@@ -1,1 +1,11 @@
-<p>checkin works!</p>
+<div *ngIf="isCameraExist; else noCameraExist">
+    <webcam [width]="1000" [height]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+        *ngIf="showWebcam" [switchCamera]="nextWebcamObservable"></webcam>
+</div>
+<button nz-button (click)="takeSnapshot()">Check In</button>
+<ng-template #noCameraExist>
+    Camera Device not Available
+</ng-template>
+<div *ngIf="webcamImage">
+    <img [src]="webcamImage.imageAsDataUrl" alt="Image Checkin">
+</div>

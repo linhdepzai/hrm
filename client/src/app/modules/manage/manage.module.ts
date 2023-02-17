@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { ProfileComponent } from './components/profile/profile.component';
 import { CheckinComponent } from './components/checkin/checkin.component';
+import { WebcamModule } from 'ngx-webcam';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 registerLocaleData(en);
 
 @NgModule({
@@ -33,6 +35,8 @@ registerLocaleData(en);
     FormsModule,
     NzBadgeModule,
     NzCalendarModule,
+    WebcamModule,
+    NzButtonModule
   ],
   exports: [
     ManageRoutingModule,
