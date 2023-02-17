@@ -1,11 +1,47 @@
-<div *ngIf="isCameraExist; else noCameraExist">
-    <webcam [width]="1000" [height]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
-        *ngIf="showWebcam" [switchCamera]="nextWebcamObservable"></webcam>
-</div>
-<button nz-button (click)="takeSnapshot()">Check In</button>
-<ng-template #noCameraExist>
-    Camera Device not Available
-</ng-template>
-<div *ngIf="webcamImage">
-    <img [src]="webcamImage.imageAsDataUrl" alt="Image Checkin">
+<div class="title">Check In</div>
+<div nz-row [nzGutter]="24">
+    <div nz-col nzSpan="12">
+        <div *ngIf="isCameraExist; else noCameraExist" class="camera">
+            <webcam [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
+                [switchCamera]="nextWebcamObservable"></webcam>
+        </div>
+        <ng-template #noCameraExist>
+            Camera Device not Available
+        </ng-template>
+    </div>
+    <div nz-col nzSpan="12">
+        <div nz-row [nzGutter]="24">
+            <div nz-col nzSpan="16">
+                <div *ngIf="webcamImage; else imageCheckin">
+                    <img [src]="webcamImage.imageAsDataUrl" alt="Image Checkin" class="image-check">
+                </div>
+                <ng-template #imageCheckin>
+                    <div class="image-check">
+                        <webcam [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
+                            [switchCamera]="nextWebcamObservable"></webcam>
+                    </div>
+                </ng-template>
+                <button class="btn-checkin" nz-button nzType="primary" (click)="showConfirm()">Check In</button>
+            </div>
+            <div nz-col nzSpan="8" [ngSwitch]="checkinList.length">
+                <div *ngSwitchCase="0" style="height: 100%;">
+                    <div class="image-check" style="border: 1px dashed #000; height: 49%;"></div>
+                    <div class="image-check" style="height: 2%;"></div>
+                    <div class="image-check" style="border: 1px dashed #000; height: 49%;"></div>
+                </div>
+                <div *ngSwitchCase="1" style="height: 100%;">
+                    <img [src]="checkinList[0].photoCheckin" alt="Image Checkin" class="image-check">
+                    <div class="image-check" style="border: 1px dashed #000; height: 49%; margin-top: 24px;"></div>
+                </div>
+                <div *ngSwitchDefault>
+                    <img [src]="checkinList[checkinList.length - 1].photoCheckin" alt="Image Checkin" class="image-check" style="padding-bottom: 24px;">
+                    <img [src]="checkinList[checkinList.length - 2].photoCheckin" alt="Image Checkin" class="image-check">
+                </div>
+            </div>
+        </div>
+        <div>
+
+
+        </div>
+    </div>
 </div>

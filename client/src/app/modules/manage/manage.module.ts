@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { HomeComponent } from './components/home/home.component';
 import { ManageRoutingModule } from './manage-routing.module';
 import { registerLocaleData } from '@angular/common';
@@ -17,6 +17,10 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { CheckinComponent } from './components/checkin/checkin.component';
 import { WebcamModule } from 'ngx-webcam';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { RequestOffComponent } from './components/request-off/request-off.component';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 registerLocaleData(en);
 
 @NgModule({
@@ -29,6 +33,7 @@ registerLocaleData(en);
     WorkingTimeComponent,
     ProfileComponent,
     CheckinComponent,
+    RequestOffComponent,
   ],
   imports: [
     CommonModule,
@@ -36,12 +41,16 @@ registerLocaleData(en);
     NzBadgeModule,
     NzCalendarModule,
     WebcamModule,
-    NzButtonModule
+    NzButtonModule,
+    NzGridModule,
+    NzModalModule,
+    NzNotificationModule,
   ],
   exports: [
     ManageRoutingModule,
   ],
   providers: [
+    DatePipe,
     { provide: NZ_I18N, useValue: en_US },
   ]
 })

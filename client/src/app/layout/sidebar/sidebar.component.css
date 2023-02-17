@@ -1,7 +1,7 @@
 .sider-menu {
     height: calc(91vh - 140px);
     border-right: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 }
 

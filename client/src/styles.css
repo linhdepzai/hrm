@@ -10,3 +10,12 @@ body {
     overflow: hidden;
     transition: 0.5s;
 }
+
+.title {
+    font-weight: bold;
+    font-size: large;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 15px;
+    border-bottom: 0.5px solid;
+}

@@ -23,14 +23,9 @@ import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthModule } from './modules/auth/auth.module';
 import { ManageModule } from './modules/manage/manage.module';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 registerLocaleData(en);
-const ngZorroConfig: NzConfig = {
-  theme: {
-    primaryColor: '#00000',
-  },
-  message: { nzTop: 120 },
-  notification: { nzTop: 240 }
-};
+const ngZorroConfig: NzConfig = {};
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +50,8 @@ const ngZorroConfig: NzConfig = {
     NzMenuModule,
     NzGridModule,
     NzDrawerModule,
-    NzIconModule
+    NzIconModule,
+    NzDropDownModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

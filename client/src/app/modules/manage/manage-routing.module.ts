@@ -9,6 +9,7 @@ import { UsersComponent } from './components/admin/users/users.component';
 import { WorkingTimeComponent } from './components/admin/working-time/working-time.component';
 import { CheckinComponent } from './components/checkin/checkin.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { RequestOffComponent } from './components/request-off/request-off.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'timesheet', component: TimesheetComponent },
   { path: 'checkin', component: CheckinComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'request-off', component: RequestOffComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 

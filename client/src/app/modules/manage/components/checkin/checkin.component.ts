@@ -1,6 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WebcamImage, WebcamUtil } from 'ngx-webcam';
-import { WebcamInitError } from 'ngx-webcam/public_api';
 import { Observable, Subject } from 'rxjs';
 
 @Component({
@@ -9,11 +11,19 @@ import { Observable, Subject } from 'rxjs';
   styleUrls: ['./checkin.component.css']
 })
 export class CheckinComponent implements OnInit {
-  isCameraExist = true;
-  showWebcam = true;
-  webcamImage!: WebcamImage;
+  public isCameraExist = true;
+  public showWebcam = true;
+  public webcamImage!: WebcamImage;
   private trigger: Subject<void> = new Subject<void>();
   private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
+  public checkinList: any[] = [];
+  confirmModal?: NzModalRef;
+  
+  constructor(
+    private modal: NzModalService,
+    private datepipe: DatePipe,
+    private notification: NzNotificationService
+    ) {}
 
   ngOnInit(): void{
     WebcamUtil.getAvailableVideoInputs().then(
@@ -23,13 +33,8 @@ export class CheckinComponent implements OnInit {
     )
   }
 
-  takeSnapshot() {
-    this.trigger.next();
-  }
-
   handleImage(webcamImage: WebcamImage){
     this.webcamImage = webcamImage;
-    this.showWebcam = false;
   }
 
   get triggerObservable(): Observable<void> {
@@ -38,5 +43,20 @@ export class CheckinComponent implements OnInit {
 
   get nextWebcamObservable(): Observable<boolean|string>{
     return this.nextWebcam.asObservable();
+  }
+
+  showConfirm(): void {
+    this.trigger.next();
+    const now = this.datepipe.transform(new Date(), 'HH:mm');
+    this.confirmModal = this.modal.confirm({
+      nzTitle: 'Check in at ' + now + ' ?',
+      nzContent: '<img src="' + this.webcamImage.imageAsDataUrl + '" alt="Image Checkin" width="500px">',
+      nzWidth: '640px',
+      nzOnOk: () =>
+        new Promise((resolve, reject) => {
+          this.notification.success('Checkin success!!!', 'You checkin at ' + now);
+          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+        }).catch(() => console.log('Oops errors!'))
+    });
   }
 }
