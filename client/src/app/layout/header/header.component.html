@@ -1,0 +1,16 @@
+<div class="logo" routerLink="/home">
+    <img src="../../../assets/logo.png" alt="Logo">
+    <span class="name">HRM</span>
+</div>
+<button nz-button nzType="primary" (click)="visible = !visible" class="btn-menu">
+    <span class="fa-stack" [ngClass]="visible ? 'fa-rotate-180' : ''">
+        <i class="fa-solid fa-bars-staggered"></i>
+        <i class="fa-solid fa-angles-right"></i>
+    </span>
+</button>
+<nz-drawer [nzClosable]="false" [nzBodyStyle]="{padding: '0'}" nzWidth="250px" [nzVisible]="visible" nzPlacement="left"
+    (nzOnClose)="close()" [nzContent]="menu">
+    <ng-template #menu>
+        <app-sidebar></app-sidebar>
+    </ng-template>
+</nz-drawer>

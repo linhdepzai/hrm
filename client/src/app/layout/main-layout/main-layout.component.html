@@ -1,0 +1,19 @@
+<nz-layout>
+    <nz-header>
+        <app-header></app-header>
+    </nz-header>
+    <nz-layout>
+        <nz-sider nzWidth="250px" nzTheme="light" class="sider">
+            <app-sidebar></app-sidebar>
+        </nz-sider>
+        <nz-layout class="inner-layout">
+            <nz-breadcrumb>
+                <nz-breadcrumb-item>{{ title }}</nz-breadcrumb-item>
+                <nz-breadcrumb-item *ngIf="subtitle !== ''">{{ subtitle }}</nz-breadcrumb-item>
+            </nz-breadcrumb>
+            <nz-content>
+                <router-outlet></router-outlet>
+            </nz-content>
+        </nz-layout>
+    </nz-layout>
+</nz-layout>

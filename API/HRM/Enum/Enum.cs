@@ -1,0 +1,35 @@
+﻿namespace HRM.Enum
+{
+    public enum Level
+    {
+        Intern = 1,
+        Fresher = 2,
+        Senior = 3,
+        Middle = 4,
+        Junior = 5,
+    }
+    public enum Position
+    {
+        Dev = 1,
+        QA = 2,
+        BA = 3,
+        PM = 4,
+        DevOps = 5,
+        DataEngineer = 6,
+        ScrumMaster = 7,
+    }
+    public enum Status
+    {
+        New = 1,
+        Pending = 2,
+        Approved = 3,
+        Rejected = 4,
+    }
+    public enum OptionOnLeave
+    {
+        OffMorning = 1,
+        OffAfternoon = 2,
+        OffFullDay = 3,
+        Late = 4,
+    }
+}

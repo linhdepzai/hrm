@@ -1,0 +1,44 @@
+<div class="background">
+    <div class="content">
+        <h3 class="fw-b color-white">Welcome</h3>
+        <form [formGroup]="loginForm" class="login-form">
+            <h5 class="fw-b">Login</h5>
+            <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your username!">
+                    <nz-input-group [nzPrefix]="prefixTemplateUser">
+                        <input type="text" nz-input formControlName="userNameOrEmailAddress"
+                            placeholder="User name or email *" />
+                        <ng-template #prefixTemplateUser><span nz-icon nzType="user"></span></ng-template>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control nzErrorTip="Please input your password!">
+                    <nz-input-group nzPrefixIcon="lock" [nzSuffix]="suffixTemplate">
+                        <input [type]="passwordVisible ? 'text' : 'password'" nz-input formControlName="password"
+                            placeholder="Password *" />
+                        <ng-template #suffixTemplate>
+                            <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'"
+                                (click)="passwordVisible = !passwordVisible"></span>
+                        </ng-template>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <div nz-row class="login-form-margin">
+                <div nz-col [nzSpan]="12">
+                    <label nz-checkbox formControlName="rememberClient">
+                        <span class="fw-b">Remember me</span>
+                    </label>
+                </div>
+                <div nz-col [nzSpan]="12">
+                    <button nz-button nzType="primary" class="login-form-button" [disabled]="!loginForm.valid"
+                        (click)="submitForm()">Log in</button>
+                </div>
+            </div>
+            <button nz-button class="login-form-expand login-form-margin" nzType="primary">Log In With Google</button>
+            <input nz-input class="login-form-expand login-form-margin" placeholder="Security Code" />
+        </form>
+        <span class="color-white mt-10">© 2022 Timesheet. <span class="fw-b">Version</span>
+            4.3.0.0 [20221606]</span>
+    </div>
+</div>

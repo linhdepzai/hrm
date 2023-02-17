@@ -20,9 +20,6 @@
 
   <ItemGroup>
     <Folder Include="Enum\" />
-    <Folder Include="Entities\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="DTOs\" />
   </ItemGroup>
 
 </Project>
