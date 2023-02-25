@@ -1,0 +1,56 @@
+<nz-modal [(nzVisible)]="isVisibleModal" [nzTitle]="header" [nzContent]="content" [nzFooter]="footer"
+    (nzOnCancel)="handleCancel()" (nzOnOk)="handleCancel()"></nz-modal>
+<ng-template #header>
+    <i class="fa-solid fa-building-user mr-5"></i>
+    <span>New Department</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="departmentForm">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Name</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <input nz-input formControlName="name" id="name" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-label nz-col [nzSpan]="6" nzFor="name">Color</nz-form-label>
+            <nz-form-control nz-col [nzSpan]="11">
+                <input nz-input formControlName="color" id="color" />
+            </nz-form-control>
+            <span nz-col [nzSpan]="1"></span>
+            <button nz-button nzType="primary" nz-col [nzSpan]="6" (click)="randomColor()">
+                <i class="fa-solid fa-shuffle mr-5"></i>
+                <span>Random</span>
+            </button>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-label nz-col [nzSpan]="6" nzFor="name">Icon</nz-form-label>
+            <nz-form-control nz-col [nzSpan]="11">
+                <nz-select nzShowSearch nzPlaceHolder="Choose icon" [ngModel]="departmentForm.value.icon"
+                    formControlName="icon" id="icon">
+                    <nz-option nzCustomContent [nzValue]="item" [nzLabel]="item" *ngFor="let item of iconList">
+                        <i class="fa-solid fa-{{ item }}"></i>
+                        <span class="ml-5">{{ item }}</span>
+                    </nz-option>
+                </nz-select>
+            </nz-form-control>
+            <span nz-col [nzSpan]="1"></span>
+            <button nz-button nzType="primary" nz-col [nzSpan]="6" (click)="randomIcon()">
+                <i class="fa-solid fa-shuffle mr-5"></i>
+                <span>Random</span>
+            </button>
+        </nz-form-item>
+        <div style="text-align: center;">
+            <span class="demo" nz-tooltip [nzTooltipTitle]="departmentForm.value.name" nz-typography nzEllipsis [style.background-color]="departmentForm.value.color">
+                <i class="fa-solid fa-{{ departmentForm.value.icon }}"></i>
+                <span class="ml-5">{{ departmentForm.value.name }}</span>
+            </span>
+        </div>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button nz-button nzType="primary" (click)="submitForm()">
+        <i class="fa-solid fa-plus mr-5"></i>
+        <span>Save</span>
+    </button>
+</ng-template>

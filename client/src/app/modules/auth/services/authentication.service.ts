@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { LoginForm } from 'src/app/interfaces/interfaces';
+import { Login } from 'src/app/interfaces/interfaceRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class AuthenticationService {
     }
   }
 
-  login(loginForm: LoginForm) {
+  login(loginForm: Login) {
     this.apiService.login(loginForm)
       .pipe(catchError((err) => of(err)))
       .subscribe((response) => {
@@ -39,7 +39,8 @@ export class AuthenticationService {
   }
 
   logout(): void {
-    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('user');
+    localStorage.removeItem('user');
     this.isLogin.next(false);
     this.router.navigate(['login']);
   }

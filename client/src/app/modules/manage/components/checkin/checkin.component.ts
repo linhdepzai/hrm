@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WebcamImage, WebcamUtil } from 'ngx-webcam';
@@ -10,14 +10,14 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './checkin.component.html',
   styleUrls: ['./checkin.component.css']
 })
-export class CheckinComponent implements OnInit {
+export class CheckinComponent implements OnInit, OnDestroy {
   public isCameraExist = true;
   public showWebcam = true;
   public webcamImage!: WebcamImage;
   private trigger: Subject<void> = new Subject<void>();
   private nextWebcam: Subject<boolean | string> = new Subject<boolean | string>();
   public checkinList: any[] = [];
-  confirmModal?: NzModalRef;
+  private confirmModal?: NzModalRef;
   
   constructor(
     private modal: NzModalService,
@@ -55,8 +55,13 @@ export class CheckinComponent implements OnInit {
       nzOnOk: () =>
         new Promise((resolve, reject) => {
           this.notification.success('Checkin success!!!', 'You checkin at ' + now);
+          this.checkinList.push({photoCheckin: this.webcamImage.imageAsDataUrl});
           setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
         }).catch(() => console.log('Oops errors!'))
     });
+  }
+
+  ngOnDestroy(): void {
+    this.showWebcam = false;
   }
 }

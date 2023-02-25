@@ -1,0 +1,151 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" [nzTitle]="header" [nzContent]="content" (nzOnClose)="close()"
+    nzWidth="50%" [nzFooter]="footer">
+</nz-drawer>
+<ng-template #header>
+    <i class="fa-solid" [ngClass]="title == 'Create' ? 'fa-user-plus' : 'fa-user-pen'"></i>
+    <span class="ml-5">{{ title }}</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="employeeForm" class="login-form">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Name</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <input nz-input placeholder="Enter your name" formControlName="fullName" id="fullName" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Sex</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Sex!">
+                <nz-radio-group [ngModel]="true" formControlName="sex" id="sex">
+                    <label nz-radio [nzValue]="true">Male</label>
+                    <label nz-radio [nzValue]="false">Female</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Email</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid E-mail!">
+                <input nz-input placeholder="Enter your email" formControlName="email" id="email" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Phone</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Phone!">
+                <input nz-input placeholder="Enter your phone" formControlName="phone" id="phone" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Date of Birth</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Birthday!">
+                <nz-date-picker [ngModel]="" formControlName="doB" id="doB"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Level</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Level!">
+                <nz-select [ngModel]="employeeForm.value.level" formControlName="level" id="level">
+                    <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of levelList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Position!">
+                <nz-select [ngModel]="employeeForm.value.position" formControlName="position" id="position">
+                    <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of positionList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item nz-row>
+            <nz-form-label nz-col [nzSpan]="6" nzRequired nzFor="name">Department</nz-form-label>
+            <nz-form-control nz-col [nzSpan]="11" nzErrorTip="The input is not valid Department!">
+                <nz-select [ngModel]="" nzPlaceHolder="Choose department..." formControlName="departmentId" id="departmentId">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of departmentList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+            <span nz-col [nzSpan]="1"></span>
+            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleModal = true">New Department</button>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Ngân hàng">Bank</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <nz-select [ngModel]="" nzPlaceHolder="Choose bank..." formControlName="bank" id="bank">
+                    <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of bankList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Tài khoản ngân hàng">Bank Account</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input placeholder="Enter your bank account" formControlName="bankAccount" id="bankAccount" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Mã số thuế">Tax Code</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input placeholder="Enter your tax code" formControlName="taxCode" id="taxCode" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Bảo hiểm">Insurance Status</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input placeholder="Enter your insurance status" formControlName="insuranceStatus" id="insuranceStatus" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">
+                <span nz-tooltip nzTooltipTitle="CCCD/CMT">Identify</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Identify!">
+                <input nz-input placeholder="Enter your identify" formControlName="identify" id="identify" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Quê quán">Place of Origin</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input placeholder="Enter your place of origin" formControlName="placeOfOrigin" id="placeOfOrigin" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Nơi thường trú">Place of Residence</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input placeholder="Enter your place of residence" formControlName="placeOfResidence" id="placeOfResidence" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Ngày cấp">Date of Issue</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <nz-date-picker [ngModel]="" formControlName="dateOfIssue" id="dateOfIssue"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
+                <span nz-tooltip nzTooltipTitle="Cấp bởi">Issued by</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24">
+                <input nz-input placeholder="Enter your issued by" formControlName="issuedBy" id="issuedBy" />
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button nz-button nzType="primary" style="float: right;" (click)="submitForm()">
+        <i class="fa-solid fa-check mr-5"></i>
+        <span>Submit</span>
+    </button>
+</ng-template>
+<app-create-department-modal [isVisibleModal]="isVisibleModal" (cancel)="isVisibleModal = false"></app-create-department-modal>

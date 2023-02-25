@@ -18,4 +18,58 @@ body {
     text-align: left;
     margin-bottom: 15px;
     border-bottom: 0.5px solid;
+    position: sticky;
+    top: 0;
+    background: #fff;
+}
+
+*::-webkit-scrollbar {
+    width: 0.25em;
+}
+
+*::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: darkgrey;
+    outline: 1px solid slategrey;
+}
+
+.mr-5 {
+    margin-right: 5px;
+}
+
+.ml-5 {
+    margin-left: 5px;
+}
+
+label {
+    float: left;
+}
+
+.btn-action {
+    width: 46px;
+    height: 32px;
+}
+
+.center {
+    text-align: center;
+}
+
+.mr-per {
+    margin-right: 0.5%;
+}
+
+.ml-per {
+    margin-left: 0.5%;
+}
+
+.fw-bold {
+    font-weight: bold;
+}
+
+.fa-mars {
+    color: blue;
+}
+
+.fa-venus {
+    color: pink;
 }

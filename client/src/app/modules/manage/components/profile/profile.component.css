@@ -1,0 +1,49 @@
+.avt-user {
+    width: 150px;
+    height: 150px;
+    margin: 5%;
+}
+
+.background {
+    background-color: rgba(60, 90, 100, .04);
+}
+
+.line {
+    margin: 2.5% 0;
+}
+
+.action {
+    width: 100%;
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+app-tag,
+.sex {
+    margin: 0 2.5px;
+}
+
+.background-avt {
+    background: rgba(60, 90, 100, .04);
+    width: 75%;
+    height: 100%;
+    margin: 0 12.5%;
+}
+
+.title {
+    background-color: transparent;
+}
+
+.information {
+    height: 40%;
+}
+
+@media (max-width: 800px) {
+    .tag {
+        display: none;
+    }
+
+    .information {
+        height: 200px;
+    }
+}

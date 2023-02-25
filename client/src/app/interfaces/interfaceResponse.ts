@@ -1,9 +1,3 @@
-export interface LoginForm {
-    userNameOrEmailAddress: string;
-    password: string;
-    rememberClient: boolean;
-}
-
 export interface LoginResponse {
     result: {
         accessToken: string;

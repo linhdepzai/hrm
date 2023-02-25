@@ -15,7 +15,6 @@ namespace HRM.DTOs.EmployeeDto
         public Position Position { get; set; }
         public Guid? DepartmentId { get; set; }
         public DateTime StartingDate { get; set; }
-        public DateTime? LeaveDate { get; set; }
         public string Bank { get; set; }
         public string BankAccount { get; set; }
         public string TaxCode { get; set; }
@@ -25,6 +24,5 @@ namespace HRM.DTOs.EmployeeDto
         public string PlaceOfResidence { get; set; }
         public string DateOfIssue { get; set; }
         public string IssuedBy { get; set; }
-        public Status Status { get; set; }
     }
 }

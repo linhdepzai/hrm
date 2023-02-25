@@ -7,24 +7,8 @@ nz-content {
     background: #fff;
     padding: 24px;
     min-height: 280px;
-    text-align: center;
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-nz-content::-webkit-scrollbar {
-    width: 0.25em;
-}
-
-nz-content::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background-color: darkgrey;
-    outline: 1px solid slategrey;
-}
-
-.more{
-    position: absolute;
-    right: 48px;
 }
 
 @media (max-width: 1000px) {

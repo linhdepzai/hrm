@@ -19,6 +19,7 @@ export enum Bank {
     NamABank = 'Nam Á Bank',
     VIB = 'VIB',
 }
+
 export enum Level {
     Intern = 1,
     Fresher = 2,
@@ -26,6 +27,7 @@ export enum Level {
     Middle = 4,
     Junior = 5,
 }
+
 export enum Position {
     Dev = 1,
     QA = 2,
@@ -35,12 +37,14 @@ export enum Position {
     DataEngineer = 6,
     ScrumMaster = 7,
 }
+
 export enum Status {
     New = 1,
     Pending = 2,
     Approved = 3,
     Rejected = 4,
 }
+
 export enum OptionOnLeave {
     OffMorning = 1,
     OffAfternoon = 2,
