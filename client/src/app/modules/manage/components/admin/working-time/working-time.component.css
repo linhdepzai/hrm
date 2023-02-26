@@ -1,0 +1,19 @@
+.btn-refresh {
+    border-color: #52c41a;
+    background-color: #52c41a;
+}
+
+.btn-refresh:hover {
+    border-color: #72ef35;
+    background-color: #72ef35;
+}
+
+.btn-refresh:active {
+    border-color: #46b112;
+    background-color: #46b112;
+}
+
+.search-name {
+    margin: 0 1%;
+    margin-bottom: 15px;
+}

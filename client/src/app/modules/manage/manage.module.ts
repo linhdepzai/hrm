@@ -83,6 +83,7 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { CreateDepartmentModalComponent } from './components/admin/users/create-or-edit-employee/create-department-modal/create-department-modal.component';
 import { TagComponent } from "../../shared/components/tag/tag.component";
 import { ModalChangeInfoComponent } from './components/profile/modal-change-info/modal-change-info.component';
+import { ModalWorkingTimeComponent } from './components/admin/working-time/modal-working-time/modal-working-time.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -99,6 +100,7 @@ registerLocaleData(en);
         CreateOrEditEmployeeComponent,
         CreateDepartmentModalComponent,
         ModalChangeInfoComponent,
+        ModalWorkingTimeComponent,
     ],
     exports: [
         ManageRoutingModule,

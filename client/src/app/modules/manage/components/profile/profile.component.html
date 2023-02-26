@@ -1,13 +1,19 @@
 <div class="title">My Profile</div>
-<div class="action">
-    <button nz-button nzType="primary" (click)="refresh()" class="mr-5">
-        <i class="fa-solid fa-arrows-rotate mr-5"></i>
-        <span>Refresh</span>
-    </button>
-    <button nz-button nzType="primary" (click)="openModalChangeInfo()">
-        <i class="fa-solid fa-user-pen mr-5"></i>
-        <span>Request Change Info</span>
-    </button>
+<div nz-row>
+    <div nz-col [nzSpan]="12">
+        <span>Status: </span>
+        <span style="color: #4caf50; font-weight: bold;">Approved</span>
+    </div>
+    <div nz-col [nzSpan]="12" class="action">
+        <button nz-button nzType="primary" (click)="refresh()" class="mr-5">
+            <i class="fa-solid fa-arrows-rotate mr-5"></i>
+            <span>Refresh</span>
+        </button>
+        <button nz-button nzType="primary" (click)="openModalChangeInfo()">
+            <i class="fa-solid fa-user-pen mr-5"></i>
+            <span>Request Change Info</span>
+        </button>
+    </div>
 </div>
 <div nz-row [nzGutter]="24" class="information">
     <div nz-col [nzSpan]="8" class="center">
