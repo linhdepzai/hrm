@@ -84,6 +84,9 @@ import { CreateDepartmentModalComponent } from './components/admin/users/create-
 import { TagComponent } from "../../shared/components/tag/tag.component";
 import { ModalChangeInfoComponent } from './components/profile/modal-change-info/modal-change-info.component';
 import { ModalWorkingTimeComponent } from './components/admin/working-time/modal-working-time/modal-working-time.component';
+import { MyWorkingTimeComponent } from './components/my-working-time/my-working-time.component';
+import { ProjectComponent } from './components/project/project.component';
+import { TaskComponent } from './components/task/task.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -101,6 +104,9 @@ registerLocaleData(en);
         CreateDepartmentModalComponent,
         ModalChangeInfoComponent,
         ModalWorkingTimeComponent,
+        MyWorkingTimeComponent,
+        ProjectComponent,
+        TaskComponent,
     ],
     exports: [
         ManageRoutingModule,
