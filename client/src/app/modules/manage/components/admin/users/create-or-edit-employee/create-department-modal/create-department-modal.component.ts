@@ -29,7 +29,7 @@ export class CreateDepartmentModalComponent implements OnInit {
       name: [null, Validators.required],
       color: ['#00ff00'],
       icon: ['house']
-    })
+    });
   }
 
   submitForm() {

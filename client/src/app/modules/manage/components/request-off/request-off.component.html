@@ -1,1 +1,24 @@
-<div class="title">Request off</div>
+<div class="title">Request Off</div>
+<button nz-button nzType="primary" (click)="openModal()" [disabled]="requestList.length == 0">Request Off</button>
+<nz-calendar [ngModel]="date" (ngModelChange)="selectDateRequest($event)" nzMode="month">
+    <ul *nzDateCell="let date">
+        <ng-container *ngFor="let item of requestList">
+            <ng-container [ngSwitch]="formatDate(date)">
+                <ng-container *ngSwitchCase="formatDate(item.date)">
+                    <nz-select [ngModel]="item.option"
+                        (ngModelChange)="changeOptionOnLeave(item.date, $event, item.status)"
+                        (click)="$event.stopPropagation()">
+                        <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                            *ngFor="let item of onLeaveList | async"></nz-option>
+                    </nz-select>
+                    <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
+                    <span role="button" (click)="$event.stopPropagation(); handleDelete()">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </span>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </ul>
+</nz-calendar>
+<app-modal-request-off [isVisibleModal]="isVisibleModal" [requestList]="requestList"
+    (cancel)="isVisibleModal = false"></app-modal-request-off>

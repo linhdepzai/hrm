@@ -18,7 +18,7 @@ export class WorkingTimeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.employeeList = this.manageService.employeeList$
+    this.employeeList = this.manageService.employeeList$;
   }
 
   changeStatusWorkingTime(data: any) {

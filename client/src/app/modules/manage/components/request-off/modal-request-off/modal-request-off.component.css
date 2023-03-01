@@ -1,0 +1,14 @@
+.request-list{
+    text-align: center;
+    max-height: 30vh;
+    overflow: auto;
+    margin-top: 5px;
+}
+
+.item-request {
+    padding: 5px 35px;
+    border: 1px solid #0000003b;
+    display: inline-block;
+    margin: 5px;
+    width: 70%;
+}

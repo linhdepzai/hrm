@@ -30,11 +30,10 @@ export class MyWorkingTimeComponent implements OnInit {
       morningEndTime: [null, Validators.required],
       afternoonStartTime: [null, Validators.required],
       afternoonEndTime: [null, Validators.required],
+      applyDate: [null, Validators.required],
       morningTotalTime: [0],
       afternoonTotalTime: [0],
-      applyDate: [null, Validators.required],
     });
-    this.workingTimeForm.reset();
   }
 
   calcTotalTime(endTime: any, startTime: any) {

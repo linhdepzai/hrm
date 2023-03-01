@@ -1,16 +1,8 @@
-nz-time-picker {
+nz-time-picker, nz-date-picker {
     width: 100%;
 }
 
-button, nz-date-picker, label {
+button, nz-date-picker {
     float: right;
     margin-bottom: 15px;
-}
-
-nz-date-picker{
-    margin: 0 5px;
-}
-
-label {
-    margin-top: 3px;
 }

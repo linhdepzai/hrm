@@ -1,0 +1,23 @@
+ul {
+    padding: 0;
+}
+
+button {
+    position: absolute;
+    z-index: 3;
+    margin-top: 12px;
+}
+
+nz-calendar {
+    overflow-y: auto;
+    height: 90%;
+    display: block;
+    overflow-x: hidden;
+}
+
+.fa-trash-can {
+    color: tomato;
+    bottom: 8px;
+    right: 4px;
+    position: absolute;
+}

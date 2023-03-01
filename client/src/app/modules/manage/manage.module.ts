@@ -87,8 +87,8 @@ import { ModalWorkingTimeComponent } from './components/admin/working-time/modal
 import { MyWorkingTimeComponent } from './components/my-working-time/my-working-time.component';
 import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component';
+import { ModalRequestOffComponent } from './components/request-off/modal-request-off/modal-request-off.component';
 registerLocaleData(en);
-
 @NgModule({
     declarations: [
         HomeComponent,
@@ -107,6 +107,7 @@ registerLocaleData(en);
         MyWorkingTimeComponent,
         ProjectComponent,
         TaskComponent,
+        ModalRequestOffComponent,
     ],
     exports: [
         ManageRoutingModule,

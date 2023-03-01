@@ -73,3 +73,23 @@ label {
 .fa-venus {
     color: pink;
 }
+
+.New {
+    color: #0061ff;
+    font-weight: bold;
+}
+
+.Pending {
+    color: #c2781e;
+    font-weight: bold;
+}
+
+.Approved {
+    color: #4fbd91;
+    font-weight: bold;
+}
+
+.Rejected {
+    color: #aab2ff;
+    font-weight: bold;
+}

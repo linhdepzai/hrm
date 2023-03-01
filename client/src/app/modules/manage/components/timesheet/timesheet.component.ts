@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-timesheet',
   templateUrl: './timesheet.component.html',
   styleUrls: ['./timesheet.component.css']
 })
-export class TimesheetComponent {
+export class TimesheetComponent implements OnInit {
   date = new Date();
+  date2: any;
   listDataMap = {
     eight: [
       { type: 'warning', content: 'This is warning event.' },
@@ -26,6 +28,17 @@ export class TimesheetComponent {
       { type: 'error', content: 'This is error event 4.' }
     ]
   };
+
+  constructor(
+    private datepipe: DatePipe,
+  ){}
+
+  ngOnInit(): void {
+    this.date.getTime();
+    console.log(this.date.getTime());
+    this.date2 = new Date('03/03/2023');
+    console.log(this.date2);
+  }
 
   getMonthData(date: Date): number | null {
     if (date.getMonth() === 8) {

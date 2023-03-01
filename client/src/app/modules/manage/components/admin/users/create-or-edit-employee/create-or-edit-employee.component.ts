@@ -57,7 +57,7 @@ export class CreateOrEditEmployeeComponent implements OnInit {
       placeOfResidence: [null],
       dateOfIssue: [null],
       issuedBy: [null],
-    })
+    });
   }
 
   submitForm() {

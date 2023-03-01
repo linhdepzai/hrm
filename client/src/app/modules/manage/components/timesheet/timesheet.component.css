@@ -20,3 +20,10 @@
 .notes-month section {
     font-size: 28px;
 }
+
+nz-calendar {
+    overflow-y: auto;
+    height: 90%;
+    display: block;
+    overflow-x: hidden;
+}

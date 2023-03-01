@@ -18,6 +18,12 @@
                         [nzDefaultOpenValue]="defaultOpenValue"></nz-time-picker>
                 </nz-form-control>
             </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="12" [nzXs]="24" nzRequired nzFor="name">Apply Date</nz-form-label>
+                <nz-form-control [nzSm]="12" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                    <nz-date-picker [ngModel]="workingTimeForm.value.applyDate" formControlName="applyDate" id="applyDate"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
         </div>
         <div nz-col [nzSpan]="8">
             <nz-form-item>
@@ -36,6 +42,7 @@
                         [nzDefaultOpenValue]="defaultOpenValue"></nz-time-picker>
                 </nz-form-control>
             </nz-form-item>
+            <span>Total Time: {{ workingTimeForm.value.morningTotalTime + workingTimeForm.value.afternoonTotalTime }}</span>
         </div>
         <div nz-col [nzSpan]="8">
             <nz-form-item>
@@ -50,26 +57,21 @@
                     <input nz-input formControlName="afternoonTotalTime" id="afternoonTotalTime" />
                 </nz-form-control>
             </nz-form-item>
+            <button *ngIf="isEdit === false; else edit" nz-button nzType="primary" (click)="changeMode()">
+                <i class="fa-solid fa-business-time mr-5"></i>
+                <span>Change Working Time</span>
+            </button>
+            <ng-template #edit>
+                <button nz-button nzType="primary" (click)="submit()">
+                    <i class="fa-solid fa-check mr-5"></i>
+                    <span>Change</span>
+                </button>
+                <button class="mr-5" nz-button nzType="default" (click)="changeMode()">
+                    <i class="fa-solid fa-xmark mr-5"></i>
+                    <span>Cancel</span>
+                </button>
+            </ng-template>
         </div>
-    </div>
-    <div>
-        <span>Total Time: {{ workingTimeForm.value.morningTotalTime + workingTimeForm.value.afternoonTotalTime }}</span>
-        <button *ngIf="isEdit === false; else edit" nz-button nzType="primary" (click)="changeMode()">
-            <i class="fa-solid fa-business-time mr-5"></i>
-            <span>Change Working Time</span>
-        </button>
-        <ng-template #edit>
-            <button nz-button nzType="primary" (click)="submit()">
-                <i class="fa-solid fa-check mr-5"></i>
-                <span>Change</span>
-            </button>
-            <button class="mr-5" nz-button nzType="default" (click)="changeMode()">
-                <i class="fa-solid fa-xmark mr-5"></i>
-                <span>Cancel</span>
-            </button>
-        </ng-template>
-        <nz-date-picker class="mr-5" formControlName="applyDate"></nz-date-picker>
-        <label>Apply Date: </label>
     </div>
 </form>
 <nz-table #table>

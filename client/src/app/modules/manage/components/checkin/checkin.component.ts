@@ -49,8 +49,8 @@ export class CheckinComponent implements OnInit, OnDestroy {
     this.trigger.next();
     const now = this.datepipe.transform(new Date(), 'HH:mm');
     this.confirmModal = this.modal.confirm({
-      nzTitle: 'Check in at ' + now + ' ?',
-      nzContent: '<img src="' + this.webcamImage.imageAsDataUrl + '" alt="Image Checkin" width="500px">',
+      nzTitle: 'Check in at ' + now + '?',
+      nzContent: `<img src="${this.webcamImage.imageAsDataUrl}" alt="Image Checkin" width="500px">`,
       nzWidth: '640px',
       nzOnOk: () =>
         new Promise((resolve, reject) => {

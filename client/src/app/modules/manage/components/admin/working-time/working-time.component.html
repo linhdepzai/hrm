@@ -33,7 +33,7 @@
                 <td nzAlign="center">{{ calcTime(data.morningStartTime, data.morningEndTime) +
                     calcTime(data.afternoonStartTime, data.afternoonEndTime) }}</td>
                 <td nzAlign="center">
-                    <span style="color: #4fbd91; font-weight: bold;">Approved</span>
+                    <span class="Approved">Approved</span>
                 </td>
             </ng-template>
             <ng-template #pending (click)="changeStatusWorkingTime(data)">
@@ -45,7 +45,7 @@
                 <td nzAlign="center">{{ calcTime(data.morningStartTime, data.morningEndTime) +
                     calcTime(data.afternoonStartTime, data.afternoonEndTime) }}</td>
                 <td nzAlign="center">
-                    <span style="color: #c2781e; font-weight: bold;">Pending</span>
+                    <span class="Pending">Pending</span>
                 </td>
             </ng-template>
         </tr>
