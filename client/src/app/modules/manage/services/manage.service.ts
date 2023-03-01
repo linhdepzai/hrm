@@ -163,7 +163,7 @@ export class ManageService {
       { value: OptionOnLeave.OffMorning, label: 'Off Morning' },
       { value: OptionOnLeave.OffAfternoon, label: 'Off Afternoon' },
       { value: OptionOnLeave.OffFullDay, label: 'Off Full Day' },
-      { value: OptionOnLeave.Late, label: 'Late' }]);
+      { value: OptionOnLeave.Late, label: 'Late/Leave Early' }]);
     this.bankList.next([Bank.Techcombank, Bank.ACB, Bank.Agribank,
       Bank.BIDV, Bank.DongABank, Bank.MBB, Bank.MSB, Bank.OCB,
       Bank.Sacombank, Bank.ShinhanBank, Bank.TPBank, Bank.VCB,

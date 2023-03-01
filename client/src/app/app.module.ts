@@ -24,6 +24,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthModule } from './modules/auth/auth.module';
 import { ManageModule } from './modules/manage/manage.module';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzTypographyModule } from 'ng-zorro-antd/typography';
 registerLocaleData(en);
 const ngZorroConfig: NzConfig = {};
 @NgModule({
@@ -52,6 +53,7 @@ const ngZorroConfig: NzConfig = {};
     NzDrawerModule,
     NzIconModule,
     NzDropDownModule,
+    NzTypographyModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
