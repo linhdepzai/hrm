@@ -1,3 +1,5 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
 .logo {
     width: 120px;
     height: 31px;
@@ -30,8 +32,24 @@ img {
     font-size: x-large;
 }
 
+.config-option {
+    color: #fff;
+    float: right;
+    margin: 2.5px 0;
+}
+
+a {
+    color: #fff;
+}
+
+.fa-gear {
+    margin-left: 10px;
+}
+
 @media (max-width: 1000px) {
-    .btn-menu {
-        display: block;
+
+    .btn-menu,
+    .config-option {
+        display: inline;
     }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Employee, Login } from '../interfaces/interfaceRequest';
 import { LoginResponse } from '../interfaces/interfaceResponse';
@@ -9,6 +9,7 @@ import { LoginResponse } from '../interfaces/interfaceResponse';
   providedIn: 'root'
 })
 export class ApiService {
+  themeColor: BehaviorSubject<string> = new BehaviorSubject<string>('#096dd9');
 
   constructor(private httpClient: HttpClient) { }
 

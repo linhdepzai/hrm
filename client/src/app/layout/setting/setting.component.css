@@ -1,0 +1,12 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+.name {
+    font-weight: bold;
+}
+
+.theme {
+    width: calc(100% / 11);
+}
+
+nz-radio-group{
+    width: 100%;
+}

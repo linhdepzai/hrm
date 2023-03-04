@@ -1,3 +1,4 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 .inner-layout {
     padding: 24px;
     height: 91vh;
@@ -9,6 +10,10 @@ nz-content {
     min-height: 280px;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+nz-header {
+    background: var(--ant-primary-color) !important;
 }
 
 @media (max-width: 1000px) {

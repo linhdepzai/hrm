@@ -1,3 +1,4 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 nz-select, nz-date-picker, input {
     width: 100%;
 }

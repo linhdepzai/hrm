@@ -1,3 +1,4 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 .events {
     list-style: none;
     margin: 0;

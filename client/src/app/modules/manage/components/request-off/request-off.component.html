@@ -1,5 +1,5 @@
 <div class="title">Request Off</div>
-<button nz-button nzType="primary" (click)="openModal()" [disabled]="requestList.length == 0">Request Off</button>
+<button class="btn-request" nz-button nzType="primary" (click)="openModal()" [disabled]="requestList.length == 0">Request Off</button>
 <nz-calendar [ngModel]="date" (ngModelChange)="selectDateRequest($event)" nzMode="month">
     <ul *nzDateCell="let date">
         <ng-container *ngFor="let item of requestList">

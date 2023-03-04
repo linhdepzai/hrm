@@ -1,3 +1,4 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 div.ant-typography {
     margin-bottom: 0;
 }
@@ -10,7 +11,7 @@ div.ant-typography {
 }
 
 .footer{
-    background: #001529;
+    background: var(--ant-primary-color);
     color: #fff;
     font-size: larger;
     font-weight: bold;
@@ -27,7 +28,6 @@ div.ant-typography {
 
 .header{
     height: 83.6px;
-    background: url(https://static.wixstatic.com/media/5b44bf_317f722d308c4426a6ba01e3c61bf072~mv2_d_4206_2366_s_2.jpg/v1/fill/w_980,h_551,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/5b44bf_317f722d308c4426a6ba01e3c61bf072~mv2_d_4206_2366_s_2.jpg);
     color: #fff;
     justify-content: center;
     align-items: center;

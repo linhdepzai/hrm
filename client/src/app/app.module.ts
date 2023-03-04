@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzNoAnimationModule } from 'ng-zorro-antd/core/no-animation';
-import { NzConfig, NZ_CONFIG } from 'ng-zorro-antd/core/config';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
@@ -25,8 +24,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ManageModule } from './modules/manage/manage.module';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { FormsModule } from '@angular/forms';
+import { SettingComponent } from './layout/setting/setting.component';
 registerLocaleData(en);
-const ngZorroConfig: NzConfig = {};
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,9 +37,11 @@ const ngZorroConfig: NzConfig = {};
     PageNotFoundComponent,
     SidebarComponent,
     LoginLayoutComponent,
+    SettingComponent,
   ],
   imports: [
     CommonModule,
+    FormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -54,10 +58,11 @@ const ngZorroConfig: NzConfig = {};
     NzIconModule,
     NzDropDownModule,
     NzTypographyModule,
+    NzAvatarModule,
+    NzRadioModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },
-    { provide: NZ_CONFIG, useValue:  ngZorroConfig  }
   ],
   bootstrap: [AppComponent]
 })

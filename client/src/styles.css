@@ -1,6 +1,6 @@
 /* @import "/node_modules/ng-zorro-antd/ng-zorro-antd.min.css";  */
-@import "/node_modules/ng-zorro-antd/style/index.min.css";
-@import "/node_modules/ng-zorro-antd/button/style/index.min.css";
+/* @import "/node_modules/ng-zorro-antd/style/index.min.css"; */
+/* @import "/node_modules/ng-zorro-antd/button/style/index.min.css"; */
 /* @import "/node_modules/ng-zorro-antd/ng-zorro-antd.dark.css"; */
 /* @import "/node_modules/ng-zorro-antd/ng-zorro-antd.compact.css"; */
 /* @import "/node_modules/ng-zorro-antd/ng-zorro-antd.aliyun.css"; */
@@ -34,11 +34,11 @@ body {
 }
 
 .mr-5 {
-    margin-right: 5px;
+    margin-right: 5px !important;
 }
 
 .ml-5 {
-    margin-left: 5px;
+    margin-left: 5px !important;
 }
 
 label {
@@ -55,15 +55,15 @@ label {
 }
 
 .mr-per {
-    margin-right: 0.5%;
+    margin-right: 0.5% !important;
 }
 
 .ml-per {
-    margin-left: 0.5%;
+    margin-left: 0.5% !important;
 }
 
 .fw-bold {
-    font-weight: bold;
+    font-weight: bold !important;
 }
 
 .fa-mars {
@@ -93,3 +93,24 @@ label {
     color: #aab2ff;
     font-weight: bold;
 }
+
+.ant-picker-calendar-full .ant-picker-panel {
+    height: 59vh;
+    overflow-y: auto;
+}
+
+.btn-refresh {
+    border-color: #52c41a !important;
+    background-color: #52c41a !important;
+}
+
+.btn-refresh:hover {
+    border-color: #72ef35 !important;
+    background-color: #72ef35 !important;
+}
+
+.btn-refresh:active {
+    border-color: #46b112 !important;
+    background-color: #46b112 !important;
+}
+

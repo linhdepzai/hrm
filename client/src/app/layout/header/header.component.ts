@@ -6,12 +6,21 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  visible = false;
-  open(): void {
-    this.visible = true;
+  visibleSidebar = false;
+  visibleSetting = false;
+  openSidebar(): void {
+    this.visibleSidebar = true;
   }
 
-  close(): void {
-    this.visible = false;
+  closeSidebar(): void {
+    this.visibleSidebar = false;
+  }
+
+  openSetting(): void {
+    this.visibleSetting = true;
+  }
+
+  closeSetting(): void {
+    this.visibleSetting = false;
   }
 }

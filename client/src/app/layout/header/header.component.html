@@ -2,15 +2,26 @@
     <img src="../../../assets/logo.png" alt="Logo">
     <span class="name">HRM</span>
 </div>
-<button nz-button nzType="primary" (click)="visible = !visible" class="btn-menu">
-    <span class="fa-stack" [ngClass]="visible ? 'fa-rotate-180' : ''">
+<button nz-button nzType="primary" (click)="openSidebar()" class="btn-menu">
+    <span class="fa-stack" [ngClass]="visibleSidebar ? 'fa-rotate-180' : ''">
         <i class="fa-solid fa-bars-staggered"></i>
         <i class="fa-solid fa-angles-right"></i>
     </span>
 </button>
-<nz-drawer [nzClosable]="false" [nzBodyStyle]="{padding: '0'}" nzWidth="250px" [nzVisible]="visible" nzPlacement="left"
-    (nzOnClose)="close()" [nzContent]="menu">
+<span class="config-option">
+    <a href="https://docs.google.com/document/d/1FQ7DLaRJC_h0cUiAfYHsAp1FEEOO8v_9y4WDEadkvwI/edit?usp=sharing"
+        target="_blank" class="fa-solid fa-file-lines fa-2x"></a>
+    <i class="fa-solid fa-gear fa-2x fa-spin" (click)="openSetting()"></i>
+</span>
+<nz-drawer [nzClosable]="false" [nzBodyStyle]="{padding: '0'}" nzWidth="250px" [nzVisible]="visibleSidebar"
+    nzPlacement="left" (nzOnClose)="closeSidebar()" [nzContent]="menu">
     <ng-template #menu>
         <app-sidebar></app-sidebar>
+    </ng-template>
+</nz-drawer>
+<nz-drawer [nzClosable]="false" nzWidth="50%" [nzVisible]="visibleSetting"
+    nzPlacement="right" (nzOnClose)="closeSetting()" [nzContent]="setting">
+    <ng-template #setting>
+        <app-setting></app-setting>
     </ng-template>
 </nz-drawer>

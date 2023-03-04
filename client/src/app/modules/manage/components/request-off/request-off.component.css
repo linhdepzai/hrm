@@ -1,18 +1,13 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
 ul {
     padding: 0;
 }
 
-button {
+.btn-request {
     position: absolute;
     z-index: 3;
     margin-top: 12px;
-}
-
-nz-calendar {
-    overflow-y: auto;
-    height: 90%;
-    display: block;
-    overflow-x: hidden;
 }
 
 .fa-trash-can {

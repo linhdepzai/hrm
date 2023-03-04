@@ -64,7 +64,9 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleModal = true">New Department</button>
+            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleModal = true">
+                <span nz-typography nzEllipsis style="color: #fff;">New Department</span>
+            </button>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
