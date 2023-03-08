@@ -13,7 +13,7 @@ namespace HRM.Entities
         public Guid EmployeeId { get; set; }
         public DateTime DateLeave { get; set; }
         public OptionOnLeave Option { get; set; }
-        public int TimeLeave { get; set; }
+        public string Reason { get; set; }
         public Status Status { get; set; }
     }
 }

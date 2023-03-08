@@ -23,8 +23,6 @@ export class UsersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.manageService.getAllDepartment();
-    this.manageService.getAllEmployee();
     this.manageService.employeeList$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.manageService.departmentList$;
     this.levelList = this.manageService.levelList;

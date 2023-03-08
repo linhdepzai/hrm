@@ -22,7 +22,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<ActionResult> GetAll()
         {
-            var list = await _dataContext.Department.AsNoTracking().ToListAsync();
+            var list = await _dataContext.Employee.AsNoTracking().ToListAsync();
             return Ok(list);
         }
         [HttpPost("save")]

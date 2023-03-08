@@ -22,6 +22,8 @@ export class ManageService {
     private notification: NzNotificationService,
   ) {
     this.dataList();
+    this.getAllDepartment();
+    this.getAllEmployee();
   }
 
   getAllDepartment() {
@@ -90,6 +92,13 @@ export class ManageService {
       });
   }
 
+  requestOnLeave(form: any){
+    this.apiService
+      .requestOnLeave(form)
+      .subscribe(()=> {
+        console.log(form)
+      });
+  }
 
 
 

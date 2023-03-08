@@ -44,4 +44,8 @@ export class ApiService {
   deleteEmployee(id: any): Observable<any>{
     return this.httpClient.delete(environment.baseUrl + 'employee/delete?id=' + id);
   }
+  
+  requestOnLeave(payload: any): Observable<any>{
+    return this.httpClient.post(environment.baseUrl + 'onleave/requestLeave', payload);
+  }
 }
