@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Bank, Level, OptionOnLeave, Position } from 'src/app/enums/Enum';
-import { Department, Employee } from 'src/app/interfaces/interfaceRequest';
+import { DepartmentResponse } from 'src/app/interfaces/interfaceReponse';
+import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 
 @Injectable({
@@ -10,7 +11,7 @@ import { ApiService } from 'src/app/services/api.service';
 })
 export class ManageService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
-  public departmentList$ = new BehaviorSubject<Department[]>([]);
+  public departmentList$ = new BehaviorSubject<DepartmentResponse[]>([]);
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
   public positionList = new BehaviorSubject<{ value: Position, label: string }[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
@@ -29,7 +30,7 @@ export class ManageService {
   getAllDepartment() {
     this.apiService
       .getAllDepartment()
-      .subscribe((response) => {
+      .subscribe((response: DepartmentResponse[]) => {
         this.departmentList$.next(response);
       });
   }

@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   initForm() {
     this.loginForm = this.fb.group({
-      userNameOrEmailAddress: [null, [Validators.required]],
+      email: [null, [Validators.required]],
       password: [null, [Validators.required]],
       rememberMe: [true]
     });
@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
       this.loginForm.controls[i].updateValueAndValidity();
     }
     if (this.loginForm.valid) {
+      // this.loginForm.controls['rememberMe'].disabled;
       this.authenticationService.login(this.loginForm.value);
     } else {
       Object.values(this.loginForm.controls).forEach((control) => {

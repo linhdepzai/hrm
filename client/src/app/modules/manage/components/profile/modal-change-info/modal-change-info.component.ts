@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Bank, Level, Position } from 'src/app/enums/Enum';
-import { Department } from 'src/app/interfaces/interfaceRequest';
+import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { ManageService } from '../../../services/manage.service';
 
 @Component({
@@ -10,27 +10,31 @@ import { ManageService } from '../../../services/manage.service';
   templateUrl: './modal-change-info.component.html',
   styleUrls: ['./modal-change-info.component.css']
 })
-export class ModalChangeInfoComponent implements OnInit {
+export class ModalChangeInfoComponent implements OnInit, OnChanges {
   @Input() isVisibleModal: boolean = false;
-  @Input() user: any;
+  @Input() user!: LoginResponse;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   infoForm!: FormGroup;
   levelList = new Observable<any[]>();
   positionList = new Observable<any[]>();
   bankList = new Observable<Bank[]>();
-  departmentList = new Observable<Department[]>();
+  departmentList = new Observable<DepartmentResponse[]>();
 
   constructor(
     private manageService: ManageService,
     private fb: FormBuilder,
   ) { }
-
+  
   ngOnInit(): void {
-    this.changeInfoForm();
     this.departmentList = this.manageService.departmentList$;
     this.levelList = this.manageService.levelList;
     this.positionList = this.manageService.positionList;
     this.bankList = this.manageService.bankList;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.changeInfoForm();
+    this.infoForm.patchValue(this.user);
   }
 
   changeInfoForm() {
@@ -55,7 +59,6 @@ export class ModalChangeInfoComponent implements OnInit {
       dateOfIssue: [null],
       issuedBy: [null],
     });
-    this.infoForm.patchValue(this.user);
   }
 
   submitForm() {

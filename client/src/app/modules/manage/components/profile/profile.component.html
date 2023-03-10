@@ -20,10 +20,13 @@
         <div class="background-avt">
             <nz-avatar nzIcon="user" class="avt-user"></nz-avatar>
             <div class="tag">
-                <i class="fa-solid sex" [ngClass]="true == true ? 'fa-mars' : 'fa-venus'"></i>
-                <app-tag [label]="'Intern'" size></app-tag>
-                <app-tag [label]="'Dev'" size></app-tag>
-                <app-tag [label]="'Sao do'" [color]="'red'" size></app-tag>
+                <i class="fa-solid sex" [ngClass]="user.sex ? 'fa-mars' : 'fa-venus'"></i>
+                <app-tag [label]="level[user.level]" size></app-tag>
+                <app-tag [label]="position[user.position]" size></app-tag>
+                <app-tag 
+                    [label]="getDepartment(user.departmentId)?.name" 
+                    [color]="getDepartment(user.departmentId)?.color" 
+                    size></app-tag>
             </div>
         </div>
     </div>
@@ -33,37 +36,37 @@
             <div nz-col [nzSpan]="12">
                 <div class="line">
                     <span class="fw-bold">Name: </span>
-                    <span>Linhdepzai</span>
+                    <span>{{ user.fullName }}</span>
                 </div>
                 <div class="line">
                     <span class="fw-bold">Sex: </span>
-                    <span>Male</span>
+                    <span>{{ user.sex ? 'Male' : 'Female' }}</span>
                 </div>
                 <div class="line">
                     <span class="fw-bold">Email: </span>
-                    <span>Linhdepzai@gmail.com</span>
+                    <span>{{ user.email }}</span>
                 </div>
                 <div class="line">
                     <span class="fw-bold">Phone: </span>
-                    <span>0387008631</span>
+                    <span>{{ user.phone }}</span>
                 </div>
             </div>
             <div nz-col [nzSpan]="12">
                 <div class="line">
                     <span class="fw-bold">Birthday: </span>
-                    <span>2001-01-01</span>
+                    <span>{{ user.doB | date: 'dd/MM/YYYY' }}</span>
                 </div>
                 <div class="line">
                     <span class="fw-bold">Level: </span>
-                    <span>Intern</span>
+                    <span>{{ level[user.level] }}</span>
                 </div>
                 <div class="line">
                     <span class="fw-bold">Position: </span>
-                    <span>Dev</span>
+                    <span>{{ position[user.position] }}</span>
                 </div>
                 <div class="line">
                     <span class="fw-bold">Department: </span>
-                    <span>Sao do</span>
+                    <span>{{ getDepartment(user.departmentId)?.name }}</span>
                 </div>
             </div>
         </div>
@@ -73,43 +76,44 @@
 <div nz-row [nzGutter]="24">
     <div nz-col [nzSpan]="12">
         <div class="line">
-            <span class="fw-bold">Bank: </span>
-            <span>Techcombank</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Ngân hàng">Bank: </span>
+            <span>{{ user.bank }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Bank Account: </span>
-            <span>1981981589484</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Tài khoản ngân hàng">Bank Account: </span>
+            <span>{{ user.bankAccount }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Tax Code: </span>
-            <span>2163546845165</span>
+            <span class="fw-bold"  nz-tooltip nzTooltipTitle="Mã số thuế">Tax Code: </span>
+            <span>{{ user.taxCode }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Insurance Status: </span>
-            <span>265265265</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Bảo hiểm">Insurance Status: </span>
+            <span>{{ user.insuranceStatus }}</span>
         </div>
     </div>
     <div nz-col [nzSpan]="12">
         <div class="line">
-            <span class="fw-bold">Identify: </span>
-            <span>001201024305</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="CCCD/CMT">Identify: </span>
+            <span>{{ user.identify }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Place of Origin: </span>
-            <span>High Noise</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Quê quán">Place of Origin: </span>
+            <span nz-typography nzEllipsis>{{ user.placeOfOrigin }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Place of Residence: </span>
-            <span>Sight Gone</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Nơi thường trú">Place of Residence: </span>
+            <span nz-typography nzEllipsis>{{ user.placeOfResidence }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Date of Issue: </span>
-            <span>1999-99-99</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Ngày cấp">Date of Issue: </span>
+            <span>{{ user.dateOfIssue | date: 'dd/MM/YYYY' }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold">Issued by: </span>
-            <span>Tao</span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Cấp bởi">Issued by: </span>
+            <span nz-typography nzEllipsis>{{ user.issuedBy }}</span>
         </div>
     </div>
 </div>
-<app-modal-change-info [isVisibleModal]="isVisibleModal" [user]="user" (cancel)="isVisibleModal = false"></app-modal-change-info>
+<app-modal-change-info [isVisibleModal]="isVisibleModal" [user]="user"
+    (cancel)="isVisibleModal = false"></app-modal-change-info>

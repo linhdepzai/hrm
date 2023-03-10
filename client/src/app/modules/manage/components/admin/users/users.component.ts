@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Level, Position } from 'src/app/enums/Enum';
-import { Department, Employee } from 'src/app/interfaces/interfaceRequest';
+import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { ManageService } from '../../../services/manage.service';
 
 @Component({

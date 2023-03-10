@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { ApiService } from 'src/app/services/api.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { Login } from 'src/app/interfaces/interfaceRequest';
+import { Login } from 'src/app/interfaces/interfaces';
+import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class AuthenticationService {
     private notification: NzNotificationService,
     private router: Router,
     private apiService: ApiService
-  ) {
-    if (sessionStorage.getItem('accessToken')) {
+  ) { 
+    if (sessionStorage.getItem('user') || localStorage.getItem('user')) {
       this.isLogin.next(true);
     } else {
       this.isLogin.next(false);
@@ -26,14 +27,18 @@ export class AuthenticationService {
   login(loginForm: Login) {
     this.apiService.login(loginForm)
       .pipe(catchError((err) => of(err)))
-      .subscribe((response) => {
-        if (response.success){
-          sessionStorage.setItem('accessToken', JSON.stringify(response.result.accessToken));
-          this.notification.create('success', 'Successfully!', '');
-          this.router.navigate(['projects']);
+      .subscribe((response: LoginResponse) => {
+        if (response.id){
+          if(loginForm.rememberMe == true){
+            localStorage.setItem('user', JSON.stringify(response));
+          } else {
+            sessionStorage.setItem('user', JSON.stringify(response));
+          };
+          this.notification.create('success', `Hello ${response.fullName}!`, '');
+          this.router.navigate(['manage/home']);
           this.isLogin.next(true);
         } else {
-          this.notification.create('error', response?.error?.error?.message, response?.error?.error?.details);
+          this.notification.error('Login Failed!!!', 'Your email or password is incorrected!!!');
         }
       });
   }
@@ -41,7 +46,7 @@ export class AuthenticationService {
   logout(): void {
     sessionStorage.removeItem('user');
     localStorage.removeItem('user');
-    this.isLogin.next(false);
     this.router.navigate(['login']);
+    this.isLogin.next(false);
   }
 }

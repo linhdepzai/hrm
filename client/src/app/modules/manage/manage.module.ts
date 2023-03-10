@@ -140,6 +140,7 @@ registerLocaleData(en);
         TagComponent,
         NzAvatarModule,
         NzTimePickerModule,
+        NzTypographyModule,
     ]
 })
 export class ManageModule { }

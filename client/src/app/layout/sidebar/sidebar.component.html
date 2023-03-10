@@ -1,11 +1,11 @@
 <div class="header" style="background-image: url({{coverAvt}});">
-    <div nz-row>
+    <div nz-row [nzGutter]="24">
         <div nz-col nzSpan="8">
             <nz-avatar [nzSize]="60" nzIcon="user" nzSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiuxu29YKej9hhnYkaDVBrbXaNs_25eRYABg&usqp=CAU"></nz-avatar>
         </div>
         <div nz-col nzSpan="16">
-            <div style="color: #fff; margin-top: 7.5px;" nz-typography nzEllipsis>Linhdepzai</div>
-            <div style="color: #fff;" nz-typography nzEllipsis>Linhdepzai@gmail.com</div>
+            <div style="color: #fff; margin-top: 7.5px;" nz-typography nzEllipsis>{{ user.fullName }}</div>
+            <div style="color: #fff;" nz-typography nzEllipsis>{{ user.email }}</div>
         </div>
     </div>
 </div>

@@ -1,9 +1,9 @@
 import { Level, Position } from "../enums/Enum";
 
 export interface Login {
-    userNameOrEmailAddress: string;
+    email: string;
     password: string;
-    rememberClient: boolean;
+    rememberMe: boolean;
 }
 
 export interface Employee {

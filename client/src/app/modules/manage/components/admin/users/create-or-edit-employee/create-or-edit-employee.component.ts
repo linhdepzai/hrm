@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Bank, Level, Position } from 'src/app/enums/Enum';
-import { Department } from 'src/app/interfaces/interfaceRequest';
+import { Department } from 'src/app/interfaces/interfaces';
 import { ManageService } from 'src/app/modules/manage/services/manage.service';
 
 @Component({

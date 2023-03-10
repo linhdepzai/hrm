@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Level, Position } from 'src/app/enums/Enum';
+import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { ManageService } from '../../services/manage.service';
 
 @Component({
   selector: 'app-profile',
@@ -6,12 +9,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  user: any;
+  user!: LoginResponse;
   isVisibleModal: boolean = false;
-  constructor() { }
+  level = Level;
+  position = Position;
+
+  constructor(
+    private manageService: ManageService,
+  ) { }
 
   ngOnInit(): void {
-    this.user = sessionStorage.getItem('user') || '{}';
+    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
   }
 
   refresh() {
@@ -20,5 +28,14 @@ export class ProfileComponent implements OnInit {
 
   openModalChangeInfo() {
     this.isVisibleModal = true;
+  }
+
+  getDepartment(id: string) {
+    let department: any;
+    this.manageService.departmentList$
+      .subscribe((data: any[]) => {
+        department = data.find(d => d.id == id);
+      });
+    return department;
   }
 }
