@@ -20,6 +20,12 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
+        [HttpGet("getAll")]
+        public async Task<ActionResult> GetAll()
+        {
+            var list = await _dataContext.OnLeave.AsNoTracking().ToListAsync();
+            return Ok(list);
+        }
         [HttpPost("requestLeave")]
         public async Task<ActionResult> Create(CreateOrEditOnLeaveDto input)
         {
@@ -32,12 +38,20 @@ namespace HRM.Controllers
                     DateLeave = i.DateLeave,
                     Option = i.Option,
                     Reason = i.Reason,
-                    Status = Status.New,
+                    Status = Status.Pending,
                 };
                 await _dataContext.OnLeave.AddAsync(onLeave);
             };
             await _dataContext.SaveChangesAsync();
             return Ok(input);
+        }
+
+        [HttpDelete("delete")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            _dataContext.OnLeave.Remove(await _dataContext.OnLeave.FindAsync(id));
+            await _dataContext.SaveChangesAsync();
+            return Ok(id);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Bank, Level, Position } from "../enums/Enum";
+import { Bank, Level, OptionOnLeave, Position, Status } from "../enums/Enum";
 
 export interface LoginResponse {
     id: string;
@@ -27,4 +27,13 @@ export interface DepartmentResponse {
     name: string,
     color: string,
     icon: string
+}
+
+export interface OnLeaveResponse {
+    id: string,
+    employeeId: string,
+    dateLeave: Date,
+    option: OptionOnLeave,
+    reason: string,
+    status: Status
 }

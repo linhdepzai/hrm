@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Bank, Level, OptionOnLeave, Position } from 'src/app/enums/Enum';
-import { DepartmentResponse } from 'src/app/interfaces/interfaceReponse';
+import { DepartmentResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -12,6 +12,7 @@ import { ApiService } from 'src/app/services/api.service';
 export class ManageService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
   public departmentList$ = new BehaviorSubject<DepartmentResponse[]>([]);
+  public onLeaveList$ = new BehaviorSubject<OnLeaveResponse[]>([]);
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
   public positionList = new BehaviorSubject<{ value: Position, label: string }[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
@@ -25,6 +26,7 @@ export class ManageService {
     this.dataList();
     this.getAllDepartment();
     this.getAllEmployee();
+    this.getAllOnLeave();
   }
 
   getAllDepartment() {
@@ -93,12 +95,40 @@ export class ManageService {
       });
   }
 
-  requestOnLeave(form: any){
+  requestOnLeave(form: any) {
     this.apiService
       .requestOnLeave(form)
-      .subscribe(()=> {
-        console.log(form)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.getAllOnLeave();
+        this.notification.success('Successfully!!!', `There are ${response.onLeave.length} items have been added!`);
       });
+  }
+
+  getAllOnLeave() {
+    this.apiService
+      .getAllOnLeave()
+      .subscribe((response: OnLeaveResponse[]) => {
+        this.onLeaveList$.next(response);
+      });
+  }
+
+  deleteOnLeave(id: string) {
+    this.apiService
+      .deleteOnLeave(id)
+      .subscribe((response) => {
+        if(response.length == 36){
+          const index = this.onLeaveList$.value.findIndex((item) => item.id == response);
+          this.onLeaveList$.value.splice(index, 1);
+          this.onLeaveList$.next([...this.onLeaveList$.value]);
+          this.notification.success('Successfully!', 'This item has been deleted!');
+        } else {
+          this.notification.error('Error!!!', 'An error occurred during execution!');
+        }
+      })
   }
 
 
@@ -175,10 +205,10 @@ export class ManageService {
       { value: OptionOnLeave.OffFullDay, label: 'Off Full Day' },
       { value: OptionOnLeave.Late, label: 'Late/Leave Early' }]);
     this.bankList.next([Bank.Techcombank, Bank.ACB, Bank.Agribank,
-      Bank.BIDV, Bank.DongABank, Bank.MBB, Bank.MSB, Bank.OCB,
-      Bank.Sacombank, Bank.ShinhanBank, Bank.TPBank, Bank.VCB,
-      Bank.VietCapitalBank, Bank.VietinBank, Bank.VPBank, Bank.HDBank,
-      Bank.VIETCOMBANK, Bank.NamABank, Bank.VIB]);
+    Bank.BIDV, Bank.DongABank, Bank.MBB, Bank.MSB, Bank.OCB,
+    Bank.Sacombank, Bank.ShinhanBank, Bank.TPBank, Bank.VCB,
+    Bank.VietCapitalBank, Bank.VietinBank, Bank.VPBank, Bank.HDBank,
+    Bank.VIETCOMBANK, Bank.NamABank, Bank.VIB]);
     this.iconList.next(['house', 'magnifying-glass', 'user', 'check',
       'download', 'image', 'phone', 'bars', 'envelope', 'star',
       'location-dot', 'music', 'wand-magic-sparkles', 'heart',
