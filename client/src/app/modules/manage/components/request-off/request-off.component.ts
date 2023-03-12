@@ -4,7 +4,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { OptionOnLeave, Status } from 'src/app/enums/Enum';
-import { OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
+import { LoginResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { ManageService } from '../../services/manage.service';
 
 @Component({
@@ -15,11 +15,12 @@ import { ManageService } from '../../services/manage.service';
 export class RequestOffComponent implements OnInit {
   date = new Date();
   requestList: { date: Date, option: OptionOnLeave, status: Status }[] = [];
-  optionRequestList = new Observable<any[]>();
+  optionRequestList = new Observable<{ value: OptionOnLeave; label: string }[]>();
   onLeaveList: OnLeaveResponse[] = [];
   isVisibleModal: boolean = false;
   status = Status;
   confirmModal?: NzModalRef;
+  user!: LoginResponse;
 
   constructor(
     private manageService: ManageService,
@@ -29,10 +30,11 @@ export class RequestOffComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.requestList = [];
     this.optionRequestList = this.manageService.requestOffList;
     this.manageService.onLeaveList$.subscribe((data) => {
-      this.onLeaveList = data;
+      this.onLeaveList = data.filter((item) => item.employeeId == this.user.id);
     });
   }
 

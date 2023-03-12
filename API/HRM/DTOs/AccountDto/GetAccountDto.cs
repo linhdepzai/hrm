@@ -24,5 +24,6 @@ namespace HRM.DTOs.AccountDto
         public string PlaceOfResidence { get; set; }
         public string DateOfIssue { get; set; }
         public string IssuedBy { get; set; }
+        public string UserCode { get; set; }
     }
 }

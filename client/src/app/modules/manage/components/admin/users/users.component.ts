@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Level, Position } from 'src/app/enums/Enum';
+import { DepartmentResponse } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { ManageService } from '../../../services/manage.service';
 
@@ -14,8 +15,8 @@ export class UsersComponent implements OnInit {
   employeeList: Employee[] = [];
   level = Level;
   position = Position;
-  levelList = new Observable<any[]>();
-  positionList = new Observable<any[]>();
+  levelList = new Observable<{ value: Level; label: string }[]>();
+  positionList = new Observable<{ value: Position; label: string }[]>();
   departmentList = new Observable<Department[]>();
 
   constructor(
@@ -30,10 +31,10 @@ export class UsersComponent implements OnInit {
   }
 
   getDepartmentName(id: string) {
-    let department: any;
+    let department!: DepartmentResponse;
     this.manageService.departmentList$
-      .subscribe((data: any[]) => {
-        department = data.find(d => d.id == id);
+      .subscribe((data: DepartmentResponse[]) => {
+        department = data.find(d => d.id == id)!;
       });
     return department;
   }

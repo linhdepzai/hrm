@@ -10,13 +10,14 @@ namespace HRM.Entities
     {
         [Key]
         public Guid Id { get; set; }
-        public string Password { get; set; }
+        public string UserCode { get; set; }
         [Required, StringLength(50)]
         public string FullName { get; set; }
         [Required]
         public bool Sex { get; set; }
         [Required, StringLength(50)]
         public string Email { get; set; }
+        public string Password { get; set; }
         [Required, StringLength(11)]
         public string Phone { get; set; }
         [Required]

@@ -42,7 +42,7 @@
                         [nzDefaultOpenValue]="defaultOpenValue"></nz-time-picker>
                 </nz-form-control>
             </nz-form-item>
-            <span>Total Time: {{ workingTimeForm.value.morningTotalTime + workingTimeForm.value.afternoonTotalTime }}</span>
+            <span>Total Time: {{ calcTotalTime() }}h</span>
         </div>
         <div nz-col [nzSpan]="8">
             <nz-form-item>
@@ -74,7 +74,7 @@
         </div>
     </div>
 </form>
-<nz-table #table>
+<nz-table #table [nzData]="timeWorkingList">
     <thead>
         <tr>
             <th nzAlign="center">Request Date</th>
@@ -89,21 +89,24 @@
     </thead>
     <tbody>
         <tr *ngFor="let data of table.data">
-            <td>{{ data.fullName }}</td>
-            <td>{{ data.email }}</td>
-            <td nzAlign="center">{{ data.phone }}</td>
-            <td nzAlign="center">{{ data.phone }}</td>
-            <td nzAlign="center">{{ data.phone }}</td>
-            <td nzAlign="center">{{ data.phone }}</td>
-            <td nzAlign="center">{{ data.phone }}</td>
+            <td>{{ data.applyDate | date: 'dd/MM/YYYY' }}</td>
+            <td class="{{status[data.status]}}">{{ status[data.status] }}</td>
+            <td nzAlign="center">{{ data.applyDate | date: 'dd/MM/YYYY' }}</td>
+            <td nzAlign="center">{{ data.morningStartTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ data.morningEndTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ data.afternoonStartTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ data.afternoonStartTime | date: 'HH:mm' }}</td>
             <td nzAlign="center">
-                <button *ngIf="data.status == 2 else statusNew" nz-button nzType="primary" class="btn-action"><i
-                        class="fa-solid fa-pen-to-square"></i></button>
+                <button *ngIf="data.status == 2 else statusNew" nz-button nzType="primary" class="btn-action">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
                 <ng-template #statusNew>
-                    <button nz-button nzType="primary" class="btn-action"><i
-                            class="fa-solid fa-pen-to-square"></i></button>
-                    <button nz-button nzDanger nzType="primary" class="btn-action"><i
-                            class="fa-solid fa-trash-can"></i></button>
+                    <button nz-button nzDanger nzType="primary" class="btn-action">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    <button nz-button nzType="primary" class="btn-action mr-5">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
                 </ng-template>
             </td>
         </tr>

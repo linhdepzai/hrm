@@ -8,7 +8,7 @@ import { AuthenticationService } from 'src/app/modules/auth/services/authenticat
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
-  @Output() close = new EventEmitter<any>();
+  @Output() close = new EventEmitter<boolean>();
   coverAvt: string = '';
   user!: LoginResponse;
 

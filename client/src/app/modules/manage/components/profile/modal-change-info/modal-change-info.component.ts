@@ -15,8 +15,8 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   @Input() user!: LoginResponse;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   infoForm!: FormGroup;
-  levelList = new Observable<any[]>();
-  positionList = new Observable<any[]>();
+  levelList = new Observable<{ value: Level; label: string }[]>();
+  positionList = new Observable<{ value: Position; label: string }[]>();
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<DepartmentResponse[]>();
 

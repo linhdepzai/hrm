@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { DepartmentResponse, LoginResponse, OnLeaveResponse } from '../interfaces/interfaceReponse';
+import { DepartmentResponse, LoginResponse, OnLeaveResponse, TimeWorkingResponse } from '../interfaces/interfaceReponse';
 import { Employee, Login } from '../interfaces/interfaces';
 
 @Injectable({
@@ -55,5 +55,9 @@ export class ApiService {
 
   deleteOnLeave(id: string): Observable<string> {
     return this.httpClient.delete<string>(environment.baseUrl + 'onleave/delete?id=' + id);
+  }
+
+  getAllTimeWorking(): Observable<TimeWorkingResponse[]> {
+    return this.httpClient.get<TimeWorkingResponse[]>(environment.baseUrl + 'timeworking/getAll');
   }
 }

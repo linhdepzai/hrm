@@ -141,6 +141,8 @@ registerLocaleData(en);
         NzAvatarModule,
         NzTimePickerModule,
         NzTypographyModule,
+        NzSpinModule,
+        NzMessageModule
     ]
 })
 export class ManageModule { }

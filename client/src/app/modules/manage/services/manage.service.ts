@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Bank, Level, OptionOnLeave, Position } from 'src/app/enums/Enum';
-import { DepartmentResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
+import { DepartmentResponse, OnLeaveResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -13,25 +14,35 @@ export class ManageService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
   public departmentList$ = new BehaviorSubject<DepartmentResponse[]>([]);
   public onLeaveList$ = new BehaviorSubject<OnLeaveResponse[]>([]);
+  public timeWorkingList$ = new BehaviorSubject<TimeWorkingResponse[]>([]);
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
   public positionList = new BehaviorSubject<{ value: Position, label: string }[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
   public iconList = new BehaviorSubject<string[]>([]);
   public requestOffList = new BehaviorSubject<{ value: OptionOnLeave, label: string }[]>([]);
+  public loading = new BehaviorSubject<boolean>(false);
 
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
+    private message: NzMessageService,
   ) {
+    this.loading.next(true);
     this.dataList();
     this.getAllDepartment();
     this.getAllEmployee();
     this.getAllOnLeave();
+    this.getAllTimeWorking();
+    this.loading.next(false);
   }
 
   getAllDepartment() {
     this.apiService
       .getAllDepartment()
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
       .subscribe((response: DepartmentResponse[]) => {
         this.departmentList$.next(response);
       });
@@ -60,6 +71,10 @@ export class ManageService {
   getAllEmployee() {
     this.apiService
       .getAllEmployee()
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
       .subscribe((response) => {
         this.employeeList$.next(response);
       });
@@ -111,6 +126,10 @@ export class ManageService {
   getAllOnLeave() {
     this.apiService
       .getAllOnLeave()
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
       .subscribe((response: OnLeaveResponse[]) => {
         this.onLeaveList$.next(response);
       });
@@ -120,7 +139,7 @@ export class ManageService {
     this.apiService
       .deleteOnLeave(id)
       .subscribe((response) => {
-        if(response.length == 36){
+        if (response.length == 36) {
           const index = this.onLeaveList$.value.findIndex((item) => item.id == response);
           this.onLeaveList$.value.splice(index, 1);
           this.onLeaveList$.next([...this.onLeaveList$.value]);
@@ -128,7 +147,22 @@ export class ManageService {
         } else {
           this.notification.error('Error!!!', 'An error occurred during execution!');
         }
-      })
+      });
+  }
+
+  getAllTimeWorking() {
+    this.apiService
+      .getAllTimeWorking()
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+      .subscribe((response: TimeWorkingResponse[]) => {
+        const data = response.sort((a, b) => {
+          return new Date(b.applyDate).getTime() - new Date(a.applyDate).getTime();
+        });
+        this.timeWorkingList$.next(data);
+      });
   }
 
 

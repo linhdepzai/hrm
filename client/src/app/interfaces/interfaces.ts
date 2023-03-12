@@ -11,6 +11,7 @@ export interface Employee {
     fullName: string,
     sex: true,
     email: string,
+    password: string,
     phone: string,
     doB: Date,
     level: Level,

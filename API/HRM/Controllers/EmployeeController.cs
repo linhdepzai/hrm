@@ -6,6 +6,8 @@ using HRM.DTOs.EmployeeDto;
 using HRM.Entities;
 using Microsoft.EntityFrameworkCore;
 using HRM.Enum;
+using System.Drawing;
+using System.Text;
 
 namespace HRM.Controllers
 {
@@ -30,11 +32,11 @@ namespace HRM.Controllers
         {
             if (input.Id == null)
             {
-                return await Update(input);
+                return await Create(input);
             }
             else
             {
-                return await Create(input);
+                return await Update(input);
             }
         }
         private async Task<ActionResult> Create(CreateOrEditEmployeeDto input)
@@ -46,9 +48,11 @@ namespace HRM.Controllers
             var employee = new Employee
             {
                 Id = new Guid(),
+                UserCode = Random(input),
                 FullName = input.FullName,
                 Sex = input.Sex,
                 Email = input.Email,
+                Password = input.Password,
                 Phone = input.Phone,
                 DoB = input.DoB,
                 Level = input.Level,
@@ -68,6 +72,19 @@ namespace HRM.Controllers
                 Status = Status.Approved,
             };
             await _dataContext.Employee.AddAsync(employee);
+            var today = DateTime.Today;
+            var timeWorking = new TimeWorking
+            {
+                Id = new Guid(),
+                EmployeeId = employee.Id,
+                MorningStartTime = today.AddHours(8.5),
+                MorningEndTime = today.AddHours(12),
+                AfternoonStartTime = today.AddHours(13),
+                AfternoonEndTime = today.AddHours(17.5),
+                ApplyDate = today,
+                Status = Status.Approved,
+            };
+            await _dataContext.TimeWorking.AddAsync(timeWorking);
             await _dataContext.SaveChangesAsync();
             return Ok(employee);
         }
@@ -127,6 +144,53 @@ namespace HRM.Controllers
             _dataContext.Department.Remove(await _dataContext.Department.FindAsync(id));
             await _dataContext.SaveChangesAsync();
             return Ok("Removed");
+        }
+        public static string Random(CreateOrEditEmployeeDto input)
+        {
+            string randomStr = "0";
+            switch (input.Position)
+            {
+                case Position.Dev:
+                    randomStr += "1";
+                    break;
+                case Position.QA:
+                    randomStr += "2";
+                    break;
+                case Position.BA:
+                    randomStr += "3";
+                    break;
+                case Position.PM:
+                    randomStr += "4";
+                    break;
+                case Position.DevOps:
+                    randomStr += "5";
+                    break;
+                case Position.DataEngineer:
+                    randomStr += "6";
+                    break;
+                case Position.ScrumMaster:
+                    randomStr += "7";
+                    break;
+            }
+            if (input.Sex == true) randomStr += "01"; else randomStr += "02";
+            randomStr += DateTime.Now.ToString("yy");
+            try
+            {
+                int[] myIntArray = new int[4];
+                int x;
+                //that is to create the random # and add it to uour string
+                Random autoRand = new Random();
+                for (x = 0; x < 4; x++)
+                {
+                    myIntArray[x] = System.Convert.ToInt32(autoRand.Next(0, 9));
+                    randomStr += (myIntArray[x].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                randomStr = "error";
+            }
+            return randomStr;
         }
     }
 }

@@ -28,6 +28,7 @@ import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
 import { SettingComponent } from './layout/setting/setting.component';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 registerLocaleData(en);
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ registerLocaleData(en);
     NzTypographyModule,
     NzAvatarModule,
     NzRadioModule,
+    NzSpinModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

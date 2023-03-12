@@ -29,6 +29,12 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Password</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Password!">
+                <input nz-input placeholder="Enter your password" formControlName="password" id="password" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Phone</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Phone!">
                 <input nz-input placeholder="Enter your phone" formControlName="phone" id="phone" />

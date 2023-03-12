@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { OptionOnLeave } from 'src/app/enums/Enum';
+import { OptionOnLeave, Status } from 'src/app/enums/Enum';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { ManageService } from '../../../services/manage.service';
 
@@ -12,7 +12,7 @@ import { ManageService } from '../../../services/manage.service';
 })
 export class ModalRequestOffComponent implements OnInit, OnChanges {
   @Input() isVisibleModal: boolean = false;
-  @Input() requestList: any[] = [];
+  @Input() requestList: { date: Date, option: OptionOnLeave, status: Status }[] = [];
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   @Output() submit: EventEmitter<boolean> = new EventEmitter();
   requestOnLeaveForm!: FormGroup;
@@ -43,12 +43,12 @@ export class ModalRequestOffComponent implements OnInit, OnChanges {
   }
 
   getNameOptionLeave(option: OptionOnLeave){
-    let name: any;
+    let name!: { value: OptionOnLeave; label: string};
     this.manageService.requestOffList
-      .subscribe((data: any[]) => {
-        name = data.find(d => d.value == option)?.label;
+      .subscribe((data: { value: OptionOnLeave; label: string}[]) => {
+        name = data.find(d => d.value == option)!;
       });
-    return name;
+    return name.label;
   }
 
   handleSubmit(){

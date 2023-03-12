@@ -19,7 +19,8 @@ export interface LoginResponse {
     placeOfOrigin: string,
     placeOfResidence: string,
     dateOfIssue: string,
-    issuedBy: string
+    issuedBy: string,
+    userCode: string
 }
 
 export interface DepartmentResponse {
@@ -35,5 +36,16 @@ export interface OnLeaveResponse {
     dateLeave: Date,
     option: OptionOnLeave,
     reason: string,
+    status: Status
+}
+
+export interface TimeWorkingResponse {
+    id: string,
+    employeeId: string,
+    morningStartTime: Date,
+    morningEndTime: Date,
+    afternoonStartTime: Date,
+    afternoonEndTime: Date,
+    applyDate: Date,
     status: Status
 }

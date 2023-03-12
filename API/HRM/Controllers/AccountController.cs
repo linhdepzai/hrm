@@ -46,6 +46,7 @@ namespace HRM.Controllers
                 PlaceOfResidence = user.PlaceOfResidence,
                 DateOfIssue = user.DateOfIssue,
                 IssuedBy = user.IssuedBy,
+                UserCode = user.UserCode,
             };
         }
     }

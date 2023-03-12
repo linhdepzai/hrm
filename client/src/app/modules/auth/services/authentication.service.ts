@@ -16,7 +16,7 @@ export class AuthenticationService {
     private notification: NzNotificationService,
     private router: Router,
     private apiService: ApiService
-  ) { 
+  ) {
     if (sessionStorage.getItem('user') || localStorage.getItem('user')) {
       this.isLogin.next(true);
     } else {
@@ -28,13 +28,13 @@ export class AuthenticationService {
     this.apiService.login(loginForm)
       .pipe(catchError((err) => of(err)))
       .subscribe((response: LoginResponse) => {
-        if (response.id){
-          if(loginForm.rememberMe == true){
+        if (response.id) {
+          if (loginForm.rememberMe == true) {
             localStorage.setItem('user', JSON.stringify(response));
           } else {
             sessionStorage.setItem('user', JSON.stringify(response));
           };
-          this.notification.create('success', `Hello ${response.fullName}!`, '');
+          this.notification.success(`Hello ${response.fullName}!`, '');
           this.router.navigate(['manage/home']);
           this.isLogin.next(true);
         } else {

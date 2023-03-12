@@ -22,7 +22,7 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Sex</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Sex!">
-                <nz-radio-group [ngModel]="true" formControlName="sex" id="sex">
+                <nz-radio-group [ngModel]="infoForm.value.sex" formControlName="sex" id="sex">
                     <label nz-radio [nzValue]="true">Male</label>
                     <label nz-radio [nzValue]="false">Female</label>
                 </nz-radio-group>

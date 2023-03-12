@@ -1,8 +1,7 @@
 <div class="title">My Profile</div>
 <div nz-row>
     <div nz-col [nzSpan]="12">
-        <span>Status: </span>
-        <span style="color: #4caf50; font-weight: bold;">Approved</span>
+        <span>Usercode: {{ user.userCode }}</span>
     </div>
     <div nz-col [nzSpan]="12" class="action">
         <button nz-button nzType="primary" (click)="refresh()" class="mr-5">
@@ -24,8 +23,8 @@
                 <app-tag [label]="level[user.level]" size></app-tag>
                 <app-tag [label]="position[user.position]" size></app-tag>
                 <app-tag 
-                    [label]="getDepartment(user.departmentId)?.name" 
-                    [color]="getDepartment(user.departmentId)?.color" 
+                    [label]="getDepartment(user.departmentId).name" 
+                    [color]="getDepartment(user.departmentId).color" 
                     size></app-tag>
             </div>
         </div>
@@ -66,7 +65,7 @@
                 </div>
                 <div class="line">
                     <span class="fw-bold">Department: </span>
-                    <span>{{ getDepartment(user.departmentId)?.name }}</span>
+                    <span>{{ getDepartment(user.departmentId).name }}</span>
                 </div>
             </div>
         </div>

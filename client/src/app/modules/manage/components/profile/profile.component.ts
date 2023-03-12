@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Level, Position } from 'src/app/enums/Enum';
-import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { ManageService } from '../../services/manage.service';
 
 @Component({
@@ -31,10 +31,10 @@ export class ProfileComponent implements OnInit {
   }
 
   getDepartment(id: string) {
-    let department: any;
+    let department!: DepartmentResponse;
     this.manageService.departmentList$
-      .subscribe((data: any[]) => {
-        department = data.find(d => d.id == id);
+      .subscribe((data: DepartmentResponse[]) => {
+        department = data.find(d => d.id == id)!;
       });
     return department;
   }

@@ -16,8 +16,8 @@ export class CreateOrEditEmployeeComponent implements OnInit {
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   title: string = 'Create';
   employeeForm!: FormGroup;
-  levelList = new Observable<any[]>();
-  positionList = new Observable<any[]>();
+  levelList = new Observable<{ value: Level; label: string }[]>();
+  positionList = new Observable<{ value: Position; label: string }[]>();
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<Department[]>();
   isVisibleModal: boolean = false;
@@ -42,6 +42,7 @@ export class CreateOrEditEmployeeComponent implements OnInit {
       fullName: [null, Validators.required],
       sex: [true, Validators.required],
       email: [null, Validators.required],
+      password: [null, Validators.required],
       phone: [null, Validators.required],
       doB: [null, Validators.required],
       level: [Level.Intern, Validators.required],
