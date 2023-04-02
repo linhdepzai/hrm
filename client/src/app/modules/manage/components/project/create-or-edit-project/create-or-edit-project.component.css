@@ -1,0 +1,12 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.step {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 1000px) {
+
+    nz-modal {
+        overflow: hidden;
+    }
+}

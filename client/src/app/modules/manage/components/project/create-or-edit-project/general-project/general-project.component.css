@@ -1,0 +1,11 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.btn-next {
+    bottom: 24px;
+    position: absolute;
+    right: 36px;
+}
+
+nz-date-picker {
+    width: 100%;
+}

@@ -23,8 +23,8 @@
                 <app-tag [label]="level[user.level]" size></app-tag>
                 <app-tag [label]="position[user.position]" size></app-tag>
                 <app-tag 
-                    [label]="getDepartment(user.departmentId).name" 
-                    [color]="getDepartment(user.departmentId).color" 
+                    [label]="getDepartment(user.departmentId)?.name" 
+                    [color]="getDepartment(user.departmentId)?.color" 
                     size></app-tag>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 </div>
                 <div class="line">
                     <span class="fw-bold">Department: </span>
-                    <span>{{ getDepartment(user.departmentId).name }}</span>
+                    <span>{{ getDepartment(user.departmentId)?.name }}</span>
                 </div>
             </div>
         </div>

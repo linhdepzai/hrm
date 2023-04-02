@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NzConfigService } from 'ng-zorro-antd/core/config';
-import { ApiService } from './services/api.service';
+import { DataService } from './services/data.service';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +13,9 @@ export class AppComponent {
   
   constructor(
     private nzConfigService: NzConfigService,
-    private setting: ApiService,
+    private setting: DataService,
   ) {
-    this.setting.themeColor.subscribe((data) => { this.theme = data });
-  }
-  
-  ngDoCheck(): void {
-    this.onChangeConfig();
+    this.setting.themeColor.subscribe((data) => { this.theme = data; this.onChangeConfig() });
   }
 
   onChangeConfig() {

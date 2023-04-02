@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 using HRM.DTOs.TimeWorkingDto;
 using HRM.DTOs.OnLeaveDto;
 
@@ -24,7 +25,13 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<ActionResult> GetAll()
         {
-            var list = await _dataContext.TimeWorking.AsNoTracking().ToListAsync();
+            var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
+            return Ok(list);
+        }
+        [HttpGet("getAllRequestOff")]
+        public async Task<ActionResult> GetAllRequestOff()
+        {
+            var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
             return Ok(list);
         }
         [HttpPut("edit")]
@@ -40,6 +47,7 @@ namespace HRM.Controllers
                 timeWorking.AfternoonStartTime = input.AfternoonStartTime;
                 timeWorking.AfternoonEndTime = input.AfternoonEndTime;
                 timeWorking.ApplyDate = input.ApplyDate;
+                timeWorking.RequestDate = input.RequestDate;
                 timeWorking.Status = Status.New;
             };
             _dataContext.TimeWorking.Update(timeWorking);

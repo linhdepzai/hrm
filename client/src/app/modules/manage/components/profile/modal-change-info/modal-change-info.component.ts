@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Bank, Level, Position } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { DataService } from 'src/app/services/data.service';
 import { ManageService } from '../../../services/manage.service';
 
 @Component({
@@ -22,14 +23,15 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
 
   constructor(
     private manageService: ManageService,
+    private dataService: DataService,
     private fb: FormBuilder,
   ) { }
   
   ngOnInit(): void {
     this.departmentList = this.manageService.departmentList$;
-    this.levelList = this.manageService.levelList;
-    this.positionList = this.manageService.positionList;
-    this.bankList = this.manageService.bankList;
+    this.levelList = this.dataService.levelList;
+    this.positionList = this.dataService.positionList;
+    this.bankList = this.dataService.bankList;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -40,6 +42,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   changeInfoForm() {
     this.infoForm = this.fb.group({
       id: [null, Validators.required],
+      userCode: [null, Validators.required],
       fullName: [null, Validators.required],
       sex: [true, Validators.required],
       email: [null, Validators.required],
@@ -63,7 +66,8 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
 
   submitForm() {
     if (this.infoForm.valid) {
-      this.manageService.saveEmployee(this.infoForm.value);
+      this.infoForm.controls['userCode'].setValue(this.user.userCode);
+      this.manageService.requestChangeInfor(this.infoForm.value);
     } else {
       Object.values(this.infoForm.controls).forEach(control => {
         if (control.invalid) {

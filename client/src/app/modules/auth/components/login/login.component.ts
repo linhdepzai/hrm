@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
@@ -10,6 +11,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class LoginComponent implements OnInit {
   loginForm!: UntypedFormGroup;
   passwordVisible = false;
+  loading = new Observable<boolean>();
+
   constructor(
     private fb: UntypedFormBuilder,
     private authenticationService: AuthenticationService,
@@ -17,6 +20,7 @@ export class LoginComponent implements OnInit {
   
   ngOnInit(): void {
     this.initForm();
+    this.loading = this.authenticationService.loading;
   }
 
   initForm() {

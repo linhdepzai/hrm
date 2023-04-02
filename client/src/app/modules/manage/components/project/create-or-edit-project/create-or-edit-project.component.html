@@ -1,0 +1,16 @@
+<nz-modal [nzBodyStyle]="{height: '500px', margin: '0 12px'}" [nzStyle]="{top: '5vh'}" nzWidth="1000px"
+    [(nzVisible)]="visibleCreateOrEditProject" [nzTitle]="title" [nzContent]="content" (nzOnCancel)="handleCancel()"
+    [nzFooter]="null" nzKeyboard></nz-modal>
+<ng-template #title>Create Project</ng-template>
+<ng-template #content>
+    <nz-steps [nzCurrent]="current" class="step">
+        <nz-step nzTitle="General"></nz-step>
+        <nz-step nzTitle="Team"></nz-step>
+    </nz-steps>
+    <div *ngIf="current != 1; else team">
+        <app-general-project [backForm]="generalForm" (next)="actionPage($event, 'next')"></app-general-project>
+    </div>
+    <ng-template #team>
+        <app-team-project [generalForm]="generalForm" (previous)="actionPage($event, 'previous')"></app-team-project>
+    </ng-template>
+</ng-template>

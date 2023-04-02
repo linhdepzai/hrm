@@ -1,4 +1,4 @@
-import { Bank, Level, OptionOnLeave, Position, Status } from "../enums/Enum";
+import { Bank, Level, OptionOnLeave, Position, Priority, ProjectType, Status, StatusTask } from "../enums/Enum";
 
 export interface LoginResponse {
     id: string;
@@ -48,4 +48,28 @@ export interface TimeWorkingResponse {
     afternoonEndTime: Date,
     applyDate: Date,
     status: Status
+}
+
+export interface ProjectResponse {
+    id: string,
+    projectName: string,
+    description: string,
+    projectType: ProjectType,
+    projectCode: string,
+    createDate: Date,
+    deadlineDate: Date,
+    completeDate: Date | null,
+    priorityCode: Priority,
+    statusCode: StatusTask,
+    pm: string
+}
+
+export interface TimeKeepingResponse {
+    id: string | null,
+    employeeId: string,
+    checkin: Date,
+    photoCheckin: string,
+    checkout: Date,
+    photoCheckout: string,
+    punish: boolean,
 }

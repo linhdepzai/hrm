@@ -21,7 +21,8 @@
                             [switchCamera]="nextWebcamObservable"></webcam>
                     </div>
                 </ng-template>
-                <button class="btn-checkin" nz-button nzType="primary" (click)="showConfirm()">Check In</button>
+                <button class="btn-checkin" nz-button nzType="primary" (click)="showConfirm()"
+                    [disabled]="disableBtn">{{ btnText }}</button>
             </div>
             <div nz-col nzSpan="8" [ngSwitch]="checkinList.length">
                 <div *ngSwitchCase="0" style="height: 100%;">
@@ -30,18 +31,34 @@
                     <div class="image-check" style="border: 1px dashed #000; height: 49%;"></div>
                 </div>
                 <div *ngSwitchCase="1" style="height: 100%;">
-                    <img [src]="checkinList[0].photoCheckin" alt="Image Checkin" class="image-check">
+                    <img [src]="checkinList[0].photo" alt="Image Checkin" class="image-check">
                     <div class="image-check" style="border: 1px dashed #000; height: 49%; margin-top: 24px;"></div>
                 </div>
                 <div *ngSwitchDefault>
-                    <img [src]="checkinList[checkinList.length - 1].photoCheckin" alt="Image Checkin" class="image-check" style="padding-bottom: 24px;">
-                    <img [src]="checkinList[checkinList.length - 2].photoCheckin" alt="Image Checkin" class="image-check">
+                    <img [src]="checkinList[0].photo" alt="Image Checkin" class="image-check"
+                        style="padding-bottom: 24px;">
+                    <img [src]="checkinList[1].photo" alt="Image Checkin" class="image-check">
                 </div>
             </div>
         </div>
-        <div>
-
-
+        <div (click)="openModal()" style="height: 32px;">
+            <span class="fw-bold">History Check In</span>
+            <span style="float: right;">
+                <button nz-button nzType="primary">Detail</button>
+            </span>
+        </div>
+        <div (click)="openModal()" class="checkin-list">
+            <div *ngFor="let item of checkinList">
+                <span>{{item.time | date: 'dd/MM/YYYY'}} | You
+                    <span [ngStyle]="{color: item.checkin ? 'blue' : 'red', fontWeight: 'bold'}">{{item.checkin ?
+                        'check in' : 'check out'}} </span>
+                    at {{item.time | date: 'HH:mm'}}
+                </span>
+                <span *ngIf="item.punish">
+                    and
+                </span>
+            </div>
         </div>
     </div>
 </div>
+<app-modal-list-checkin [visibleModal]="visibleModalList" (cancel)="visibleModalList = false"></app-modal-list-checkin>

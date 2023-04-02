@@ -32,7 +32,7 @@
                 </div>
                 <div nz-col [nzSpan]="12">
                     <button nz-button nzType="primary" class="login-form-button" [disabled]="!loginForm.valid"
-                        (click)="submitForm()">Log in</button>
+                        (click)="submitForm()" [nzLoading]="loading | async">Log in</button>
                 </div>
             </div>
             <button nz-button class="login-form-expand login-form-margin" nzType="primary">Log In With Google</button>

@@ -2,19 +2,28 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { DepartmentResponse, LoginResponse, OnLeaveResponse, TimeWorkingResponse } from '../interfaces/interfaceReponse';
-import { Employee, Login } from '../interfaces/interfaces';
+import { Status } from '../enums/Enum';
+import { DepartmentResponse, LoginResponse, OnLeaveResponse, ProjectResponse, TimeKeepingResponse, TimeWorkingResponse } from '../interfaces/interfaceReponse';
+import { CheckinOrCheckout, CreateProject, Employee, Login } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  themeColor: BehaviorSubject<string> = new BehaviorSubject<string>('#096dd9');
+  
 
   constructor(private httpClient: HttpClient) { }
 
   login(payload: Login): Observable<LoginResponse> {
     return this.httpClient.post<LoginResponse>(environment.baseUrl + 'account/login', payload);
+  }
+
+  requestChangeInfor(payload: Employee): Observable<Employee> {
+    return this.httpClient.put<Employee>(environment.baseUrl + 'account/requestChangeInfor', payload);
+  }
+
+  updateStatusUserInfo(payload: {id: string, status: Status}): Observable<Employee> {
+    return this.httpClient.put<Employee>(environment.baseUrl + 'employee/updateStatus', payload);
   }
 
   getAllDepartment(): Observable<DepartmentResponse[]> {
@@ -29,16 +38,12 @@ export class ApiService {
     return this.httpClient.delete(environment.baseUrl + 'department/delete?id=' + id);
   }
 
-  getAllEmployee(): Observable<any> {
-    return this.httpClient.get(environment.baseUrl + 'employee/getAll');
+  getAllEmployee(): Observable<Employee[]> {
+    return this.httpClient.get<Employee[]>(environment.baseUrl + 'employee/getAll');
   }
 
-  saveEmployee(payload: Employee): Observable<any> {
-    return this.httpClient.post(environment.baseUrl + 'employee/save', payload);
-  }
-
-  updateStatusEmployee(payload: any): Observable<any> {
-    return this.httpClient.put(environment.baseUrl + 'employee/updateStatus', payload);
+  saveEmployee(payload: Employee): Observable<Employee> {
+    return this.httpClient.post<Employee>(environment.baseUrl + 'employee/save', payload);
   }
 
   deleteEmployee(id: any): Observable<any> {
@@ -59,5 +64,29 @@ export class ApiService {
 
   getAllTimeWorking(): Observable<TimeWorkingResponse[]> {
     return this.httpClient.get<TimeWorkingResponse[]>(environment.baseUrl + 'timeworking/getAll');
+  }
+
+  getAllProject(): Observable<ProjectResponse[]>{
+    return this.httpClient.get<ProjectResponse[]>(environment.baseUrl + 'project/getall');
+  }
+
+  getOnlyProject(projectId: string): Observable<CreateProject>{
+    return this.httpClient.get<CreateProject>(environment.baseUrl + 'project/getAProject?projectId=' + projectId);
+  }
+
+  saveProject(payload: CreateProject): Observable<CreateProject>{
+    return this.httpClient.post<CreateProject>(environment.baseUrl + 'project/save', payload);
+  }
+
+  getTimeKeepingForUser(id: string): Observable<TimeKeepingResponse[]>{
+    return this.httpClient.get<TimeKeepingResponse[]>(environment.baseUrl + 'timekeeping/getTimeKeepingForUser?id=' + id);
+  }
+
+  checkinOrCheckout(payload: CheckinOrCheckout): Observable<TimeKeepingResponse>{
+    return this.httpClient.post<TimeKeepingResponse>(environment.baseUrl + 'timekeeping/checkinOrCheckout', payload);
+  }
+
+  getAllRequestChangeInfo(): Observable<Employee[]>{
+    return this.httpClient.get<Employee[]>(environment.baseUrl + 'employee/getAllRequestChangeInfo');
   }
 }

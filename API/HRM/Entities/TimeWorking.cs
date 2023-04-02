@@ -16,6 +16,7 @@ namespace HRM.Entities
         public DateTime AfternoonStartTime { get; set; }
         public DateTime AfternoonEndTime { get; set; }
         public DateTime ApplyDate { get; set; }
+        public DateTime RequestDate { get; set; }
         public Status Status { get; set; }
     }
 }

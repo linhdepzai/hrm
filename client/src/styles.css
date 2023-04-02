@@ -73,6 +73,22 @@ label {
     color: pink;
 }
 
+.morning {
+    color:#2600ff;
+}
+
+.afternoon {
+    color:#a11ec2;
+}
+
+.fullday {
+    color:#ff0000;
+}
+
+.late {
+    color:#ff9100;
+}
+
 .New {
     color: #0061ff;
     font-weight: bold;

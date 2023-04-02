@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Level, Position } from 'src/app/enums/Enum';
 import { DepartmentResponse } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
+import { DataService } from 'src/app/services/data.service';
 import { ManageService } from '../../../services/manage.service';
 
 @Component({
@@ -21,13 +22,14 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private manageService: ManageService,
-  ) { }
+    private dataService: DataService,
+    ) { }
 
   ngOnInit(): void {
     this.manageService.employeeList$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.manageService.departmentList$;
-    this.levelList = this.manageService.levelList;
-    this.positionList = this.manageService.positionList;
+    this.levelList = this.dataService.levelList;
+    this.positionList = this.dataService.positionList;
   }
 
   getDepartmentName(id: string) {

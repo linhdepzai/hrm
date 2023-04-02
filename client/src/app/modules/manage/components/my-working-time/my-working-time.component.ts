@@ -58,7 +58,8 @@ export class MyWorkingTimeComponent implements OnInit {
     const afternoonTotalMinute = ((afternoonEndTime == null ? '00:00' : afternoonEndTime).substring(3, 5) - (afternoonStartTime == null ? '00:00' : afternoonStartTime).substring(3, 5).substring(3, 5)) / 60;
     this.workingTimeForm.controls['morningTotalTime'].setValue(morningTotalHour + morningTotalMinute);
     this.workingTimeForm.controls['afternoonTotalTime'].setValue(afternoonTotalHour + afternoonTotalMinute);
-    return (morningTotalHour + morningTotalMinute + afternoonTotalHour + afternoonTotalMinute).toFixed(2);
+    const totalTime = morningTotalHour + morningTotalMinute + afternoonTotalHour + afternoonTotalMinute;
+    return totalTime % 2 == 0 ? totalTime : totalTime.toFixed(2);
   }
 
   checkEdit() {

@@ -1,10 +1,11 @@
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
-import { Bank, Level, OptionOnLeave, Position } from 'src/app/enums/Enum';
-import { DepartmentResponse, OnLeaveResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
-import { Department, Employee } from 'src/app/interfaces/interfaces';
+import { Level, Position, Priority, ProjectType, StatusTask } from 'src/app/enums/Enum';
+import { DepartmentResponse, LoginResponse, OnLeaveResponse, ProjectResponse, TimeKeepingResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
+import { CheckinOrCheckout, CreateProject, Department, Employee } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 
 @Injectable({
@@ -15,25 +16,35 @@ export class ManageService {
   public departmentList$ = new BehaviorSubject<DepartmentResponse[]>([]);
   public onLeaveList$ = new BehaviorSubject<OnLeaveResponse[]>([]);
   public timeWorkingList$ = new BehaviorSubject<TimeWorkingResponse[]>([]);
-  public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
-  public positionList = new BehaviorSubject<{ value: Position, label: string }[]>([]);
-  public bankList = new BehaviorSubject<Bank[]>([]);
-  public iconList = new BehaviorSubject<string[]>([]);
-  public requestOffList = new BehaviorSubject<{ value: OptionOnLeave, label: string }[]>([]);
+  public projectList$ = new BehaviorSubject<ProjectResponse[]>([]);
+  public myTimeKeepingList$ = new BehaviorSubject<TimeKeepingResponse[]>([]);
+  public requestChangeInfoList$ = new BehaviorSubject<Employee[]>([]);
+  public project$ = new BehaviorSubject<CreateProject>({
+    id: null,
+    projectName: '',
+    description: '',
+    projectType: ProjectType.FF,
+    projectCode: '',
+    deadlineDate: null,
+    priorityCode: Priority.Medium,
+    statusCode: StatusTask.Open,
+    members: [],
+  });
   public loading = new BehaviorSubject<boolean>(false);
-
+  user: LoginResponse;
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
     private message: NzMessageService,
+    private datepipe: DatePipe
   ) {
-    this.loading.next(true);
-    this.dataList();
+    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.getAllDepartment();
     this.getAllEmployee();
     this.getAllOnLeave();
     this.getAllTimeWorking();
-    this.loading.next(false);
+    this.getAllProject();
+    this.getTimeKeepingForUser(this.user.id);
   }
 
   getAllDepartment() {
@@ -41,6 +52,7 @@ export class ManageService {
       .getAllDepartment()
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        this.loading.next(false);
         return of(err);
       }))
       .subscribe((response: DepartmentResponse[]) => {
@@ -49,10 +61,12 @@ export class ManageService {
   }
 
   saveDepartment(payload: Department) {
+    this.loading.next(true);
     this.apiService
       .saveDepartment(payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.loading.next(false);
         return of(err);
       }))
       .subscribe((response) => {
@@ -65,6 +79,7 @@ export class ManageService {
             this.departmentList$.next([response, ...this.departmentList$.value]);
           };
         };
+        this.loading.next(false);
       });
   }
 
@@ -81,10 +96,12 @@ export class ManageService {
   }
 
   saveEmployee(payload: Employee) {
+    this.loading.next(true);
     this.apiService
       .saveEmployee(payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.loading.next(false);
         return of(err);
       }))
       .subscribe((response) => {
@@ -97,20 +114,24 @@ export class ManageService {
             this.employeeList$.next([response, ...this.employeeList$.value]);
           };
         };
+        this.loading.next(false);
       });
   }
 
   deleteEmployee(id: string) {
+    this.loading.next(true);
     this.apiService
       .deleteEmployee(id)
       .subscribe(() => {
         const index = this.employeeList$.value.findIndex((item) => item.id == id);
         this.employeeList$.value.splice(index, 1);
         this.employeeList$.next([...this.employeeList$.value]);
+        this.loading.next(false);
       });
   }
 
   requestOnLeave(form: any) {
+    this.loading.next(true);
     this.apiService
       .requestOnLeave(form)
       .pipe(catchError((err) => {
@@ -136,6 +157,7 @@ export class ManageService {
   }
 
   deleteOnLeave(id: string) {
+    this.loading.next(true);
     this.apiService
       .deleteOnLeave(id)
       .subscribe((response) => {
@@ -147,6 +169,7 @@ export class ManageService {
         } else {
           this.notification.error('Error!!!', 'An error occurred during execution!');
         }
+        this.loading.next(false);
       });
   }
 
@@ -165,116 +188,105 @@ export class ManageService {
       });
   }
 
+  getAllProject() {
+    this.apiService
+      .getAllProject()
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+      .subscribe((response: ProjectResponse[]) => {
+        this.projectList$.next(response);
+      });
+  }
 
+  getOnlyProject(projectId: string) {
+    this.apiService
+      .getOnlyProject(projectId)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        return of(err);
+      }))
+      .subscribe((response: CreateProject) => {
+        this.project$.next(response);
+        this.getAllEmployee();
+      });
 
+  }
 
+  saveProject(payload: CreateProject) {
+    this.loading.next(true);
+    this.apiService
+      .saveProject(payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.loading.next(false);
+        return of(err);
+      }))
+      .subscribe((response) => {
+        if (response.id) {
+          this.notification.success('Successfully!', 'This project has been created!');
+        }
+        this.loading.next(false);
+      });
+  }
 
+  checkinOrCheckout(data: CheckinOrCheckout) {
+    this.loading.next(true);
+    this.apiService
+      .checkinOrCheckout(data)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.loading.next(false);
+        return of(err);
+      }))
+      .subscribe((response: TimeKeepingResponse) => {
+        if (response.photoCheckout == null) {
+          this.myTimeKeepingList$.next([response, ...this.myTimeKeepingList$.value]);
+          const timeCheckin = this.datepipe.transform(response.checkin, 'HH:mm');
+          this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
+        } else {
+          this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id == response.id), 1, response);
+          this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
+          const timeCheckout = this.datepipe.transform(response.checkout, 'HH:mm');
+          this.notification.success('Checkout success!!!', 'You checkout at ' + timeCheckout);
+        }
+        this.loading.next(false);
+      });
+  }
 
+  getTimeKeepingForUser(id: string) {
+    this.apiService
+      .getTimeKeepingForUser(id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        return of(err);
+      }))
+      .subscribe((response: TimeKeepingResponse[]) => {
+        const myTimeKeepingList = response.sort(() => -1);
+        this.myTimeKeepingList$.next(myTimeKeepingList);
+      });
+  }
 
+  requestChangeInfor(data: Employee) {
+    this.apiService
+      .requestChangeInfor(data)
+      .subscribe((response) => {
+        if(response.id) {
+          this.notification.success('Request success!', '');
+        }
+      });
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  dataList() {
-    this.levelList.next([
-      { value: Level.Intern, label: 'Intern' },
-      { value: Level.Fresher, label: 'Fresher' },
-      { value: Level.Junior, label: 'Junior' },
-      { value: Level.Middle, label: 'Middle' },
-      { value: Level.Senior, label: 'Senior' }]);
-    this.positionList.next([
-      { value: Position.Dev, label: 'Dev' },
-      { value: Position.QA, label: 'QA' },
-      { value: Position.BA, label: 'BA' },
-      { value: Position.PM, label: 'PM' },
-      { value: Position.DevOps, label: 'DevOps' },
-      { value: Position.DataEngineer, label: 'DataEngineer' },
-      { value: Position.ScrumMaster, label: 'ScrumMaster' }]);
-    this.requestOffList.next([
-      { value: OptionOnLeave.OffMorning, label: 'Off Morning' },
-      { value: OptionOnLeave.OffAfternoon, label: 'Off Afternoon' },
-      { value: OptionOnLeave.OffFullDay, label: 'Off Full Day' },
-      { value: OptionOnLeave.Late, label: 'Late/Leave Early' }]);
-    this.bankList.next([Bank.Techcombank, Bank.ACB, Bank.Agribank,
-    Bank.BIDV, Bank.DongABank, Bank.MBB, Bank.MSB, Bank.OCB,
-    Bank.Sacombank, Bank.ShinhanBank, Bank.TPBank, Bank.VCB,
-    Bank.VietCapitalBank, Bank.VietinBank, Bank.VPBank, Bank.HDBank,
-    Bank.VIETCOMBANK, Bank.NamABank, Bank.VIB]);
-    this.iconList.next(['house', 'magnifying-glass', 'user', 'check',
-      'download', 'image', 'phone', 'bars', 'envelope', 'star',
-      'location-dot', 'music', 'wand-magic-sparkles', 'heart',
-      'arrow-right', 'circle-xmark', 'bomb', 'poo', 'camera-retro',
-      'xmark', 'cloud', 'comment', 'caret-up', 'truck-fast', 'pen-nib',
-      'arrow-up', 'hippo', 'face-smile', 'calendar-days', 'paperclip',
-      'shield-halved', 'file', 'bell', 'cart-shopping', 'clipboard',
-      'filter', 'circle-info', 'arrow-up-from-bracket', 'bolt', 'car',
-      'ghost', 'mug-hot', 'circle-user', 'pen', 'umbrella', 'gift', 'film',
-      'list', 'gear', 'trash', 'circle-up', 'circle-down', 'inbox', 'rotate-right',
-      'lock', 'headphones', 'barcode', 'tag', 'book', 'bookmark', 'print',
-      'camera', 'font', 'video', 'circle-half-stroke', 'droplet', 'pen-to-square',
-      'share-from-square', 'plus', 'minus', 'share', 'circle-exclamation',
-      'fire', 'eye', 'eye-slash', 'plane', 'magnet', 'hand', 'folder',
-      'folder-open', 'money-bill', 'thumbs-up', 'thumbs-down', 'comments',
-      'lemon', 'key', 'thumbtack', 'gears', 'paper-plane', 'code', 'globe',
-      'truck', 'city', 'ticket', 'tree', 'wifi', 'paint-roller', 'bicycle',
-      'sliders', 'brush', 'hashtag', 'flask', 'briefcase', 'compass',
-      'dumpster-fire', 'person', 'person-dress', 'address-book', 'bath',
-      'handshake', 'snowflake', 'right-to-bracket', 'earth-americas',
-      'cloud-arrow-up', 'binoculars', 'palette', 'layer-group', 'users',
-      'gamepad', 'business-time', 'feather', 'sun', 'link', 'pen-fancy',
-      'fish', 'bug', 'shop', 'mug-saucer', 'landmark', 'poo-storm',
-      'chart-simple', 'shirt', 'anchor', 'quote-left', 'bag-shoppping',
-      'gauge', 'code-compare', 'user-secret', 'stethoscope', 'car-side',
-      'hand-holding-heart', 'truck-font', 'cable-car', 'mountain-sun',
-      'location-pin', 'info', 'user-minus', 'calendar', 'cart-plus',
-      'clock', 'circle', 'play', 'cross', 'backward', 'handshake-slash',
-      'chevron-up', 'passport', 'question', 'pencil', 'phone-volume',
-      'upload', 'strikethrough', 'credit-card', 'street-view', 'database',
-      'copy', 'mobile', 'square', 'sort', 'forward', 'hourglass-start',
-      'newspaper', 'notes-medical', 'table', 'building', 'stop', 'store',
-      'flag', 'file-excel', 'network-wired']);
+  getAllRequestChangeInfo(){
+    this.apiService
+      .getAllRequestChangeInfo()
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.requestChangeInfoList$.next(response);
+      });
   }
 }

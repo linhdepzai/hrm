@@ -5,6 +5,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { OptionOnLeave, Status } from 'src/app/enums/Enum';
 import { LoginResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
+import { DataService } from 'src/app/services/data.service';
 import { ManageService } from '../../services/manage.service';
 
 @Component({
@@ -17,13 +18,16 @@ export class RequestOffComponent implements OnInit {
   requestList: { date: Date, option: OptionOnLeave, status: Status }[] = [];
   optionRequestList = new Observable<{ value: OptionOnLeave; label: string }[]>();
   onLeaveList: OnLeaveResponse[] = [];
+  onLeaveListStorage: OnLeaveResponse[] = [];
   isVisibleModal: boolean = false;
   status = Status;
   confirmModal?: NzModalRef;
   user!: LoginResponse;
+  optionOnLeave = OptionOnLeave;
 
   constructor(
     private manageService: ManageService,
+    private dataService: DataService,
     private datepipe: DatePipe,
     private notification: NzNotificationService,
     private modal: NzModalService,
@@ -32,10 +36,29 @@ export class RequestOffComponent implements OnInit {
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.requestList = [];
-    this.optionRequestList = this.manageService.requestOffList;
+    this.optionRequestList = this.dataService.requestOffList;
     this.manageService.onLeaveList$.subscribe((data) => {
       this.onLeaveList = data.filter((item) => item.employeeId == this.user.id);
     });
+  }
+
+  getTotalRequestMonth(date: Date): { option: string, total: number }[] | null {
+    const onLeaveListFilter = this.onLeaveList!.filter((item) =>
+      date.getMonth() === new Date(item.dateLeave).getMonth() &&
+      date.getFullYear() == new Date(item.dateLeave).getFullYear());
+    if (onLeaveListFilter.length > 0) {
+      const totalRequestOffMorning = onLeaveListFilter.filter((item) => item.option == OptionOnLeave.OffMorning).length;
+      const totalRequestOffAfternoon = onLeaveListFilter.filter((item) => item.option == OptionOnLeave.OffAfternoon).length;
+      const totalRequestOffFullDay = onLeaveListFilter.filter((item) => item.option == OptionOnLeave.OffFullDay).length;
+      const totalRequestOffLate = onLeaveListFilter.filter((item) => item.option == OptionOnLeave.Late).length;
+      return [
+        { option: "off morning", total: totalRequestOffMorning },
+        { option: "off afternoon", total: totalRequestOffAfternoon },
+        { option: "off full day", total: totalRequestOffFullDay },
+        { option: "late or leave early", total: totalRequestOffLate },
+      ];
+    }
+    return null;
   }
 
   selectDateRequest(requestDate: Date) {
@@ -43,7 +66,7 @@ export class RequestOffComponent implements OnInit {
     let index = this.requestList.findIndex((item) => this.datepipe.transform(item.date, 'MM/dd/yyyy') == date);
     let onleaveDate = this.onLeaveList.find((item) => this.datepipe.transform(item.dateLeave, 'MM/dd/yyyy') == date);
     if (!onleaveDate) {
-      if (requestDate.getTime() >= this.date.getTime()) {
+      if (requestDate.getTime() > this.date.getTime()) {
         if (index != -1) {
           this.requestList.splice(index, 1);
           this.requestList = [...this.requestList];
@@ -59,10 +82,31 @@ export class RequestOffComponent implements OnInit {
 
   changeOptionOnLeave(date: Date, option: OptionOnLeave, status: Status) {
     let data = { date: new Date(date), option: option, status: status };
-    this.requestList.splice(this.requestList.findIndex((item) =>
-      this.datepipe.transform(item.date, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY')
-    ), 1, data);
-    this.requestList = [...this.requestList];
+    const onLeaveStorage = this.onLeaveListStorage.find(item => this.datepipe.transform(item.dateLeave, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY') && item.option == data.option);
+    if (onLeaveStorage) {
+      this.onLeaveList = [...this.onLeaveList, onLeaveStorage];
+      const index = this.requestList.findIndex((item) => this.datepipe.transform(item.date, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY'));
+      this.requestList.splice(index, 1);
+      this.requestList = [...this.requestList];
+      const indexOnLeaveListStorage = this.onLeaveListStorage.findIndex((item) => this.datepipe.transform(item.dateLeave, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY'));
+      this.onLeaveListStorage.splice(indexOnLeaveListStorage, 1);
+      this.onLeaveListStorage = [...this.onLeaveListStorage];
+    } else {
+      if (this.requestList.find(item => this.datepipe.transform(item.date, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY'))) {
+        this.requestList.splice(this.requestList.findIndex((item) =>
+          this.datepipe.transform(item.date, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY')
+        ), 1, data);
+        this.requestList = [...this.requestList];
+      } else {
+        const onLeave = this.onLeaveList.find((item) => this.datepipe.transform(item.dateLeave, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY'));
+        const index = this.onLeaveList.findIndex((item) => this.datepipe.transform(item.dateLeave, 'dd/MM/YYYY') === this.datepipe.transform(data.date, 'dd/MM/YYYY'));
+        this.onLeaveListStorage = [...this.onLeaveListStorage, onLeave!];
+        this.onLeaveList.splice(index, 1);
+        this.onLeaveList = [...this.onLeaveList];
+        data.status = Status.New;
+        this.requestList = [...this.requestList, data];
+      }
+    }
   }
 
   openModal() {
@@ -91,7 +135,7 @@ export class RequestOffComponent implements OnInit {
 
   disableDate(date: Date) {
     const today = new Date();
-    if(new Date(date) < today && Number(this.datepipe.transform(date, 'dd')) < Number(this.datepipe.transform(today, 'dd'))){
+    if (new Date(date) < today && Number(this.datepipe.transform(date, 'dd')) < Number(this.datepipe.transform(today, 'dd'))) {
       return true;
     } else {
       return false;

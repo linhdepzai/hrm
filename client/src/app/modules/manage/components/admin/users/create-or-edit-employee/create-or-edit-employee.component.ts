@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Bank, Level, Position } from 'src/app/enums/Enum';
 import { Department } from 'src/app/interfaces/interfaces';
 import { ManageService } from 'src/app/modules/manage/services/manage.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-create-or-edit-employee',
@@ -24,6 +25,7 @@ export class CreateOrEditEmployeeComponent implements OnInit {
 
   constructor(
     private manageService: ManageService,
+    private dataService: DataService,
     private fb: FormBuilder,
     private datepipe: DatePipe,
   ) { }
@@ -31,9 +33,9 @@ export class CreateOrEditEmployeeComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.departmentList = this.manageService.departmentList$;
-    this.levelList = this.manageService.levelList;
-    this.positionList = this.manageService.positionList;
-    this.bankList = this.manageService.bankList;
+    this.levelList = this.dataService.levelList;
+    this.positionList = this.dataService.positionList;
+    this.bankList = this.dataService.bankList;
   }
 
   initForm() {

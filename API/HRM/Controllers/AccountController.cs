@@ -1,8 +1,11 @@
 ﻿using HRM.Data;
 using HRM.DTOs.AccountDto;
+using HRM.DTOs.EmployeeDto;
+using HRM.Entities;
 using HRM.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace HRM.Controllers
@@ -48,6 +51,72 @@ namespace HRM.Controllers
                 IssuedBy = user.IssuedBy,
                 UserCode = user.UserCode,
             };
+        }
+        [HttpPut("requestChangeInfor")]
+        public async Task<ActionResult<GetAccountDto>> RequestChangeInfor(ChangeInfoDto input)
+        {
+            var draft = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(i => i.UserCode == input.UserCode && i.Status == Status.Pending);
+            if (draft == null)
+            {
+                var employeeDraft = await _dataContext.Employee.FirstOrDefaultAsync(i => i.UserCode == input.UserCode);
+                if (employeeDraft != null)
+                {
+                    var employee = new Employee
+                    {
+                        Id = new Guid(),
+                        UserCode = input.UserCode,
+                        FullName = input.FullName,
+                        Sex = input.Sex,
+                        Email = input.Email,
+                        Password = input.Password,
+                        Phone = input.Phone,
+                        DoB = input.DoB,
+                        Level = employeeDraft.Level,
+                        Position = employeeDraft.Position,
+                        DepartmentId = employeeDraft.DepartmentId != null ? employeeDraft.DepartmentId : null,
+                        StartingDate = input.StartingDate,
+                        LeaveDate = null,
+                        Bank = input.Bank,
+                        BankAccount = input.BankAccount,
+                        TaxCode = input.TaxCode,
+                        InsuranceStatus = input.InsuranceStatus,
+                        Identify = input.Identify,
+                        PlaceOfOrigin = input.PlaceOfOrigin,
+                        PlaceOfResidence = input.PlaceOfResidence,
+                        DateOfIssue = input.DateOfIssue,
+                        IssuedBy = input.IssuedBy,
+                        Status = Status.Pending,
+                    };
+                    await _dataContext.Employee.AddAsync(employee);
+                    await _dataContext.SaveChangesAsync();
+                    return Ok(employee);
+                }
+                else
+                {
+                    return BadRequest("Request Failed");
+                }
+            }
+            else
+            {
+                draft.FullName = input.FullName;
+                draft.Sex = input.Sex;
+                draft.Email = input.Email;
+                draft.Phone = input.Phone;
+                draft.DoB = input.DoB;
+                draft.Bank = input.Bank;
+                draft.BankAccount = input.BankAccount;
+                draft.TaxCode = input.TaxCode;
+                draft.InsuranceStatus = input.InsuranceStatus;
+                draft.Identify = input.Identify;
+                draft.PlaceOfOrigin = input.PlaceOfOrigin;
+                draft.PlaceOfResidence = input.PlaceOfResidence;
+                draft.DateOfIssue = input.DateOfIssue;
+                draft.IssuedBy = input.IssuedBy;
+                _dataContext.Employee.Update(draft);
+                await _dataContext.SaveChangesAsync();
+                return Ok(draft);
+            }
+
         }
     }
 }

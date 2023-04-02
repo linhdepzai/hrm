@@ -1,0 +1,51 @@
+<nz-modal [nzBodyStyle]="{paddingTop: '0'}" [nzStyle]="{top: '5vh'}" [nzWidth]="1000" [(nzVisible)]="visibleModal" [nzTitle]="title"
+    [nzContent]="content" [nzFooter]="null" (nzOnCancel)="handleCancel()">
+</nz-modal>
+<ng-template #title>
+    <span>History Check In</span>
+</ng-template>
+<ng-template #content>
+    <ng-template #tableTitle>
+        <div nz-row>
+            <div nz-col [nzSpan]="8">
+                <span>Year: </span>
+                <nz-select [ngModel]="today.getFullYear()">
+                    <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of yearList"></nz-option>
+                </nz-select>
+            </div>
+            <div nz-col [nzSpan]="8">
+                <span>Month: </span>
+                <nz-select [ngModel]="today.getMonth() + 1">
+                    <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of monthList"></nz-option>
+                </nz-select>
+            </div>
+            <span nz-col [nzSpan]="8" style="margin-top: 5px;">Total Punish: {{ totalPunish }}</span>
+        </div>
+    </ng-template>
+    <nz-table #basicTable [nzData]="myTimeKeepingList" [nzFrontPagination]="false" [nzTitle]="tableTitle" nzAlign="center">
+        <thead>
+            <tr>
+                <th nzAlign="center">Date</th>
+                <th nzAlign="center">Start Time</th>
+                <th nzAlign="center">End Time</th>
+                <th nzAlign="center">Check In</th>
+                <th nzAlign="center">Check Out</th>
+                <th nzAlign="center">Punish</th>
+                <th nzAlign="center">Complain</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td nzAlign="center">{{(data.photoCheckin != null ? data.checkin : data.checkout) | date: 'dd/MM/YYYY'}}</td>
+                <td nzAlign="center">{{myTimeWorking.morningStartTime | date: 'HH:mm'}}</td>
+                <td nzAlign="center">{{myTimeWorking.afternoonEndTime | date: 'HH:mm'}}</td>
+                <td nzAlign="center">{{(data.checkin | date: 'HH:mm')?.indexOf('00:00') ? (data.checkin | date: 'HH:mm') : ''}}</td>
+                <td nzAlign="center">{{(data.checkout | date: 'HH:mm')?.indexOf('00:00') ? (data.checkout | date: 'HH:mm') : ''}}</td>
+                <td nzAlign="center" style="color: red; font-weight: bold;">{{data.punish ? 'Punish' : ''}}</td>
+                <td nzAlign="center">
+                    <button *ngIf="data.punish" nz-button nzType="default">Complain</button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</ng-template>

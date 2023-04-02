@@ -1,0 +1,39 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.fa-angle-right,
+.fa-angle-left,
+nz-select {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.search {
+    width: 49%;
+}
+
+.footer {
+    bottom: 24px;
+    position: absolute;
+    width: 100%;
+}
+
+.box {
+    border: #d9d9d9 solid 1px;
+    border-radius: 7.5px;
+    padding: 12px;
+    height: 365px;
+    overflow: hidden;
+    width: 49.5%;
+}
+
+.list {
+    margin-top: 12px;
+    overflow-y: auto;
+    height: 295px;
+}
+
+.no-data {
+    text-align: center;
+    margin-top: 25%;
+}

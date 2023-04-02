@@ -1,44 +1,70 @@
 <div class="title">Request Off</div>
 <button class="btn-request" nz-button nzType="primary" (click)="openModal()"
     [disabled]="requestList.length == 0">Request Off</button>
-<nz-calendar [ngModel]="date" (ngModelChange)="selectDateRequest($event)" nzMode="month">
-    <ul *nzDateCell="let date">
-        <ng-container *ngFor="let item of requestList">
-            <ng-container *ngIf="formatDate(item.date) == formatDate(date)">
-                <nz-select [ngModel]="item.option" (ngModelChange)="changeOptionOnLeave(item.date, $event, item.status)"
+<nz-calendar
+    [ngModel]="date"
+    (nzSelectChange)="selectDateRequest($event)"
+    [nzMode]="'month'" 
+    [nzDateCell]="dateCellTpl"
+    [nzMonthCell]="monthCellTpl">
+</nz-calendar>
+<ng-template #dateCellTpl let-date>
+    <ng-container *ngFor="let item of requestList">
+        <ng-container *ngIf="formatDate(item.date) == formatDate(date)">
+            <nz-select [ngModel]="item.option" 
+                (ngModelChange)="changeOptionOnLeave(item.date, $event, item.status)"
+                (click)="$event.stopPropagation()">
+                <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                    *ngFor="let item of optionRequestList | async"></nz-option>
+            </nz-select>
+            <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
+        </ng-container>
+    </ng-container>
+    <ng-container *ngFor="let item of onLeaveList">
+        <ng-container *ngIf="formatDate(item.dateLeave) == formatDate(date)">
+            <ng-container *ngIf="disableDate(item.dateLeave) == false; else approved">
+                <nz-select [ngModel]="item.option"
+                    (ngModelChange)="changeOptionOnLeave(item.dateLeave, $event, item.status)"
                     (click)="$event.stopPropagation()">
                     <nz-option [nzValue]="item.value" [nzLabel]="item.label"
                         *ngFor="let item of optionRequestList | async"></nz-option>
                 </nz-select>
                 <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
+                <span role="button" (click)="$event.stopPropagation(); handleDelete(item.id, item.dateLeave)">
+                    <i class="fa-solid fa-trash-can"></i>
+                </span>
             </ng-container>
         </ng-container>
-        <ng-container *ngFor="let item of onLeaveList">
-            <ng-container *ngIf="formatDate(item.dateLeave) == formatDate(date)">
-                <ng-container *ngIf="disableDate(item.dateLeave) == false; else approved">
-                    <nz-select [ngModel]="item.option"
-                        (ngModelChange)="changeOptionOnLeave(item.dateLeave, $event, item.status)"
-                        (click)="$event.stopPropagation()">
-                        <nz-option [nzValue]="item.value" [nzLabel]="item.label"
-                            *ngFor="let item of optionRequestList | async"></nz-option>
-                    </nz-select>
-                    <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
-                    <span role="button" (click)="$event.stopPropagation(); handleDelete(item.id, item.dateLeave)">
-                        <i class="fa-solid fa-trash-can"></i>
+        <ng-template #approved>
+            <nz-select [ngModel]="item.option" disabled
+                (ngModelChange)="changeOptionOnLeave(item.dateLeave, $event, item.status)"
+                (click)="$event.stopPropagation()">
+                <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                    *ngFor="let item of optionRequestList | async"></nz-option>
+            </nz-select>
+            <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
+        </ng-template>
+    </ng-container>
+</ng-template>
+<ng-template #monthCellTpl let-month>
+    <div *ngIf="getTotalRequestMonth(month) as monthData" class="notes-month">
+        <ng-container *ngFor="let item of monthData">
+            <ng-container *ngIf="item.total != 0">
+                <div>{{ item.total }} Request
+                    <span class="fw-bold morning" 
+                    [ngClass]="item.option == 'off morning' ? 'morning' : 
+                    item.option == 'off afternoon' ? 'afternoon' :
+                    item.option == 'off full day' ? 'fullday' : 'late'">
+                        {{ item.option }}
                     </span>
-                </ng-container>
+                </div>
             </ng-container>
-            <ng-template #approved>
-                <nz-select [ngModel]="item.option" disabled
-                        (ngModelChange)="changeOptionOnLeave(item.dateLeave, $event, item.status)"
-                        (click)="$event.stopPropagation()">
-                        <nz-option [nzValue]="item.value" [nzLabel]="item.label"
-                            *ngFor="let item of optionRequestList | async"></nz-option>
-                    </nz-select>
-                    <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
-            </ng-template>
         </ng-container>
-    </ul>
-</nz-calendar>
-<app-modal-request-off [isVisibleModal]="isVisibleModal" [requestList]="requestList" (submit)="requestSubmit()"
-    (cancel)="isVisibleModal = false"></app-modal-request-off>
+    </div>
+</ng-template>
+<app-modal-request-off 
+    [isVisibleModal]="isVisibleModal" 
+    [requestList]="requestList" 
+    (submit)="requestSubmit()"
+    (cancel)="isVisibleModal = false">
+</app-modal-request-off>

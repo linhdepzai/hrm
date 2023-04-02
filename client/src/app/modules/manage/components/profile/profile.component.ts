@@ -16,7 +16,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private manageService: ManageService,
-  ) { }
+  ) { 
+  }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');

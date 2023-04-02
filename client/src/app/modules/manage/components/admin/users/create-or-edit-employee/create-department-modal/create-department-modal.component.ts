@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ManageService } from 'src/app/modules/manage/services/manage.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-create-department-modal',
@@ -15,12 +16,13 @@ export class CreateDepartmentModalComponent implements OnInit {
 
   constructor(
     private manageService: ManageService,
+    private dataService: DataService,
     private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
     this.initForm();
-    this.manageService.iconList.subscribe((data) => { this.iconList = data });
+    this.dataService.iconList.subscribe((data) => { this.iconList = data });
   }
 
   initForm() {

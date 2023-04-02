@@ -1,0 +1,105 @@
+<div style="width: 100%; display: flex;">
+    <div class="box">
+        <div style="display: flex;">
+            <nz-select [ngModel]="" nzShowSearch nzAllowClear class="search">
+                <nz-option [nzValue]="item.member.fullName" [nzLabel]="item.member.fullName"
+                    *ngFor="let item of memberList"></nz-option>
+            </nz-select>
+            <div style="width: 2%;"></div>
+            <nz-select [ngModel]="" class="search">
+                <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                    *ngFor="let item of positionList | async"></nz-option>
+            </nz-select>
+        </div>
+        <div class="list">
+            <div *ngIf="memberList.length > 0; else noData">
+                <div *ngFor="let item of memberList" (click)="actionMember(item.member, 'remove')">
+                    <nz-card>
+                        <div nz-row nz-card-grid [ngStyle]="{width: '100%'}">
+                            <div nz-col [nzSpan]="12">
+                                <div>
+                                    <span>{{ item.member.fullName }}</span>
+                                    <app-tag [label]="position[item.member.position]" size></app-tag>
+                                    <app-tag [label]="level[item.member.level]" size></app-tag>
+                                </div>
+                                <span nz-typography nzEllipsis>{{ item.member.email }}</span>
+                            </div>
+                            <nz-select [ngModel]="item.type" (ngModelChange)="changeTypeMember($event, item.member)"
+                                nz-col [nzSpan]="9" (click)="$event.stopPropagation()">
+                                <nz-option [nzValue]="1" nzLabel="Project Manager"></nz-option>
+                                <nz-option [nzValue]="2" nzLabel="Member"></nz-option>
+                            </nz-select>
+                            <span nz-col [nzSpan]="1"></span>
+                            <i nz-col [nzSpan]="2" class="fa-solid fa-angle-right fa-2x"></i>
+                        </div>
+                    </nz-card>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="width: 1%;"></div>
+    <div class="box">
+        <div style="display: flex;">
+            <nz-select [ngModel]="" nzShowSearch nzAllowClear class="search">
+                <nz-option [nzValue]="item.fullName" [nzLabel]="item.fullName"
+                    *ngFor="let item of employeeList"></nz-option>
+            </nz-select>
+            <div style="width: 2%;"></div>
+            <nz-select [ngModel]="" class="search">
+                <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                    *ngFor="let item of positionList | async"></nz-option>
+            </nz-select>
+        </div>
+        <div class="list">
+            <div *ngIf="employeeList.length > 0; else noData">
+                <div *ngFor="let item of employeeList" (click)="actionMember(item, 'add')">
+                    <nz-card>
+                        <div nz-row nz-card-grid [ngStyle]="{width: '100%'}">
+                            <i nz-col [nzSpan]="3" class="fa-solid fa-angle-left fa-2x"></i>
+                            <div nz-col [nzSpan]="4" style="text-align: center;">
+                                <nz-avatar [nzSize]="50" nzIcon="user"></nz-avatar>
+                            </div>
+                            <span nz-col [nzSpan]="1"></span>
+                            <div nz-col [nzSpan]="16">
+                                <div>
+                                    <span>{{ item.fullName }}</span>
+                                    <app-tag [label]="position[item.position]" size></app-tag>
+                                    <app-tag [label]="level[item.level]" size></app-tag>
+                                </div>
+                                <span nz-typography nzEllipsis>{{ item.email }}</span>
+                            </div>
+                        </div>
+                    </nz-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #noData>
+    <div class="no-data">
+        <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg" class="ant-empty-img-simple">
+            <g transform="translate(0 1)" fill="none" fill-rule="evenodd">
+                <ellipse cx="32" cy="33" rx="32" ry="7" class="ant-empty-img-simple-ellipse"></ellipse>
+                <g fill-rule="nonzero" class="ant-empty-img-simple-g">
+                    <path
+                        d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z">
+                    </path>
+                    <path
+                        d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z"
+                        class="ant-empty-img-simple-path"></path>
+                </g>
+            </g>
+        </svg>
+        <div style="color: #d9d9d9;">No Data</div>
+    </div>
+</ng-template>
+<div class="footer">
+    <button nz-button nzType="default" (click)="handlePrevious()">
+        <i class="fa-solid fa-arrow-left mr-5"></i>
+        <span>Previous</span>
+    </button>
+    <button nz-button nzType="primary" (click)="handleSubmit()" style="float: right; margin-right: 72px;">
+        <i class="fa-solid fa-check mr-5"></i>
+        <span>Submit</span>
+    </button>
+</div>

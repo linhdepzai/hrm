@@ -42,8 +42,13 @@ a {
     color: #fff;
 }
 
-.fa-gear {
-    margin-left: 10px;
+.fa-solid {
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #fff;
 }
 
 @media (max-width: 1000px) {

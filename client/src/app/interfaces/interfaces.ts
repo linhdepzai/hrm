@@ -1,4 +1,4 @@
-import { Level, Position } from "../enums/Enum";
+import { Level, Position, Priority, ProjectType, StatusTask } from "../enums/Enum";
 
 export interface Login {
     email: string;
@@ -8,6 +8,7 @@ export interface Login {
 
 export interface Employee {
     id: string | null,
+    userCode: string,
     fullName: string,
     sex: true,
     email: string,
@@ -33,4 +34,30 @@ export interface Department {
     id: string,
     name: string,
     color: string,
+}
+
+export interface CreateProject {
+    id: string | null,
+    projectName: string,
+    description: string,
+    projectType: ProjectType,
+    projectCode: string,
+    deadlineDate: Date | null,
+    priorityCode: Priority,
+    statusCode: StatusTask,
+    members: MemberProject[],
+}
+
+export interface MemberProject {
+    employeeId: string,
+    type: 1 | 2,
+}
+
+export interface CheckinOrCheckout {
+    id: string | null,
+    employeeId: string,
+    checkin: Date,
+    photoCheckin: string,
+    checkout: Date,
+    photoCheckout: string,
 }

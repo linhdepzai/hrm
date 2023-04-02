@@ -6,8 +6,8 @@ using HRM.DTOs.EmployeeDto;
 using HRM.Entities;
 using Microsoft.EntityFrameworkCore;
 using HRM.Enum;
-using System.Drawing;
-using System.Text;
+using HRM.DTOs.AccountDto;
+using System.Linq;
 
 namespace HRM.Controllers
 {
@@ -24,8 +24,19 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<ActionResult> GetAll()
         {
-            var list = await _dataContext.Employee.AsNoTracking().ToListAsync();
-            return Ok(list);
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
+            return Ok(userList);
+            /*var dp_params = new DynamicParameters();
+            // dp_params.Add("@projectId", projectId, DbType.Guid);
+            var userList = await System.Threading.Tasks.Task.FromResult(_dapper.GetAll<GetAllEmployeeDto>("GetAllEmployee", dp_params,
+                commandType: System.Data.CommandType.StoredProcedure));
+            return Ok(userList);*/
+        }
+        [HttpGet("getAllRequestChangeInfo")]
+        public async Task<ActionResult> GetAllRequestChangeInfo()
+        {
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
+            return Ok(userList);
         }
         [HttpPost("save")]
         public async Task<ActionResult> CreateOrEdit(CreateOrEditEmployeeDto input)
@@ -82,6 +93,7 @@ namespace HRM.Controllers
                 AfternoonStartTime = today.AddHours(13),
                 AfternoonEndTime = today.AddHours(17.5),
                 ApplyDate = today,
+                RequestDate = today,
                 Status = Status.Approved,
             };
             await _dataContext.TimeWorking.AddAsync(timeWorking);
@@ -113,7 +125,7 @@ namespace HRM.Controllers
                 employee.PlaceOfResidence = input.PlaceOfResidence;
                 employee.DateOfIssue = input.DateOfIssue;
                 employee.IssuedBy = input.IssuedBy;
-                employee.Status = Status.New;
+                employee.Status = Status.Approved;
             };
             _dataContext.Employee.Update(employee);
             await _dataContext.SaveChangesAsync();
@@ -122,21 +134,40 @@ namespace HRM.Controllers
         [HttpPut("updateStatus")]
         public async Task<ActionResult> UpdateStatus(UpdateStatusEmployeeDto input)
         {
-            var employee = await _dataContext.Employee.FindAsync(input.Id);
-            if (employee != null)
+            var employeeDraft = await _dataContext.Employee.FindAsync(input.Id);
+            if (input.Status == Status.Rejected)
             {
-                if (employee.Position != Position.PM)
+                _dataContext.Employee.Remove(await _dataContext.Employee.FindAsync(input.Id));
+                await _dataContext.SaveChangesAsync();
+                return Ok("Rejected");
+            }
+            else
+            {
+                var employee = await _dataContext.Employee.FirstOrDefaultAsync(i => i.UserCode == employeeDraft.UserCode && i.Status == Status.Approved);
+                if (employee != null)
                 {
-                    employee.Status = Status.Pending;
-                }
-                else
-                {
-                    employee.Status = input.Status;
-                }
-            };
-            _dataContext.Employee.Update(employee);
-            await _dataContext.SaveChangesAsync();
-            return Ok(employee);
+                    employee.FullName = employeeDraft.FullName;
+                    employee.Sex = employeeDraft.Sex;
+                    employee.Email = employeeDraft.Email;
+                    employee.Phone = employeeDraft.Phone;
+                    employee.DoB = employeeDraft.DoB;
+                    employee.StartingDate = employeeDraft.StartingDate;
+                    employee.Bank = employeeDraft.Bank;
+                    employee.BankAccount = employeeDraft.BankAccount;
+                    employee.TaxCode = employeeDraft.TaxCode;
+                    employee.InsuranceStatus = employeeDraft.InsuranceStatus;
+                    employee.Identify = employeeDraft.Identify;
+                    employee.PlaceOfOrigin = employeeDraft.PlaceOfOrigin;
+                    employee.PlaceOfResidence = employeeDraft.PlaceOfResidence;
+                    employee.DateOfIssue = employeeDraft.DateOfIssue;
+                    employee.IssuedBy = employeeDraft.IssuedBy;
+                    employee.Status = Status.Approved;
+                };
+                _dataContext.Employee.Update(employee);
+                _dataContext.Employee.Remove(await _dataContext.Employee.FindAsync(input.Id));
+                await _dataContext.SaveChangesAsync();
+                return Ok(employee);
+            }
         }
         [HttpDelete("delete")]
         public async Task<ActionResult> Delete(Guid id)

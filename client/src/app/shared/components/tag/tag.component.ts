@@ -10,8 +10,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
   styleUrls: ['./tag.component.css']
 })
 export class TagComponent implements OnInit {
-  @Input() color: string = '';
-  @Input() label: string = '';
+  @Input() color: string | undefined = '';
+  @Input() label: string | undefined = '';
   @Input() size: any;
   font: boolean = false;
 

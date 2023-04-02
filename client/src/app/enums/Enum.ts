@@ -51,3 +51,29 @@ export enum OptionOnLeave {
     OffFullDay = 3,
     Late = 4,
 }
+export enum Priority {
+    Normal = 1,
+    Low = 2,
+    Medium = 3,
+    High = 4,
+    Urgent = 5
+}
+export enum StatusTask {
+    Reopened = 1,
+    Open = 2,
+    InProgress = 3,
+    Resolve = 4,
+    Closed = 5
+}
+export enum MemberType {
+    ProjectManager = 1,
+    Member = 2,
+}
+export enum ProjectType {
+    TM = 1,
+    FF = 2,
+    NB = 3,
+    ODC = 4,
+    Product = 5,
+    Training = 6,
+}

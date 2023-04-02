@@ -7,7 +7,6 @@ import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
 import en from '@angular/common/locales/en';
 import { AdminComponent } from './components/admin/admin.component';
 import { TimesheetComponent } from './components/timesheet/timesheet.component';
-import { RolesComponent } from './components/admin/roles/roles.component';
 import { UsersComponent } from './components/admin/users/users.component';
 import { WorkingTimeComponent } from './components/admin/working-time/working-time.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -88,13 +87,16 @@ import { MyWorkingTimeComponent } from './components/my-working-time/my-working-
 import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component';
 import { ModalRequestOffComponent } from './components/request-off/modal-request-off/modal-request-off.component';
+import { CreateOrEditProjectComponent } from './components/project/create-or-edit-project/create-or-edit-project.component';
+import { GeneralProjectComponent } from './components/project/create-or-edit-project/general-project/general-project.component';
+import { TeamProjectComponent } from './components/project/create-or-edit-project/team-project/team-project.component';
+import { ModalListCheckinComponent } from './components/checkin/modal-list-checkin/modal-list-checkin.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
         HomeComponent,
         AdminComponent,
         TimesheetComponent,
-        RolesComponent,
         UsersComponent,
         WorkingTimeComponent,
         ProfileComponent,
@@ -108,6 +110,10 @@ registerLocaleData(en);
         ProjectComponent,
         TaskComponent,
         ModalRequestOffComponent,
+        CreateOrEditProjectComponent,
+        GeneralProjectComponent,
+        TeamProjectComponent,
+        ModalListCheckinComponent,
     ],
     exports: [
         ManageRoutingModule,
@@ -117,6 +123,7 @@ registerLocaleData(en);
         { provide: NZ_I18N, useValue: en_US },
     ],
     imports: [
+        ManageRoutingModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -142,7 +149,10 @@ registerLocaleData(en);
         NzTimePickerModule,
         NzTypographyModule,
         NzSpinModule,
-        NzMessageModule
+        NzMessageModule,
+        NzStepsModule,
+        NzCardModule,
+        NzAvatarModule,
     ]
 })
 export class ManageModule { }

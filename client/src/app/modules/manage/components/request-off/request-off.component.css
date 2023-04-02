@@ -24,3 +24,8 @@ nz-select {
 * {
     overflow-x: hidden;
 }
+
+.notes-month {
+    position: absolute;
+    transform: translateY(-20%);
+}

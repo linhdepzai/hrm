@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { OptionOnLeave, Status } from 'src/app/enums/Enum';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { DataService } from 'src/app/services/data.service';
 import { ManageService } from '../../../services/manage.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class ModalRequestOffComponent implements OnInit, OnChanges {
 
   constructor(
     private manageService: ManageService,
+    private dataService: DataService,
     private notification: NzNotificationService,
     private fb: FormBuilder,
   ){}
@@ -44,7 +46,7 @@ export class ModalRequestOffComponent implements OnInit, OnChanges {
 
   getNameOptionLeave(option: OptionOnLeave){
     let name!: { value: OptionOnLeave; label: string};
-    this.manageService.requestOffList
+    this.dataService.requestOffList
       .subscribe((data: { value: OptionOnLeave; label: string}[]) => {
         name = data.find(d => d.value == option)!;
       });

@@ -31,16 +31,26 @@ namespace HRM.Controllers
         {
             foreach (var i in input.OnLeave)
             {
-                var onLeave = new OnLeave
+                var checkLeave = await _dataContext.OnLeave.AsNoTracking().FirstOrDefaultAsync(e => e.EmployeeId == input.EmployeeId && e.DateLeave == i.DateLeave);
+                if (checkLeave != null)
                 {
-                    Id = new Guid(),
-                    EmployeeId = input.EmployeeId,
-                    DateLeave = i.DateLeave,
-                    Option = i.Option,
-                    Reason = i.Reason,
-                    Status = Status.Pending,
-                };
-                await _dataContext.OnLeave.AddAsync(onLeave);
+                    checkLeave.Option = i.Option;
+                    checkLeave.Reason = i.Reason;
+                    _dataContext.OnLeave.Update(checkLeave);
+                }
+                else
+                {
+                    var onLeave = new OnLeave
+                    {
+                        Id = new Guid(),
+                        EmployeeId = input.EmployeeId,
+                        DateLeave = i.DateLeave,
+                        Option = i.Option,
+                        Reason = i.Reason,
+                        Status = Status.Pending,
+                    };
+                    await _dataContext.OnLeave.AddAsync(onLeave);
+                }
             };
             await _dataContext.SaveChangesAsync();
             return Ok(input);

@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { PageNotFoundComponent } from '../../layout/page-not-found/page-not-found.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { HomeComponent } from './components/home/home.component';
-import { RolesComponent } from './components/admin/roles/roles.component';
 import { TimesheetComponent } from './components/timesheet/timesheet.component';
 import { UsersComponent } from './components/admin/users/users.component';
 import { WorkingTimeComponent } from './components/admin/working-time/working-time.component';
@@ -18,9 +17,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   {
-    path: 'admin', children: [
+    path: 'admin', component: AdminComponent, children: [
       {path: 'users', component: UsersComponent},
-      {path: 'roles', component: RolesComponent},
       {path: 'working-time', component: WorkingTimeComponent},
     ]
   },

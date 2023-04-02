@@ -11,6 +11,7 @@ import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 })
 export class AuthenticationService {
   isLogin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public loading = new BehaviorSubject<boolean>(false);
 
   constructor(
     private notification: NzNotificationService,
@@ -25,6 +26,7 @@ export class AuthenticationService {
   }
 
   login(loginForm: Login) {
+    this.loading.next(true);
     this.apiService.login(loginForm)
       .pipe(catchError((err) => of(err)))
       .subscribe((response: LoginResponse) => {
@@ -40,6 +42,7 @@ export class AuthenticationService {
         } else {
           this.notification.error('Login Failed!!!', 'Your email or password is incorrected!!!');
         }
+        this.loading.next(false);
       });
   }
 
