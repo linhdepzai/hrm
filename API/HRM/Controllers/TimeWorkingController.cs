@@ -26,7 +26,7 @@ namespace HRM.Controllers
         public async Task<ActionResult> GetAll()
         {
             var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
-            return Ok(list);
+            return Ok(list); 
         }
         [HttpGet("getAllRequestOff")]
         public async Task<ActionResult> GetAllRequestOff()
