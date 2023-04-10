@@ -1,12 +1,3 @@
 <div class="title">Timesheet</div>
 <nz-calendar [ngModel]="date" (ngModelChange)="a($event)">
-    <ul *nzDateCell="let date" class="events">
-        <ng-container [ngSwitch]="date.getTime()">
-            <ng-container *ngSwitchCase="date2.getTime()">
-                <li *ngFor="let item of listDataMap.eight">
-                    <nz-badge [nzStatus]="item.type" [nzText]="item.content"></nz-badge>
-                </li>
-            </ng-container>
-        </ng-container>
-    </ul>
 </nz-calendar>

@@ -44,7 +44,7 @@ export class ManageService {
     this.getAllOnLeave();
     this.getAllTimeWorking();
     this.getAllProject();
-    this.getTimeKeepingForUser(this.user.id);
+    this.getTimeKeepingForUser(this.user.id, new Date().getMonth() + 1, new Date().getFullYear());
   }
 
   getAllDepartment() {
@@ -136,11 +136,13 @@ export class ManageService {
       .requestOnLeave(form)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.loading.next(false);
         return of(err);
       }))
       .subscribe((response) => {
         this.getAllOnLeave();
         this.notification.success('Successfully!!!', `There are ${response.onLeave.length} items have been added!`);
+        this.loading.next(false);
       });
   }
 
@@ -241,29 +243,27 @@ export class ManageService {
         return of(err);
       }))
       .subscribe((response: TimeKeepingResponse) => {
-        if (response.photoCheckout == null) {
-          this.myTimeKeepingList$.next([response, ...this.myTimeKeepingList$.value]);
+        if (response) {
+          this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.id), 1, response);
+          this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
           const timeCheckin = this.datepipe.transform(response.checkin, 'HH:mm');
           this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
-        } else {
-          this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id == response.id), 1, response);
-          this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
-          const timeCheckout = this.datepipe.transform(response.checkout, 'HH:mm');
-          this.notification.success('Checkout success!!!', 'You checkout at ' + timeCheckout);
         }
         this.loading.next(false);
       });
   }
 
-  getTimeKeepingForUser(id: string) {
+  getTimeKeepingForUser(id: string, month: number, year: number) {
     this.apiService
-      .getTimeKeepingForUser(id)
+      .getTimeKeepingForUser(id, month, year)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', 'An error occurred during execution!');
         return of(err);
       }))
       .subscribe((response: TimeKeepingResponse[]) => {
-        const myTimeKeepingList = response.sort(() => -1);
+        const myTimeKeepingList = response.sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
         this.myTimeKeepingList$.next(myTimeKeepingList);
       });
   }
@@ -272,13 +272,13 @@ export class ManageService {
     this.apiService
       .requestChangeInfor(data)
       .subscribe((response) => {
-        if(response.id) {
+        if (response.id) {
           this.notification.success('Request success!', '');
         }
       });
   }
 
-  getAllRequestChangeInfo(){
+  getAllRequestChangeInfo() {
     this.apiService
       .getAllRequestChangeInfo()
       .pipe(catchError((err) => {

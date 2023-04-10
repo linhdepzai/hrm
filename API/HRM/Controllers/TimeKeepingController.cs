@@ -20,14 +20,15 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getTimeKeepingForUser")]
-        public async Task<ActionResult> GetTimeKeepingForUser(Guid id)
+        public async Task<ActionResult> GetTimeKeepingForUser(Guid id, int month, int year)
         {
             var timekeeping = await (from t in _dataContext.TimeKeeping
-                                     where t.EmployeeId == id
+                                     where t.EmployeeId == id && t.Date.Month == month && t.Date.Year == year
                                      select new
                                      {
                                          Id = t.Id,
                                          EmployeeId = t.EmployeeId,
+                                         Date = t.Date,
                                          Checkin = t.Checkin,
                                          PhotoCheckin = t.PhotoCheckin,
                                          Checkout = t.Checkout,

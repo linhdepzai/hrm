@@ -15,6 +15,7 @@ namespace HRM.Entities
         public string PhotoCheckin { get; set; }
         public DateTime Checkout { get; set; }
         public string PhotoCheckout { get; set; }
+        public string Complain { get; set; }
         public bool Punish { get; set; }
     }
 }

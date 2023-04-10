@@ -9,13 +9,13 @@
         <div nz-row>
             <div nz-col [nzSpan]="8">
                 <span>Year: </span>
-                <nz-select [ngModel]="today.getFullYear()">
+                <nz-select [ngModel]="year" (ngModelChange)="filterYear($event)">
                     <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of yearList"></nz-option>
                 </nz-select>
             </div>
             <div nz-col [nzSpan]="8">
                 <span>Month: </span>
-                <nz-select [ngModel]="today.getMonth() + 1">
+                <nz-select [ngModel]="month" (ngModelChange)="filterMonth($event)">
                     <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of monthList"></nz-option>
                 </nz-select>
             </div>
@@ -36,7 +36,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let data of basicTable.data">
-                <td nzAlign="center">{{(data.photoCheckin != null ? data.checkin : data.checkout) | date: 'dd/MM/YYYY'}}</td>
+                <td nzAlign="center">{{data.date | date: 'dd/MM/YYYY'}}</td>
                 <td nzAlign="center">{{myTimeWorking.morningStartTime | date: 'HH:mm'}}</td>
                 <td nzAlign="center">{{myTimeWorking.afternoonEndTime | date: 'HH:mm'}}</td>
                 <td nzAlign="center">{{(data.checkin | date: 'HH:mm')?.indexOf('00:00') ? (data.checkin | date: 'HH:mm') : ''}}</td>

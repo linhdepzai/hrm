@@ -1,6 +1,6 @@
 --Hang ngay se tao 1 ban ghi check in
 --Neu ngay hom day co request off fullday thi ko tao ban ghi
-create or alter proc addDailyCheckin --Run at 12:01
+create or alter proc addDailyCheckin --Run at 00:01
 as
 	declare @Saturday date = dateadd(day, -datepart(weekday, getdate()), cast(getdate() as date));
 	declare @Sunday date = dateadd(day, 1 - datepart(weekday, getdate()), cast(getdate() as date));
@@ -32,7 +32,7 @@ go
 --Neu quen check in hoac check out phat 50k
 --Neu quen check in va check out phat 100k
 --Neu check in muon hoac check out som phat 20k
-create or alter proc addDailyPunish --Run at 11:59
+create or alter proc addDailyPunish --Run at 23:59
 as
 	declare @Today date = cast(getdate() as date);
 	declare @i int = 1;
@@ -69,27 +69,27 @@ as
 			end
 			if (@Checkin = cast('00:00:00.0000000' as time) and @Checkout = cast('00:00:00.0000000' as time))
 			begin
-				update TimeKeeping set Punish = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
+				update TimeKeeping set [Punish] = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
 				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date]) values (newid(), @UserId, 'No check in, check out', 100000, getdate());
 			end
 			else if (@Checkin = cast('00:00:00.0000000' as time))
 			begin
-				update TimeKeeping set Punish = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
+				update TimeKeeping set [Punish] = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
 				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date]) values (newid(), @UserId, 'No check in', 50000, getdate());
 			end
 			else if (@Checkout = cast('00:00:00.0000000' as time))
 			begin
-				update TimeKeeping set Punish = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
+				update TimeKeeping set [Punish] = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
 				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date]) values (newid(), @UserId, 'No check out', 50000, getdate());
 			end
 			else if (@Checkin > @StartTime)
 			begin
-				update TimeKeeping set Punish = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
+				update TimeKeeping set [Punish] = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
 				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date]) values (newid(), @UserId, 'Check in late', 20000, getdate());
 			end
 			else if (@Checkout < @EndTime)
 			begin
-				update TimeKeeping set Punish = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
+				update TimeKeeping set [Punish] = 1 where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
 				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date]) values (newid(), @UserId, 'Check out early', 20000, getdate());
 			end
 		end

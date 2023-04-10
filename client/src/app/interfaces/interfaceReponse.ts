@@ -67,6 +67,7 @@ export interface ProjectResponse {
 export interface TimeKeepingResponse {
     id: string | null,
     employeeId: string,
+    date: Date,
     checkin: Date,
     photoCheckin: string,
     checkout: Date,

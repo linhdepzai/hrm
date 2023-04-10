@@ -78,8 +78,8 @@ export class ApiService {
     return this.httpClient.post<CreateProject>(environment.baseUrl + 'project/save', payload);
   }
 
-  getTimeKeepingForUser(id: string): Observable<TimeKeepingResponse[]>{
-    return this.httpClient.get<TimeKeepingResponse[]>(environment.baseUrl + 'timekeeping/getTimeKeepingForUser?id=' + id);
+  getTimeKeepingForUser(id: string, month: number, year: number): Observable<TimeKeepingResponse[]>{
+    return this.httpClient.get<TimeKeepingResponse[]>(environment.baseUrl + `timekeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`);
   }
 
   checkinOrCheckout(payload: CheckinOrCheckout): Observable<TimeKeepingResponse>{

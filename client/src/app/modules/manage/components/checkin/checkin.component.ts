@@ -78,7 +78,6 @@ export class CheckinComponent implements OnInit, OnDestroy {
 
   initForm() {
     this.checkinForm = this.fb.group({
-      id: [null],
       employeeId: [this.user.id, Validators.required],
       checkin: [new Date()],
       photoCheckin: [''],
@@ -106,9 +105,6 @@ export class CheckinComponent implements OnInit, OnDestroy {
   showConfirm(): void {
     this.trigger.next();
     const check = this.myTimeKeepingList.find(i => this.datepipe.transform(i.checkin, 'dd/MM/YYYY')?.indexOf(this.datepipe.transform(new Date(), 'dd/MM/YYYY')!) != -1);
-    if (check && check.photoCheckout != '') {
-      this.checkinForm.controls['id'].setValue(check.id);
-    };
     this.checkinForm.controls['employeeId'].setValue(this.user.id);
     this.checkinForm.controls['checkin'].setValue(new Date());
     this.checkinForm.controls['photoCheckin'].setValue(this.webcamImage.imageAsDataUrl);
