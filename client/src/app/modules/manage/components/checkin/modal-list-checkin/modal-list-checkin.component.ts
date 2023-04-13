@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoginResponse, TimeKeepingResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
 import { ManageService } from '../../../services/manage.service';
+import { FormGroup } from '@angular/forms';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-modal-list-checkin',
@@ -18,10 +20,13 @@ export class ModalListCheckinComponent implements OnInit {
   user!: LoginResponse;
   totalPunish: number = 0;
   month = new Date().getMonth() + 1;
-  year =  new Date().getFullYear();
+  year = new Date().getFullYear();
+  visibleComplain: boolean = false;
+  idComplain = '';
 
   constructor(
     private manageService: ManageService,
+    private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -48,6 +53,25 @@ export class ModalListCheckinComponent implements OnInit {
 
   filterMonth(month: number) {
     this.manageService.getTimeKeepingForUser(this.user.id, month, this.year);
+  }
+
+  openComplain(id: string | null) {
+    this.visibleComplain = true;
+    this.idComplain = id!;
+  }
+
+  handleComplain(id: string) {
+    const complain = (<HTMLInputElement>document.getElementById('complain')).value;
+    if (complain.trim() != '') {
+      const payload = {
+        id: id,
+        complain: complain,
+      };
+      this.manageService.complainDailyCheckin(payload);
+      this.visibleComplain = false;
+    } else {
+      this.notification.error('Please input your complain!', '')
+    };
   }
 
   handleCancel() {

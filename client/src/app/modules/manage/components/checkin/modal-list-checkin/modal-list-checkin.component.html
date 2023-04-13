@@ -1,5 +1,5 @@
-<nz-modal [nzBodyStyle]="{paddingTop: '0'}" [nzStyle]="{top: '5vh'}" [nzWidth]="1000" [(nzVisible)]="visibleModal" [nzTitle]="title"
-    [nzContent]="content" [nzFooter]="null" (nzOnCancel)="handleCancel()">
+<nz-modal [nzBodyStyle]="{paddingTop: '0'}" [nzStyle]="{top: '5vh'}" [nzWidth]="1250" [(nzVisible)]="visibleModal"
+    [nzTitle]="title" [nzContent]="content" [nzFooter]="null" (nzOnCancel)="handleCancel()">
 </nz-modal>
 <ng-template #title>
     <span>History Check In</span>
@@ -22,16 +22,18 @@
             <span nz-col [nzSpan]="8" style="margin-top: 5px;">Total Punish: {{ totalPunish }}</span>
         </div>
     </ng-template>
-    <nz-table #basicTable [nzData]="myTimeKeepingList" [nzFrontPagination]="false" [nzTitle]="tableTitle" nzAlign="center">
+    <nz-table #basicTable [nzData]="myTimeKeepingList" [nzFrontPagination]="false" [nzTitle]="tableTitle"
+        [nzScroll]="{ y: '20rem' }">
         <thead>
             <tr>
-                <th nzAlign="center">Date</th>
-                <th nzAlign="center">Start Time</th>
-                <th nzAlign="center">End Time</th>
-                <th nzAlign="center">Check In</th>
-                <th nzAlign="center">Check Out</th>
-                <th nzAlign="center">Punish</th>
-                <th nzAlign="center">Complain</th>
+                <th nzAlign="center" style="width: 20%;">Date</th>
+                <th nzAlign="center" style="width: 10%;">Start Time</th>
+                <th nzAlign="center" style="width: 10%;">End Time</th>
+                <th nzAlign="center" style="width: 10%;">Check In</th>
+                <th nzAlign="center" style="width: 10%;">Check Out</th>
+                <th nzAlign="center" style="width: 10%;">Punish</th>
+                <th nzAlign="center" style="width: 20%;">Complain</th>
+                <th nzAlign="center" style="width: 10%;">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -40,10 +42,28 @@
                 <td nzAlign="center">{{myTimeWorking.morningStartTime | date: 'HH:mm'}}</td>
                 <td nzAlign="center">{{myTimeWorking.afternoonEndTime | date: 'HH:mm'}}</td>
                 <td nzAlign="center">{{(data.checkin | date: 'HH:mm')?.indexOf('00:00') ? (data.checkin | date: 'HH:mm') : ''}}</td>
-                <td nzAlign="center">{{(data.checkout | date: 'HH:mm')?.indexOf('00:00') ? (data.checkout | date: 'HH:mm') : ''}}</td>
+                <td nzAlign="center">{{(data.checkout | date: 'HH:mm')?.indexOf('00:00') ? (data.checkout | date:
+                    'HH:mm') : ''}}</td>
                 <td nzAlign="center" style="color: red; font-weight: bold;">{{data.punish ? 'Punish' : ''}}</td>
                 <td nzAlign="center">
-                    <button *ngIf="data.punish" nz-button nzType="default">Complain</button>
+                    <ng-template #complain>
+                        {{ data.complain }}
+                    </ng-template>
+                    <input id="complain" *ngIf="visibleComplain == true && idComplain == data.id; else complain" type="text" nz-input
+                        [ngModel]="data.complain" />
+                </td>
+                <td nzAlign="center">
+                    <button *ngIf="data.punish && !visibleComplain" nz-button nzType="default"
+                        (click)="openComplain(data.id)">Complain</button>
+                    <ng-container *ngIf="data.punish && visibleComplain && idComplain == data.id">
+                        <button nz-button nzType="primary" (click)="handleComplain(data.id)" class="btn-action">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                        <button nz-button nzDanger nzType="primary" (click)="visibleComplain = false"
+                            class="btn-action">
+                            <i class="fa-solid fa-x"></i>
+                        </button>
+                    </ng-container>
                 </td>
             </tr>
         </tbody>

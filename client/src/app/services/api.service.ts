@@ -89,4 +89,12 @@ export class ApiService {
   getAllRequestChangeInfo(): Observable<Employee[]>{
     return this.httpClient.get<Employee[]>(environment.baseUrl + 'employee/getAllRequestChangeInfo');
   }
+
+  complainDailyCheckin(payload: any): Observable<TimeKeepingResponse>{
+    return this.httpClient.put<TimeKeepingResponse>(environment.baseUrl + 'timekeeping/complainDailyCheckin', payload);
+  }
+
+  changePassword(payload: {id: string, password: string}): Observable<Employee>{
+    return this.httpClient.put<Employee>(environment.baseUrl + 'changePassword', payload);
+  }
 }

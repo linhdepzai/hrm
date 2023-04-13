@@ -10,7 +10,19 @@
     <i class="fa-solid fa-bell fa-2x"></i>
     <a href="https://docs.google.com/document/d/1FQ7DLaRJC_h0cUiAfYHsAp1FEEOO8v_9y4WDEadkvwI/edit?usp=sharing"
         target="_blank" class="fa-solid fa-file-lines fa-2x"></a>
-    <i class="fa-solid fa-gear fa-2x" (click)="openSetting()"></i>
+    <i class="fa-solid fa-gear fa-2x" nz-dropdown [nzDropdownMenu]="settingDropdown" [nzPlacement]="'bottomRight'"></i>
+    <nz-dropdown-menu #settingDropdown="nzDropdownMenu">
+        <ul nz-menu>
+            <li nz-menu-item (click)="openSetting()">
+                <i class="fa-solid fa-gears mr-5"></i>
+                <span>Setting</span>
+            </li>
+            <li nz-menu-item (click)="openModalChangePassword()">
+                <i class="fa-solid fa-lock mr-5"></i>
+                <span>Change Password</span>
+            </li>
+        </ul>
+    </nz-dropdown-menu>
 </span>
 <nz-drawer [nzClosable]="false" [nzBodyStyle]="{padding: '0'}" nzWidth="250px" [nzVisible]="visibleSidebar"
     nzPlacement="left" (nzOnClose)="closeSidebar()" [nzContent]="menu">
@@ -24,3 +36,5 @@
         <app-setting></app-setting>
     </ng-template>
 </nz-drawer>
+<app-modal-change-password [isVisibleModal]="isVisibleModalChangePassword"
+    (cancel)="isVisibleModalChangePassword = false"></app-modal-change-password>

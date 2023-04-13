@@ -52,6 +52,33 @@ namespace HRM.Controllers
                 UserCode = user.UserCode,
             };
         }
+        [HttpPut("changePassword")]
+        public async Task<ActionResult> ChangePassword(ChangePasswordDto input)
+        {
+            var user = await _dataContext.Employee.FindAsync(input.Id);
+            if (user != null)
+            {
+                if (!input.Email.Contains(user.Email))
+                {
+
+                }
+                else if (!input.OldPassword.Contains(user.Password))
+                {
+
+                }
+                else if (!input.NewPassword.Contains(input.ConfirmPassword))
+                {
+
+                }
+                else
+                {
+                    user.Password = input.NewPassword;
+                    _dataContext.Employee.Update(user);
+                    await _dataContext.SaveChangesAsync();
+                    return Ok(user);
+                }
+            };
+        }
         [HttpPut("requestChangeInfor")]
         public async Task<ActionResult<GetAccountDto>> RequestChangeInfor(ChangeInfoDto input)
         {
@@ -116,7 +143,6 @@ namespace HRM.Controllers
                 await _dataContext.SaveChangesAsync();
                 return Ok(draft);
             }
-
         }
     }
 }

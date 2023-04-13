@@ -7,10 +7,15 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./setting.component.css']
 })
 export class SettingComponent {
+  themeColor: string = '';
 
-  constructor(private apiService: DataService){}
+  constructor(private dataService: DataService) {
+    this.dataService.themeColor.subscribe((data) => {
+      this.themeColor = data;
+    });
+  }
 
-  changeTheme(color: string){
-    this.apiService.themeColor.next(color);
+  changeTheme(color: any) {
+    this.dataService.themeColor.next(color);
   }
 }

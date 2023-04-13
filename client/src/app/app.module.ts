@@ -26,9 +26,11 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzTypographyModule } from 'ng-zorro-antd/typography';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SettingComponent } from './layout/setting/setting.component';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 registerLocaleData(en);
 @NgModule({
   declarations: [
@@ -43,6 +45,7 @@ registerLocaleData(en);
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
@@ -62,6 +65,8 @@ registerLocaleData(en);
     NzAvatarModule,
     NzRadioModule,
     NzSpinModule,
+    NzFormModule,
+    NzModalModule
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

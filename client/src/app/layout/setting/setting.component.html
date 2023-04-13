@@ -1,29 +1,4 @@
 <div class="title">Setting</div>
 <span class="name">Theme:</span>
-<nz-radio-group nzButtonStyle="solid" ngModel="" (ngModelChange)="changeTheme($event)">
-  <label class="theme" style="background-color: #1890ff;" nz-radio-button nzValue="#1890ff">&#160;</label>
-  <label class="theme" style="background-color: #ff4d4f;" nz-radio-button nzValue="#ff4d4f">&#160;</label>
-  <label class="theme" style="background-color: #eb2f96;" nz-radio-button nzValue="#eb2f96">&#160;</label>
-  <label class="theme" style="background-color: #096dd9;" nz-radio-button nzValue="#096dd9">&#160;</label>
-  <label class="theme" style="background-color: #52c41a;" nz-radio-button nzValue="#52c41a">&#160;</label>
-  <label class="theme" style="background-color: #fadb14;" nz-radio-button nzValue="#fadb14">&#160;</label>
-  <label class="theme" style="background-color: #faad14;" nz-radio-button nzValue="#faad14">&#160;</label>
-  <label class="theme" style="background-color: #444444;" nz-radio-button nzValue="#444444">&#160;</label>
-  <label class="theme" style="background-color: #660000;" nz-radio-button nzValue="#660000">&#160;</label>
-  <label class="theme" style="background-color: #000088;" nz-radio-button nzValue="#000088">&#160;</label>
-  <label class="theme" style="background-color: #CC66FF;" nz-radio-button nzValue="#CC66FF">&#160;</label>
-</nz-radio-group>
+<input nz-input type="color" [ngModel]="themeColor" (ngModelChange)="changeTheme($event)"/>
 <span class="name">Cover avatar:</span>
-<nz-radio-group nzButtonStyle="solid" ngModel="" (ngModelChange)="changeTheme($event)">
-  <label class="theme" style="background-color: #1890ff;" nz-radio-button nzValue="#1890ff">&#160;</label>
-  <label class="theme" style="background-color: #ff4d4f;" nz-radio-button nzValue="#ff4d4f">&#160;</label>
-  <label class="theme" style="background-color: #eb2f96;" nz-radio-button nzValue="#eb2f96">&#160;</label>
-  <label class="theme" style="background-color: #096dd9;" nz-radio-button nzValue="#096dd9">&#160;</label>
-  <label class="theme" style="background-color: #52c41a;" nz-radio-button nzValue="#52c41a">&#160;</label>
-  <label class="theme" style="background-color: #fadb14;" nz-radio-button nzValue="#fadb14">&#160;</label>
-  <label class="theme" style="background-color: #faad14;" nz-radio-button nzValue="#faad14">&#160;</label>
-  <label class="theme" style="background-color: #444444;" nz-radio-button nzValue="#444444">&#160;</label>
-  <label class="theme" style="background-color: #660000;" nz-radio-button nzValue="#660000">&#160;</label>
-  <label class="theme" style="background-color: #000088;" nz-radio-button nzValue="#000088">&#160;</label>
-  <label class="theme" style="background-color: #CC66FF;" nz-radio-button nzValue="#CC66FF">&#160;</label>
-</nz-radio-group>

@@ -33,10 +33,10 @@ namespace HRM.Controllers
                                          PhotoCheckin = t.PhotoCheckin,
                                          Checkout = t.Checkout,
                                          PhotoCheckout = t.PhotoCheckout,
+                                         Complain = t.Complain,
                                          Punish = t.Punish,
                                      }).AsNoTracking().Take(30).ToListAsync();
             return Ok(timekeeping);
-
         }
         [HttpPost("checkinOrCheckout")]
         public async Task<ActionResult> CheckinOrCheckout(CreateTimeKeepingDto input)
@@ -86,6 +86,18 @@ namespace HRM.Controllers
             _dataContext.TimeKeeping.Update(checkoutToday);
             await _dataContext.SaveChangesAsync();
             return Ok(checkoutToday);
+        }
+        [HttpPut("complainDailyCheckin")]
+        public async Task<ActionResult> ComplainDailyCheckin(ComplainDailyCheckinDto input)
+        {
+            var checkinComplain = await _dataContext.TimeKeeping.FindAsync(input.Id);
+            if (checkinComplain != null)
+            {
+                checkinComplain.Complain = input.Complain;
+            }
+            _dataContext.TimeKeeping.Update(checkinComplain);
+            await _dataContext.SaveChangesAsync();
+            return Ok(checkinComplain);
         }
     }
 }

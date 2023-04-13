@@ -91,6 +91,7 @@ import { CreateOrEditProjectComponent } from './components/project/create-or-edi
 import { GeneralProjectComponent } from './components/project/create-or-edit-project/general-project/general-project.component';
 import { TeamProjectComponent } from './components/project/create-or-edit-project/team-project/team-project.component';
 import { ModalListCheckinComponent } from './components/checkin/modal-list-checkin/modal-list-checkin.component';
+import { ModalChangePasswordComponent } from './components/profile/modal-change-password/modal-change-password.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -114,9 +115,11 @@ registerLocaleData(en);
         GeneralProjectComponent,
         TeamProjectComponent,
         ModalListCheckinComponent,
+        ModalChangePasswordComponent
     ],
     exports: [
         ManageRoutingModule,
+        ModalChangePasswordComponent,
     ],
     providers: [
         DatePipe,

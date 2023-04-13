@@ -72,5 +72,6 @@ export interface TimeKeepingResponse {
     photoCheckin: string,
     checkout: Date,
     photoCheckout: string,
+    complain: string,
     punish: boolean,
 }

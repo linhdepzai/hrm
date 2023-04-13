@@ -10,7 +10,8 @@ import { ManageService } from '../../services/manage.service';
 })
 export class ProfileComponent implements OnInit {
   user!: LoginResponse;
-  isVisibleModal: boolean = false;
+  isVisibleModalChangeProfile: boolean = false;
+  isVisibleModalChangePassword: boolean = false;
   level = Level;
   position = Position;
 
@@ -28,7 +29,11 @@ export class ProfileComponent implements OnInit {
   }
 
   openModalChangeInfo() {
-    this.isVisibleModal = true;
+    this.isVisibleModalChangeProfile = true;
+  }
+
+  openModalChangePassword() {
+    this.isVisibleModalChangePassword = true;
   }
 
   getDepartment(id: string) {

@@ -8,6 +8,10 @@
             <i class="fa-solid fa-arrows-rotate mr-5"></i>
             <span>Refresh</span>
         </button>
+        <button nz-button nzType="primary" (click)="openModalChangePassword()" class="mr-5">
+            <i class="fa-solid fa-lock mr-5"></i>
+            <span>Change Password</span>
+        </button>
         <button nz-button nzType="primary" (click)="openModalChangeInfo()">
             <i class="fa-solid fa-user-pen mr-5"></i>
             <span>Request Change Info</span>
@@ -22,10 +26,8 @@
                 <i class="fa-solid sex" [ngClass]="user.sex ? 'fa-mars' : 'fa-venus'"></i>
                 <app-tag [label]="level[user.level]" size></app-tag>
                 <app-tag [label]="position[user.position]" size></app-tag>
-                <app-tag 
-                    [label]="getDepartment(user.departmentId)?.name" 
-                    [color]="getDepartment(user.departmentId)?.color" 
-                    size></app-tag>
+                <app-tag [label]="getDepartment(user.departmentId)?.name"
+                    [color]="getDepartment(user.departmentId)?.color" size></app-tag>
             </div>
         </div>
     </div>
@@ -83,7 +85,7 @@
             <span>{{ user.bankAccount }}</span>
         </div>
         <div class="line">
-            <span class="fw-bold"  nz-tooltip nzTooltipTitle="Mã số thuế">Tax Code: </span>
+            <span class="fw-bold" nz-tooltip nzTooltipTitle="Mã số thuế">Tax Code: </span>
             <span>{{ user.taxCode }}</span>
         </div>
         <div class="line">
@@ -114,5 +116,7 @@
         </div>
     </div>
 </div>
-<app-modal-change-info [isVisibleModal]="isVisibleModal" [user]="user"
-    (cancel)="isVisibleModal = false"></app-modal-change-info>
+<app-modal-change-info [isVisibleModal]="isVisibleModalChangeProfile" [user]="user"
+    (cancel)="isVisibleModalChangeProfile = false"></app-modal-change-info>
+<app-modal-change-password [isVisibleModal]="isVisibleModalChangePassword"
+    (cancel)="isVisibleModalChangePassword = false"></app-modal-change-password>

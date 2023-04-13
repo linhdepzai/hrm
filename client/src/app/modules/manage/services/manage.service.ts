@@ -289,4 +289,31 @@ export class ManageService {
         this.requestChangeInfoList$.next(response);
       });
   }
+
+  complainDailyCheckin(payload: { id: string, complain: string }) {
+    this.apiService
+      .complainDailyCheckin(payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.id), 1, response);
+        this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
+      });
+  }
+
+  changePassword(payload: { id: string, password: string }) {
+    this.apiService
+      .changePassword(payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', 'An error occurred during execution!');
+        return of(err);
+      }))
+      .subscribe((response) => {
+        if (response.id) {
+          this.notification.success('Successfully!!!', 'You have successfully changed your password!');
+        }
+      });
+  }
 }
