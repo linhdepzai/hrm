@@ -75,9 +75,9 @@ namespace HRM.Controllers
                     user.Password = input.NewPassword;
                     _dataContext.Employee.Update(user);
                     await _dataContext.SaveChangesAsync();
-                    return Ok(user);
                 }
             };
+                    return Ok(user);
         }
         [HttpPut("requestChangeInfor")]
         public async Task<ActionResult<GetAccountDto>> RequestChangeInfor(ChangeInfoDto input)
