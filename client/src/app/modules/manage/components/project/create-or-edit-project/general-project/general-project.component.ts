@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Priority, ProjectType, StatusTask } from 'src/app/enums/Enum';
 import { CreateProject } from 'src/app/interfaces/interfaces';
-import { ManageService } from 'src/app/modules/manage/services/manage.service';
+import { ProjectService } from 'src/app/modules/manage/services/project.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -18,8 +18,9 @@ export class GeneralProjectComponent implements OnInit {
   priorityList = new Observable<{ value: Priority, label: string }[]>();
   statusTaskList = new Observable<{ value: StatusTask, label: string }[]>();
   projectTypeList = new Observable<{ value: ProjectType, label: string }[]>();
+
   constructor(
-    private manageService: ManageService,
+    private projectService: ProjectService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
@@ -42,7 +43,7 @@ export class GeneralProjectComponent implements OnInit {
       priorityCode: [Priority.Medium, Validators.required],
       statusCode: [StatusTask.Open, Validators.required],
     });
-    this.manageService.project$.subscribe(data => {
+    this.projectService.project$.subscribe(data => {
       this.generalForm.patchValue(data);
     });
     this.generalForm.patchValue(this.backForm);

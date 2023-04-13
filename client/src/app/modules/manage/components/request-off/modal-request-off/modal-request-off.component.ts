@@ -4,7 +4,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { OptionOnLeave, Status } from 'src/app/enums/Enum';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
-import { ManageService } from '../../../services/manage.service';
+import { OnleaveService } from '../../../services/onleave.service';
 
 @Component({
   selector: 'app-modal-request-off',
@@ -17,19 +17,18 @@ export class ModalRequestOffComponent implements OnInit, OnChanges {
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   @Output() submit: EventEmitter<boolean> = new EventEmitter();
   requestOnLeaveForm!: FormGroup;
-  user!: LoginResponse;
 
   constructor(
-    private manageService: ManageService,
+    private onleaveService: OnleaveService,
     private dataService: DataService,
     private notification: NzNotificationService,
     private fb: FormBuilder,
   ){}
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.requestOnLeaveForm = this.fb.group({
-      employeeId: [this.user.id],
+      employeeId: [user.id],
       onLeave: this.fb.array([]),
     })
   }
@@ -66,7 +65,7 @@ export class ModalRequestOffComponent implements OnInit, OnChanges {
         });
         (this.requestOnLeaveForm.controls['onLeave'] as FormArray).push(onleaveItemForm);
       });
-      this.manageService.requestOnLeave(this.requestOnLeaveForm.value);
+      this.onleaveService.requestOnLeave(this.requestOnLeaveForm.value);
       this.submit.emit();
     }
   }

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Status } from 'src/app/enums/Enum';
 import { LoginResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
-import { ManageService } from '../../services/manage.service';
+import { TimeworkingService } from '../../services/timeworking.service';
 
 @Component({
   selector: 'app-my-working-time',
@@ -19,7 +19,7 @@ export class MyWorkingTimeComponent implements OnInit {
   status = Status;
 
   constructor(
-    private manageService: ManageService,
+    private timeworkingService: TimeworkingService,
     private fb: FormBuilder,
     private datepipe: DatePipe,
   ) { }
@@ -28,7 +28,7 @@ export class MyWorkingTimeComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.initForm();
     this.checkEdit();
-    this.manageService.timeWorkingList$.subscribe((data) => {
+    this.timeworkingService.timeWorkingList$.subscribe((data) => {
       this.timeWorkingList = data.filter((item) => item.employeeId == this.user.id);
       this.workingTimeForm.patchValue(this.timeWorkingList[0]);
       this.calcTotalTime();

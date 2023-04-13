@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Bank, Level, Position } from 'src/app/enums/Enum';
 import { Department } from 'src/app/interfaces/interfaces';
-import { ManageService } from 'src/app/modules/manage/services/manage.service';
+import { DepartmentService } from 'src/app/modules/manage/services/department.service';
+import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -24,7 +25,8 @@ export class CreateOrEditEmployeeComponent implements OnInit {
   isVisibleModal: boolean = false;
 
   constructor(
-    private manageService: ManageService,
+    private departmentService: DepartmentService,
+    private employeeService: EmployeeService,
     private dataService: DataService,
     private fb: FormBuilder,
     private datepipe: DatePipe,
@@ -32,7 +34,7 @@ export class CreateOrEditEmployeeComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.departmentList = this.manageService.departmentList$;
+    this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.dataService.positionList;
     this.bankList = this.dataService.bankList;
@@ -66,7 +68,7 @@ export class CreateOrEditEmployeeComponent implements OnInit {
   submitForm() {
     this.employeeForm.controls['startingDate'].setValue(this.datepipe.transform(new Date(), 'YYYY-MM-dd'));
     if (this.employeeForm.valid) {
-      this.manageService.saveEmployee(this.employeeForm.value);
+      this.employeeService.saveEmployee(this.employeeForm.value);
       this.close();
     } else {
       Object.values(this.employeeForm.controls).forEach(control => {

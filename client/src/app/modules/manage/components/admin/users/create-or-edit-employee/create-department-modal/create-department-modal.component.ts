@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ManageService } from 'src/app/modules/manage/services/manage.service';
+import { DepartmentService } from 'src/app/modules/manage/services/department.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class CreateDepartmentModalComponent implements OnInit {
   iconList: string[] = [];
 
   constructor(
-    private manageService: ManageService,
+    private departmentService: DepartmentService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
@@ -36,7 +36,7 @@ export class CreateDepartmentModalComponent implements OnInit {
 
   submitForm() {
     if (this.departmentForm.valid) {
-      this.manageService.saveDepartment(this.departmentForm.value);
+      this.departmentService.saveDepartment(this.departmentForm.value);
       this.handleCancel();
     } else {
       Object.values(this.departmentForm.controls).forEach(control => {

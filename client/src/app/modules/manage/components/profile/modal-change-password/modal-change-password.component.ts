@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
-import { ManageService } from '../../../services/manage.service';
+import { AccountService } from '../../../services/account.service';
 
 @Component({
   selector: 'app-modal-change-password',
@@ -16,8 +16,8 @@ export class ModalChangePasswordComponent implements OnInit {
   user!: LoginResponse;
 
   constructor(
+    private accountService: AccountService,
     private fb: FormBuilder,
-    private manageService: ManageService,
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +33,7 @@ export class ModalChangePasswordComponent implements OnInit {
 
   submitForm() {
     this.changePasswordForm.value.id = this.user.id;
-    this.manageService.changePassword(this.changePasswordForm.value);
+    this.accountService.changePassword(this.changePasswordForm.value);
   }
 
   handleCancel() {

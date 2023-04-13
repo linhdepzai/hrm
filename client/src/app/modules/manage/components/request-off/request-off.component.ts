@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { OptionOnLeave, Status } from 'src/app/enums/Enum';
 import { LoginResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
-import { ManageService } from '../../services/manage.service';
+import { OnleaveService } from '../../services/onleave.service';
 
 @Component({
   selector: 'app-request-off',
@@ -22,11 +22,10 @@ export class RequestOffComponent implements OnInit {
   isVisibleModal: boolean = false;
   status = Status;
   confirmModal?: NzModalRef;
-  user!: LoginResponse;
   optionOnLeave = OptionOnLeave;
 
   constructor(
-    private manageService: ManageService,
+    private onleaveService: OnleaveService,
     private dataService: DataService,
     private datepipe: DatePipe,
     private notification: NzNotificationService,
@@ -34,11 +33,11 @@ export class RequestOffComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.requestList = [];
     this.optionRequestList = this.dataService.requestOffList;
-    this.manageService.onLeaveList$.subscribe((data) => {
-      this.onLeaveList = data.filter((item) => item.employeeId == this.user.id);
+    this.onleaveService.onLeaveList$.subscribe((data) => {
+      this.onLeaveList = data.filter((item) => item.employeeId == user.id);
     });
   }
 
@@ -122,7 +121,7 @@ export class RequestOffComponent implements OnInit {
       nzTitle: `Delete request in ${this.datepipe.transform(date, 'dd/MM/YYYY')}?`,
       nzOnOk: () =>
         new Promise((resolve) => {
-          this.manageService.deleteOnLeave(id);
+          this.onleaveService.deleteOnLeave(id);
           setTimeout(resolve, 1000);
         }).catch(() => console.log('Oops errors!'))
     });

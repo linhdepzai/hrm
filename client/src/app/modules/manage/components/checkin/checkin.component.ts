@@ -5,7 +5,7 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { WebcamImage, WebcamUtil } from 'ngx-webcam';
 import { Observable, Subject } from 'rxjs';
 import { LoginResponse, TimeKeepingResponse } from 'src/app/interfaces/interfaceReponse';
-import { ManageService } from '../../services/manage.service';
+import { TimekeepingService } from '../../services/timekeeping.service';
 
 @Component({
   selector: 'app-checkin',
@@ -29,15 +29,15 @@ export class CheckinComponent implements OnInit, OnDestroy {
   visibleModalList = false;
 
   constructor(
+    private timekeepingService: TimekeepingService,
     private modal: NzModalService,
     private datepipe: DatePipe,
-    private manageServie: ManageService,
     private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.manageServie.myTimeKeepingList$.subscribe((data) => {
+    this.timekeepingService.myTimeKeepingList$.subscribe((data) => {
       this.myTimeKeepingList = data;
       this.checkTimeKeepingToday();
       this.checkinList = [];
@@ -117,7 +117,7 @@ export class CheckinComponent implements OnInit, OnDestroy {
       nzWidth: '640px',
       nzOnOk: () =>
         new Promise((resolve) => {
-          this.manageServie.checkinOrCheckout(this.checkinForm.value);
+          this.timekeepingService.checkinOrCheckout(this.checkinForm.value);
           this.checkTimeKeepingToday();
           setTimeout(resolve, 1000);
         }).catch(() => console.log('Oops errors!'))

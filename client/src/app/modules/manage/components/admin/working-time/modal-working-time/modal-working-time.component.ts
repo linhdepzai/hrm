@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ManageService } from 'src/app/modules/manage/services/manage.service';
 
 @Component({
   selector: 'app-modal-working-time',
@@ -14,7 +13,6 @@ export class ModalWorkingTimeComponent implements OnInit {
   workingTimeForm!: FormGroup;
 
   constructor(
-    private manageService: ManageService,
   ) { }
 
   ngOnInit(): void {

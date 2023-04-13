@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoginResponse, TimeKeepingResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
-import { ManageService } from '../../../services/manage.service';
-import { FormGroup } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { TimekeepingService } from '../../../services/timekeeping.service';
+import { TimeworkingService } from '../../../services/timeworking.service';
 
 @Component({
   selector: 'app-modal-list-checkin',
@@ -25,7 +25,8 @@ export class ModalListCheckinComponent implements OnInit {
   idComplain = '';
 
   constructor(
-    private manageService: ManageService,
+    private timekeepingService: TimekeepingService,
+    private timeworkingService: TimeworkingService,
     private notification: NzNotificationService,
   ) { }
 
@@ -34,17 +35,17 @@ export class ModalListCheckinComponent implements OnInit {
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, this.today.getFullYear() + i];
     };
-    this.manageService.myTimeKeepingList$.subscribe((data) => {
+    this.timekeepingService.myTimeKeepingList$.subscribe((data) => {
       this.myTimeKeepingList = data;
       this.totalPunish = data.filter(i => i.punish == true).length;
     });
-    this.manageService.timeWorkingList$.subscribe((data) => {
+    this.timeworkingService.timeWorkingList$.subscribe((data) => {
       this.myTimeWorking = data.find(i => i.employeeId = this.user.id)!;
     })
   }
 
   filterYear(year: number) {
-    this.manageService.getTimeKeepingForUser(this.user.id, this.month, year);
+    this.timekeepingService.getTimeKeepingForUser(this.user.id, this.month, year);
     this.yearList = [];
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, year + i];
@@ -52,7 +53,7 @@ export class ModalListCheckinComponent implements OnInit {
   }
 
   filterMonth(month: number) {
-    this.manageService.getTimeKeepingForUser(this.user.id, month, this.year);
+    this.timekeepingService.getTimeKeepingForUser(this.user.id, month, this.year);
   }
 
   openComplain(id: string | null) {
@@ -67,7 +68,7 @@ export class ModalListCheckinComponent implements OnInit {
         id: id,
         complain: complain,
       };
-      this.manageService.complainDailyCheckin(payload);
+      this.timekeepingService.complainDailyCheckin(payload);
       this.visibleComplain = false;
     } else {
       this.notification.error('Please input your complain!', '')

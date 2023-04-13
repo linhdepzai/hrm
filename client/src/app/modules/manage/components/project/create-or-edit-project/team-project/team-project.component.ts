@@ -4,7 +4,8 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { Level, Position } from 'src/app/enums/Enum';
 import { CreateProject, Employee } from 'src/app/interfaces/interfaces';
-import { ManageService } from 'src/app/modules/manage/services/manage.service';
+import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
+import { ProjectService } from 'src/app/modules/manage/services/project.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class TeamProjectComponent implements OnInit {
   memberForm!: FormGroup;
 
   constructor(
-    private manageService: ManageService,
+    private employeeService: EmployeeService,
+    private projectService: ProjectService,
     private dataService: DataService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
@@ -34,11 +36,11 @@ export class TeamProjectComponent implements OnInit {
     this.memberForm = this.fb.group({
       members: this.fb.array([]),
     });
-    this.manageService.employeeList$.subscribe((data) => {
+    this.employeeService.employeeList$.subscribe((data) => {
       this.employeeList = data;
     });
     if (this.generalForm.id != ('' || null)) {
-      this.manageService.project$.subscribe((data) => {
+      this.projectService.project$.subscribe((data) => {
         data.members.forEach((member) => {
           const user = this.employeeList.find(e => e.id == member.employeeId)!;
           this.actionMember(user, 'add');
@@ -86,7 +88,7 @@ export class TeamProjectComponent implements OnInit {
       });
       this.generalForm.members = this.memberForm.value.members;
       console.log(this.generalForm)
-      this.manageService.saveProject(this.generalForm);
+      this.projectService.saveProject(this.generalForm);
     }
   }
 }

@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { Bank, Level, Position } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
-import { ManageService } from '../../../services/manage.service';
+import { DepartmentService } from '../../../services/department.service';
+import { AccountService } from '../../../services/account.service';
 
 @Component({
   selector: 'app-modal-change-info',
@@ -22,13 +23,14 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   departmentList = new Observable<DepartmentResponse[]>();
 
   constructor(
-    private manageService: ManageService,
+    private departmentService: DepartmentService,
+    private accountService: AccountService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
   
   ngOnInit(): void {
-    this.departmentList = this.manageService.departmentList$;
+    this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.dataService.positionList;
     this.bankList = this.dataService.bankList;
@@ -67,7 +69,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   submitForm() {
     if (this.infoForm.valid) {
       this.infoForm.controls['userCode'].setValue(this.user.userCode);
-      this.manageService.requestChangeInfor(this.infoForm.value);
+      this.accountService.requestChangeInfor(this.infoForm.value);
     } else {
       Object.values(this.infoForm.controls).forEach(control => {
         if (control.invalid) {

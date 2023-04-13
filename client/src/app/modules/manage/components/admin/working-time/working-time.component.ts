@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Employee } from 'src/app/interfaces/interfaces';
-import { ManageService } from '../../../services/manage.service';
+import { EmployeeService } from '../../../services/employee.service';
 
 @Component({
   selector: 'app-working-time',
@@ -14,11 +14,11 @@ export class WorkingTimeComponent implements OnInit {
   itemWorkingTime: any;
 
   constructor(
-    private manageService: ManageService,
+    private employeeService: EmployeeService,
   ) { }
 
   ngOnInit(): void {
-    this.employeeList = this.manageService.employeeList$;
+    this.employeeList = this.employeeService.employeeList$;
   }
 
   changeStatusWorkingTime(data: any) {
@@ -28,7 +28,7 @@ export class WorkingTimeComponent implements OnInit {
 
   getUserName(id: string) {
     let name: any;
-    this.manageService.employeeList$
+    this.employeeService.employeeList$
       .subscribe((data: any[]) => {
         name = data.find(d => d.id == id)?.fullName;
       });

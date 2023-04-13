@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProjectResponse } from 'src/app/interfaces/interfaceReponse';
-import { ManageService } from '../../services/manage.service';
+import { ProjectService } from '../../services/project.service';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-project',
@@ -13,15 +14,16 @@ export class ProjectComponent implements OnInit {
   projectList = new Observable<ProjectResponse[] | any>();
 
   constructor(
-    private manageService: ManageService,
+    private projectService: ProjectService,
+    private employeeService: EmployeeService,
   ) { }
 
   ngOnInit(): void {
-    this.projectList = this.manageService.projectList$;
+    this.projectList = this.projectService.projectList$;
   }
 
   openModal() {
-    this.manageService.getAllEmployee();
+    this.employeeService.getAllEmployee();
     this.visibleCreateOrEditProject = true;
   }
 
@@ -30,7 +32,7 @@ export class ProjectComponent implements OnInit {
   }
 
   editProject(projectId: string) {
-    this.manageService.getOnlyProject(projectId);
+    this.projectService.getOnlyProject(projectId);
     this.visibleCreateOrEditProject = true;
   }
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ManageService } from '../../services/manage.service';
+import { DepartmentService } from '../../services/department.service';
+import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-admin',
@@ -9,11 +10,12 @@ import { ManageService } from '../../services/manage.service';
 export class AdminComponent implements OnInit {
 
   constructor(
-    private manageService: ManageService,
+    private departmentService: DepartmentService,
+    private employeeService: EmployeeService,
   ){}
 
   ngOnInit(): void {
-    this.manageService.getAllDepartment();
-    this.manageService.getAllEmployee();
+    this.departmentService.getAllDepartment();
+    this.employeeService.getAllEmployee();
   }
 }

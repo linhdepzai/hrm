@@ -4,7 +4,8 @@ import { Level, Position } from 'src/app/enums/Enum';
 import { DepartmentResponse } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
-import { ManageService } from '../../../services/manage.service';
+import { EmployeeService } from '../../../services/employee.service';
+import { DepartmentService } from '../../../services/department.service';
 
 @Component({
   selector: 'app-users',
@@ -21,20 +22,21 @@ export class UsersComponent implements OnInit {
   departmentList = new Observable<Department[]>();
 
   constructor(
-    private manageService: ManageService,
+    private employeeService: EmployeeService,
+    private departmentService: DepartmentService,
     private dataService: DataService,
     ) { }
 
   ngOnInit(): void {
-    this.manageService.employeeList$.subscribe((data) => { this.employeeList = data });
-    this.departmentList = this.manageService.departmentList$;
+    this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
+    this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.dataService.positionList;
   }
 
   getDepartmentName(id: string) {
     let department!: DepartmentResponse;
-    this.manageService.departmentList$
+    this.departmentService.departmentList$
       .subscribe((data: DepartmentResponse[]) => {
         department = data.find(d => d.id == id)!;
       });

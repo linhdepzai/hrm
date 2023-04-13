@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Priority, ProjectType, StatusTask } from 'src/app/enums/Enum';
 import { CreateProject } from 'src/app/interfaces/interfaces';
-import { ManageService } from '../../../services/manage.service';
 
 @Component({
   selector: 'app-create-or-edit-project',
