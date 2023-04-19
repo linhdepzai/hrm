@@ -6,10 +6,8 @@ using HRM.Enum;
 
 namespace HRM.Entities
 {
-    public class Employee
+    public class Employee : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         public string UserCode { get; set; }
         [Required, StringLength(50)]
         public string FullName { get; set; }
@@ -47,8 +45,9 @@ namespace HRM.Entities
         public ICollection<TimeWorking> TimeWorking { get; set; }
         public ICollection<Evaluate> Evaluate { get; set; }
         public ICollection<Salary> Salary { get; set; }
-        public ICollection<Task> Task { get; set; }
+        public ICollection<Tasks> Tasks { get; set; }
         public ICollection<Message> MessagesSent { get; set; }
         public ICollection<Message> MessagesReceived { get; set; }
+        public ICollection<MemberProject> MemberProject { get; set; }
     }
 }

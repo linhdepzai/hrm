@@ -25,8 +25,8 @@ export class TimeworkingService {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
       }))
-      .subscribe((response: TimeWorkingResponse[]) => {
-        const data = response.sort((a, b) => {
+      .subscribe((response) => {
+        const data = (response.data as TimeWorkingResponse[]).sort((a, b) => {
           return new Date(b.applyDate).getTime() - new Date(a.applyDate).getTime();
         });
         this.timeWorkingList$.next(data);

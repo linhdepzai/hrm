@@ -23,12 +23,12 @@ export class OnleaveService {
     this.apiService
       .requestOnLeave(form)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
         this.getAllOnLeave();
-        this.notification.success('Successfully!!!', `There are ${response.onLeave.length} items have been added!`);
+        this.notification.success('Successfully!!!', `There are ${response.data.onLeave.length} items have been added!`);
       });
   }
 
@@ -39,22 +39,24 @@ export class OnleaveService {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
       }))
-      .subscribe((response: OnLeaveResponse[]) => {
-        this.onLeaveList$.next(response);
+      .subscribe((response) => {
+        this.onLeaveList$.next(response.data);
       });
   }
 
   deleteOnLeave(id: string) {
     this.apiService
       .deleteOnLeave(id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }))
       .subscribe((response) => {
-        if (response.length == 36) {
-          const index = this.onLeaveList$.value.findIndex((item) => item.id == response);
+        if (response.statusCode == 200) {
+          const index = this.onLeaveList$.value.findIndex((item) => item.id == response.data.id);
           this.onLeaveList$.value.splice(index, 1);
           this.onLeaveList$.next([...this.onLeaveList$.value]);
-          this.notification.success('Successfully!', 'This item has been deleted!');
-        } else {
-          this.notification.error('Error!!!', 'An error occurred during execution!');
+          this.notification.success('Successfully!', response.message);
         }
       });
   }

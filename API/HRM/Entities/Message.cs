@@ -4,11 +4,8 @@ using System;
 
 namespace HRM.Entities
 {
-    public class Message
+    public class Message : BaseEntity<Guid>
     {
-
-        [Key]
-        public Guid Id { get; set; }
         [Required, ForeignKey("Employee")]
         public Guid SenderId { get; set; }
         [Required, StringLength(40)]

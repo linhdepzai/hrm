@@ -28,7 +28,7 @@ export class EmployeeService {
         return of(err);
       }))
       .subscribe((response) => {
-        this.employeeList$.next(response);
+        this.employeeList$.next(response.data as Employee[]);
       });
   }
 
@@ -36,14 +36,14 @@ export class EmployeeService {
     this.apiService
       .saveEmployee(payload)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
-        if (response.id) {
-          this.notification.success('Successfully!', `Create ${Level[response.level]} ${Position[response.position]} ${response.fullName}`);
+        if (response.statusCode == 200) {
+          this.notification.success('Successfully!', `Create ${Level[response.data.level]} ${Position[response.data.position]} ${response.data.fullName}`);
           if (payload.id) {
-            this.employeeList$.value.splice(this.employeeList$.value.findIndex((item) => item.id === response.id), 1, response);
+            this.employeeList$.value.splice(this.employeeList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
             this.employeeList$.next([...this.employeeList$.value]);
           } else {
             this.employeeList$.next([response, ...this.employeeList$.value]);
@@ -55,10 +55,15 @@ export class EmployeeService {
   deleteEmployee(id: string) {
     this.apiService
       .deleteEmployee(id)
-      .subscribe(() => {
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }))
+      .subscribe((response) => {
         const index = this.employeeList$.value.findIndex((item) => item.id == id);
         this.employeeList$.value.splice(index, 1);
         this.employeeList$.next([...this.employeeList$.value]);
+        this.notification.success('Successfully!!!', response.message);
       });
   }
 }

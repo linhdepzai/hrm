@@ -5,10 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRM.Entities
 {
-    public class OnLeave
+    public class OnLeave : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         [ForeignKey("Employee")]
         public Guid EmployeeId { get; set; }
         public DateTime DateLeave { get; set; }

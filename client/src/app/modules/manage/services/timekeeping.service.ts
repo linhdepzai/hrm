@@ -26,12 +26,12 @@ export class TimekeepingService {
     this.apiService
       .checkinOrCheckout(data)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
-      .subscribe((response: TimeKeepingResponse) => {
-        if (response) {
-          this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.id), 1, response);
+      .subscribe((response) => {
+        if (response.statusCode == 200) {
+          this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
           this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
           const timeCheckin = this.datepipe.transform(response.checkin, 'HH:mm');
           this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
@@ -43,11 +43,11 @@ export class TimekeepingService {
     this.apiService
       .getTimeKeepingForUser(id, month, year)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
-      .subscribe((response: TimeKeepingResponse[]) => {
-        const myTimeKeepingList = response.sort((a, b) => {
+      .subscribe((response) => {
+        const myTimeKeepingList = (response.data as TimeKeepingResponse[]).sort((a, b) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
         this.myTimeKeepingList$.next(myTimeKeepingList);
@@ -59,11 +59,11 @@ export class TimekeepingService {
     this.apiService
       .complainDailyCheckin(payload)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
-        this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.id), 1, response);
+        this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
         this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
       });
   }

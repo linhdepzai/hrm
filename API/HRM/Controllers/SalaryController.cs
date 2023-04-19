@@ -1,11 +1,12 @@
-﻿using HRM.Data;
+﻿using CoreApiResponse;
+using HRM.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/salary")]
-    public class SalaryController : ControllerBase
+    public class SalaryController : BaseController
     {
         private readonly DataContext _dataContext;
 

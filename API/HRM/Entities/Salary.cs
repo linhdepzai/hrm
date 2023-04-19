@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRM.Entities
 {
-    public class Salary
+    public class Salary : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         [ForeignKey("Employee")]
         public Guid EmployeeId { get; set; }
         public int Money { get; set; }

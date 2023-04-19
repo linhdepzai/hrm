@@ -5,10 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRM.Entities
 {
-    public class Evaluate
+    public class Evaluate : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         public DateTime DateEvaluate { get; set; }
         public Guid PMId { get; set; }
         [ForeignKey("Employee")]

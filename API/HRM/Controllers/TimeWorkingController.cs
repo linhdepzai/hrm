@@ -9,12 +9,13 @@ using System;
 using System.Linq;
 using HRM.DTOs.TimeWorkingDto;
 using HRM.DTOs.OnLeaveDto;
+using CoreApiResponse;
 
 namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/timeworking")]
-    public class TimeWorkingController : ControllerBase
+    public class TimeWorkingController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -23,22 +24,22 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getAll")]
-        public async Task<ActionResult> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
-            return Ok(list); 
+            return CustomResult(list); 
         }
         [HttpGet("getAllRequestOff")]
-        public async Task<ActionResult> GetAllRequestOff()
+        public async Task<IActionResult> GetAllRequestOff()
         {
             var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
-            return Ok(list);
+            return CustomResult(list);
         }
         [HttpPut("edit")]
-        public async Task<ActionResult> Update(CreateOrEditTimeWorkingDto input)
+        public async Task<IActionResult> Update(CreateOrEditTimeWorkingDto input)
         {
             var timeWorking = await _dataContext.TimeWorking.FindAsync(input.Id);
-            if (timeWorking == null) return BadRequest("Error");
+            if (timeWorking == null) return CustomResult("Error", System.Net.HttpStatusCode.BadRequest);
             if (timeWorking != null)
             {
                 timeWorking.EmployeeId = input.EmployeeId;
@@ -52,10 +53,10 @@ namespace HRM.Controllers
             };
             _dataContext.TimeWorking.Update(timeWorking);
             await _dataContext.SaveChangesAsync();
-            return Ok(timeWorking);
+            return CustomResult(timeWorking);
         }
         [HttpPut("updateStatus")]
-        public async Task<ActionResult> UpdateStatus(UpdateStatusEmployeeDto input)
+        public async Task<IActionResult> UpdateStatus(UpdateStatusEmployeeDto input)
         {
             var employee = await _dataContext.Employee.FindAsync(input.Id);
             if (employee != null)
@@ -71,7 +72,7 @@ namespace HRM.Controllers
             };
             _dataContext.Employee.Update(employee);
             await _dataContext.SaveChangesAsync();
-            return Ok(employee);
+            return CustomResult(employee);
         }
     }
 }

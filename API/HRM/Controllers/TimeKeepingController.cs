@@ -1,4 +1,5 @@
-﻿using HRM.Data;
+﻿using CoreApiResponse;
+using HRM.Data;
 using HRM.DTOs.TimeKeepingDto;
 using HRM.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/timekeeping")]
-    public class TimeKeepingController : ControllerBase
+    public class TimeKeepingController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -20,7 +21,7 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getTimeKeepingForUser")]
-        public async Task<ActionResult> GetTimeKeepingForUser(Guid id, int month, int year)
+        public async Task<IActionResult> GetTimeKeepingForUser(Guid id, int month, int year)
         {
             var timekeeping = await (from t in _dataContext.TimeKeeping
                                      where t.EmployeeId == id && t.Date.Month == month && t.Date.Year == year
@@ -36,10 +37,10 @@ namespace HRM.Controllers
                                          Complain = t.Complain,
                                          Punish = t.Punish,
                                      }).AsNoTracking().Take(30).ToListAsync();
-            return Ok(timekeeping);
+            return CustomResult(timekeeping);
         }
         [HttpPost("checkinOrCheckout")]
-        public async Task<ActionResult> CheckinOrCheckout(CreateTimeKeepingDto input)
+        public async Task<IActionResult> CheckinOrCheckout(CreateTimeKeepingDto input)
         {
             if (input.PhotoCheckout != null)
             {
@@ -61,7 +62,7 @@ namespace HRM.Controllers
                 return await CheckIn(checkin);
             }
         }
-        private async Task<ActionResult> CheckIn(CheckinDto input)
+        private async Task<IActionResult> CheckIn(CheckinDto input)
         {
             var checkinToday = await _dataContext.TimeKeeping.AsNoTracking().FirstOrDefaultAsync(i => i.EmployeeId == input.EmployeeId && (
                 i.Date.Year == DateTime.Now.Year && i.Date.Month == DateTime.Now.Month && i.Date.Date == DateTime.Now.Date));
@@ -72,9 +73,9 @@ namespace HRM.Controllers
             }
             _dataContext.TimeKeeping.Update(checkinToday);
             await _dataContext.SaveChangesAsync();
-            return Ok(checkinToday);
+            return CustomResult(checkinToday);
         }
-        private async Task<ActionResult> CheckOut(CheckoutDto input)
+        private async Task<IActionResult> CheckOut(CheckoutDto input)
         {
             var checkoutToday = await _dataContext.TimeKeeping.AsNoTracking().FirstOrDefaultAsync(i => i.EmployeeId == input.EmployeeId && (
                 i.Date.Year == DateTime.Now.Year && i.Date.Month == DateTime.Now.Month && i.Date.Date == DateTime.Now.Date));
@@ -85,10 +86,10 @@ namespace HRM.Controllers
             }
             _dataContext.TimeKeeping.Update(checkoutToday);
             await _dataContext.SaveChangesAsync();
-            return Ok(checkoutToday);
+            return CustomResult(checkoutToday);
         }
         [HttpPut("complainDailyCheckin")]
-        public async Task<ActionResult> ComplainDailyCheckin(ComplainDailyCheckinDto input)
+        public async Task<IActionResult> ComplainDailyCheckin(ComplainDailyCheckinDto input)
         {
             var checkinComplain = await _dataContext.TimeKeeping.FindAsync(input.Id);
             if (checkinComplain != null)
@@ -97,7 +98,7 @@ namespace HRM.Controllers
             }
             _dataContext.TimeKeeping.Update(checkinComplain);
             await _dataContext.SaveChangesAsync();
-            return Ok(checkinComplain);
+            return CustomResult(checkinComplain);
         }
     }
 }

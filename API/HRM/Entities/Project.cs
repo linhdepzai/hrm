@@ -8,10 +8,8 @@ using System;
 
 namespace HRM.Entities
 {
-    public class Project
+    public class Project : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         [Required, StringLength(50)]
         public string ProjectName { get; set; }
         public string Description { get; set; }
@@ -28,6 +26,7 @@ namespace HRM.Entities
         public Priority PriorityCode { get; set; }
         [Required]
         public StatusTask StatusCode { get; set; }
-        public ICollection<Task> Task { get; set; }
+        public ICollection<Tasks> Tasks { get; set; }
+        public ICollection<MemberProject> MemberProject { get; set; }
     }
 }

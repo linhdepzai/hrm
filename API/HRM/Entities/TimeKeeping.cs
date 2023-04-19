@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRM.Entities
 {
-    public class TimeKeeping
+    public class TimeKeeping : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         [ForeignKey("Employee")]
         public Guid EmployeeId { get; set; }
         public DateTime Date { get; set; }

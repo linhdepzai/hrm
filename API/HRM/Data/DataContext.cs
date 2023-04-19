@@ -1,5 +1,9 @@
 ﻿using HRM.Entities;
+using HRM.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using System.Threading;
+using System;
 
 namespace HRM.Data
 {
@@ -17,7 +21,7 @@ namespace HRM.Data
         public DbSet<TimeKeeping> TimeKeeping { get; set; }
         public DbSet<TimeWorking> TimeWorking { get; set; }
         public DbSet<Project> Project { get; set; }
-        public DbSet<Task> Task { get; set; }
+        public DbSet<Tasks> Tasks { get; set; }
         public DbSet<Message> Message { get; set; }
         public DbSet<MemberProject> MemberProject { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
@@ -31,6 +35,49 @@ namespace HRM.Data
                 .HasOne(u => u.Recipient)
                 .WithMany(m => m.MessagesReceived)
                 .OnDelete(DeleteBehavior.Restrict);
+        }
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is IHasCreatorUserId hasCreatorUserIdEntity && entry.State == EntityState.Added)
+                {
+                    hasCreatorUserIdEntity.CreationTime = DateTime.Now;
+                }
+                else if (entry.Entity is IHasLastModifierUserId hasLastModifierUserIdEntity && entry.State == EntityState.Modified)
+                {
+                    hasLastModifierUserIdEntity.LastModificationTime = DateTime.Now;
+                }
+                else if (entry.Entity is ISoftDelete softDeleteEntity && entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    softDeleteEntity.DeletionTime = DateTime.Now;
+                    softDeleteEntity.IsDeleted = true;
+                }
+            }
+            return base.SaveChanges();
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is IHasCreatorUserId hasCreatorUserIdEntity && entry.State == EntityState.Added)
+                {
+                    hasCreatorUserIdEntity.CreationTime = DateTime.Now;
+                }
+                else if (entry.Entity is IHasLastModifierUserId hasLastModifierUserIdEntity && entry.State == EntityState.Modified)
+                {
+                    hasLastModifierUserIdEntity.LastModificationTime = DateTime.Now;
+                }
+                else if (entry.Entity is ISoftDelete softDeleteEntity && entry.State == EntityState.Deleted)
+                {
+                    entry.State = EntityState.Modified;
+                    softDeleteEntity.DeletionTime = DateTime.Now;
+                    softDeleteEntity.IsDeleted = true;
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
         }
     }
 }

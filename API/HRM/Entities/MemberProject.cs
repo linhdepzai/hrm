@@ -5,10 +5,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HRM.Entities
 {
-    public class MemberProject
+    public class MemberProject : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         [ForeignKey("Project")]
         public Guid ProjectId { get; set; }
         [ForeignKey("Employee")]

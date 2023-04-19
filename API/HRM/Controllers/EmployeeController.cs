@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using HRM.Enum;
 using HRM.DTOs.AccountDto;
 using System.Linq;
+using CoreApiResponse;
 
 namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/employee")]
-    public class EmployeeController : ControllerBase
+    public class EmployeeController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -22,10 +23,10 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getAll")]
-        public async Task<ActionResult> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
-            return Ok(userList);
+            return CustomResult(userList);
             /*var dp_params = new DynamicParameters();
             // dp_params.Add("@projectId", projectId, DbType.Guid);
             var userList = await System.Threading.Tasks.Task.FromResult(_dapper.GetAll<GetAllEmployeeDto>("GetAllEmployee", dp_params,
@@ -33,13 +34,13 @@ namespace HRM.Controllers
             return Ok(userList);*/
         }
         [HttpGet("getAllRequestChangeInfo")]
-        public async Task<ActionResult> GetAllRequestChangeInfo()
+        public async Task<IActionResult> GetAllRequestChangeInfo()
         {
             var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
-            return Ok(userList);
+            return CustomResult(userList);
         }
         [HttpPost("save")]
-        public async Task<ActionResult> CreateOrEdit(CreateOrEditEmployeeDto input)
+        public async Task<IActionResult> CreateOrEdit(CreateOrEditEmployeeDto input)
         {
             if (input.Id == null)
             {
@@ -50,12 +51,12 @@ namespace HRM.Controllers
                 return await Update(input);
             }
         }
-        private async Task<ActionResult> Create(CreateOrEditEmployeeDto input)
+        private async Task<IActionResult> Create(CreateOrEditEmployeeDto input)
         {
             var checkId = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(e => e.Identify.ToLower() == input.Identify.ToLower());
-            if (checkId != null) return BadRequest("Employee is taken");
+            if (checkId != null) return CustomResult("Employee is taken", System.Net.HttpStatusCode.BadRequest);
             var checkEmail = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(e => e.Email.ToLower() == input.Email.ToLower());
-            if (checkEmail != null) return BadRequest("Employee is taken");
+            if (checkEmail != null) return CustomResult("Employee is taken", System.Net.HttpStatusCode.BadRequest);
             var employee = new Employee
             {
                 Id = new Guid(),
@@ -98,12 +99,12 @@ namespace HRM.Controllers
             };
             await _dataContext.TimeWorking.AddAsync(timeWorking);
             await _dataContext.SaveChangesAsync();
-            return Ok(employee);
+            return CustomResult(employee);
         }
-        private async Task<ActionResult> Update(CreateOrEditEmployeeDto input)
+        private async Task<IActionResult> Update(CreateOrEditEmployeeDto input)
         {
             var employee = await _dataContext.Employee.FindAsync(input.Id);
-            if (employee.LeaveDate == null) return BadRequest("Employee has retired can't update");
+            if (employee.LeaveDate == null) return CustomResult("Employee has retired can't update", System.Net.HttpStatusCode.BadRequest);
             if (employee != null)
             {
                 employee.FullName = input.FullName;
@@ -129,17 +130,17 @@ namespace HRM.Controllers
             };
             _dataContext.Employee.Update(employee);
             await _dataContext.SaveChangesAsync();
-            return Ok(employee);
+            return CustomResult(employee);
         }
         [HttpPut("updateStatus")]
-        public async Task<ActionResult> UpdateStatus(UpdateStatusEmployeeDto input)
+        public async Task<IActionResult> UpdateStatus(UpdateStatusEmployeeDto input)
         {
             var employeeDraft = await _dataContext.Employee.FindAsync(input.Id);
             if (input.Status == Status.Rejected)
             {
                 _dataContext.Employee.Remove(await _dataContext.Employee.FindAsync(input.Id));
                 await _dataContext.SaveChangesAsync();
-                return Ok("Rejected");
+                return CustomResult("Rejected");
             }
             else
             {
@@ -166,15 +167,15 @@ namespace HRM.Controllers
                 _dataContext.Employee.Update(employee);
                 _dataContext.Employee.Remove(await _dataContext.Employee.FindAsync(input.Id));
                 await _dataContext.SaveChangesAsync();
-                return Ok(employee);
+                return CustomResult(employee);
             }
         }
         [HttpDelete("delete")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             _dataContext.Department.Remove(await _dataContext.Department.FindAsync(id));
             await _dataContext.SaveChangesAsync();
-            return Ok("Removed");
+            return CustomResult("Removed");
         }
         public static string Random(CreateOrEditEmployeeDto input)
         {

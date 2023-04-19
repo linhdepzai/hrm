@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
 using HRM.DTOs.OnLeaveDto;
+using CoreApiResponse;
 
 namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/onleave")]
-    public class OnLeaveController : ControllerBase
+    public class OnLeaveController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -21,13 +22,13 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getAll")]
-        public async Task<ActionResult> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var list = await _dataContext.OnLeave.AsNoTracking().ToListAsync();
-            return Ok(list);
+            return CustomResult(list);
         }
         [HttpPost("requestLeave")]
-        public async Task<ActionResult> Create(CreateOrEditOnLeaveDto input)
+        public async Task<IActionResult> Create(CreateOrEditOnLeaveDto input)
         {
             foreach (var i in input.OnLeave)
             {
@@ -53,15 +54,15 @@ namespace HRM.Controllers
                 }
             };
             await _dataContext.SaveChangesAsync();
-            return Ok(input);
+            return CustomResult(input);
         }
 
         [HttpDelete("delete")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             _dataContext.OnLeave.Remove(await _dataContext.OnLeave.FindAsync(id));
             await _dataContext.SaveChangesAsync();
-            return Ok(id);
+            return CustomResult(id);
         }
     }
 }

@@ -180,7 +180,7 @@ namespace HRM.Controllers
         [HttpDelete("delete")]
         public async Task<ActionResult> DeleteProject(Guid id)
         {
-            _dataContext.Task.RemoveRange(await _dataContext.Task.Where(e => e.ProjectId == id).ToListAsync());
+            _dataContext.Tasks.RemoveRange(await _dataContext.Tasks.Where(e => e.ProjectId == id).ToListAsync());
             await _dataContext.SaveChangesAsync();
             _dataContext.Project.Remove(await _dataContext.Project.FindAsync(id));
             await _dataContext.SaveChangesAsync();

@@ -1,6 +1,6 @@
-﻿using HRM.Data;
+﻿using CoreApiResponse;
+using HRM.Data;
 using HRM.DTOs.AccountDto;
-using HRM.DTOs.EmployeeDto;
 using HRM.Entities;
 using HRM.Enum;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/account")]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -22,13 +22,13 @@ namespace HRM.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<GetAccountDto>> Login(LoginDto input)
+        public async Task<IActionResult> Login(LoginDto input)
         {
             var checkAccount = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(e => e.Email == input.Email && e.Password == input.Password);
-            if (checkAccount == null) return Unauthorized("Your email or password is incorrected!!!");
+            if (checkAccount == null) return CustomResult("Your email or password is incorrected!!!", System.Net.HttpStatusCode.BadRequest);
             var user = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(e => e.Email == input.Email && e.Status == Status.Approved);
-            if (user == null) return Unauthorized("Invalid username");
-            return new GetAccountDto
+            if (user == null) return CustomResult("Invalid username", System.Net.HttpStatusCode.BadRequest);
+            var account = new GetAccountDto
             {
                 Id = user.Id,
                 FullName = user.FullName,
@@ -51,36 +51,38 @@ namespace HRM.Controllers
                 IssuedBy = user.IssuedBy,
                 UserCode = user.UserCode,
             };
+            return CustomResult(account);
         }
         [HttpPut("changePassword")]
-        public async Task<ActionResult> ChangePassword(ChangePasswordDto input)
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto input)
         {
             var user = await _dataContext.Employee.FindAsync(input.Id);
             if (user != null)
             {
                 if (!input.Email.Contains(user.Email))
                 {
-
+                    return CustomResult("This email is not corrected!", null, System.Net.HttpStatusCode.BadRequest);
                 }
                 else if (!input.OldPassword.Contains(user.Password))
                 {
-
+                    return CustomResult("This old password is not corrected!", null, System.Net.HttpStatusCode.BadRequest);
                 }
                 else if (!input.NewPassword.Contains(input.ConfirmPassword))
                 {
-
+                    return CustomResult("This password confirm is not corrected!", null, System.Net.HttpStatusCode.BadRequest);
                 }
                 else
                 {
                     user.Password = input.NewPassword;
                     _dataContext.Employee.Update(user);
                     await _dataContext.SaveChangesAsync();
+                    return CustomResult(user);
                 }
             };
-                    return Ok(user);
+            return CustomResult(null);
         }
         [HttpPut("requestChangeInfor")]
-        public async Task<ActionResult<GetAccountDto>> RequestChangeInfor(ChangeInfoDto input)
+        public async Task<IActionResult> RequestChangeInfor(ChangeInfoDto input)
         {
             var draft = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(i => i.UserCode == input.UserCode && i.Status == Status.Pending);
             if (draft == null)
@@ -116,11 +118,11 @@ namespace HRM.Controllers
                     };
                     await _dataContext.Employee.AddAsync(employee);
                     await _dataContext.SaveChangesAsync();
-                    return Ok(employee);
+                    return CustomResult(employee);
                 }
                 else
                 {
-                    return BadRequest("Request Failed");
+                    return CustomResult("Request Failed", System.Net.HttpStatusCode.BadRequest);
                 }
             }
             else
@@ -141,7 +143,7 @@ namespace HRM.Controllers
                 draft.IssuedBy = input.IssuedBy;
                 _dataContext.Employee.Update(draft);
                 await _dataContext.SaveChangesAsync();
-                return Ok(draft);
+                return CustomResult(draft);
             }
         }
     }

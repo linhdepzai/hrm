@@ -1,11 +1,12 @@
-﻿using HRM.Data;
+﻿using CoreApiResponse;
+using HRM.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/payoff")]
-    public class PayoffController : ControllerBase
+    public class PayoffController : BaseController
     {
         private readonly DataContext _dataContext;
 

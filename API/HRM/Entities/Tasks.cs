@@ -7,10 +7,8 @@ using HRM.Enum;
 
 namespace HRM.Entities
 {
-    public class Task
+    public class Tasks : BaseEntity<Guid>
     {
-        [Key]
-        public Guid Id { get; set; }
         [Required, StringLength(50)]
         public string TaskName { get; set; }
         [Required]

@@ -41,8 +41,8 @@ export class ProjectService {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
       }))
-      .subscribe((response: ProjectResponse[]) => {
-        this.projectList$.next(response);
+      .subscribe((response) => {
+        this.projectList$.next(response.data);
       });
   }
 
@@ -50,11 +50,11 @@ export class ProjectService {
     this.apiService
       .getOnlyProject(projectId)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
-      .subscribe((response: CreateProject) => {
-        this.project$.next(response);
+      .subscribe((response) => {
+        this.project$.next(response.data);
         this.employeeService.getAllEmployee();
       });
 
@@ -64,11 +64,11 @@ export class ProjectService {
     this.apiService
       .saveProject(payload)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
-        if (response.id) {
+        if (response.statusCode == 200) {
           this.notification.success('Successfully!', 'This project has been created!');
         }
       });

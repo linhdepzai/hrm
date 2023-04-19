@@ -35,7 +35,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let data of table.data">
+        <tr [id]="data.id" *ngFor="let data of table.data">
             <td>{{ data.fullName }}</td>
             <td nzAlign="center">
                 <i class="fa-solid" [ngClass]="data.sex == true ? 'fa-mars' : 'fa-venus'"></i>
@@ -47,7 +47,7 @@
             </td>
             <td nzAlign="center">{{ position[data.position] }}</td>
             <td nzAlign="center">
-                <app-tag [color]="getDepartmentName(data.departmentId).color"
+                <app-tag *ngIf="data.departmentId" [color]="getDepartmentName(data.departmentId).color"
                     [label]="getDepartmentName(data.departmentId).name"></app-tag>
             </td>
             <td nzAlign="center">

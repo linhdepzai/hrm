@@ -1,6 +1,8 @@
-﻿namespace HRM.Controllers
+﻿using CoreApiResponse;
+
+namespace HRM.Controllers
 {
-    public class MessageController
+    public class MessageController : BaseController
     {
     }
 }

@@ -25,7 +25,7 @@ namespace HRM.Controllers
         [HttpGet("getall")]
         public async Task<ActionResult> GetAll()
         {
-            var taskList = _dataContext.Task.AsNoTracking().ToListAsync();
+            var taskList = _dataContext.Tasks.AsNoTracking().ToListAsync();
             return Ok(taskList);
         }
         [HttpPost("save")]
@@ -42,7 +42,7 @@ namespace HRM.Controllers
         }
         private async Task<ActionResult> Create(CreateOrEditTaskDto input)
         {
-            var task = await _dataContext.Task.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.ProjectId
+            var task = await _dataContext.Tasks.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.ProjectId
                 && e.TaskName.ToLower() == input.TaskName.ToLower());
             if (task != null) return BadRequest("TaskName was existed");
             var project = await _dataContext.Project.FindAsync(input.ProjectId);
@@ -52,7 +52,7 @@ namespace HRM.Controllers
             }
             else
             {
-                var newTask = new HRM.Entities.Task
+                var newTask = new Tasks
                 {
                     Id = new Guid(),
                     TaskName = input.TaskName,
@@ -67,14 +67,14 @@ namespace HRM.Controllers
                     ProjectId = input.ProjectId,
                     EmployeeId = input.EmployeeId
                 };
-                await _dataContext.Task.AddAsync(newTask);
+                await _dataContext.Tasks.AddAsync(newTask);
                 await _dataContext.SaveChangesAsync();
                 return Ok(newTask);
             }
         }
         private async Task<ActionResult> Update(CreateOrEditTaskDto input)
         {
-            var task = await _dataContext.Task.FindAsync(input.Id);
+            var task = await _dataContext.Tasks.FindAsync(input.Id);
             if (task != null)
             {
                 var project = await _dataContext.Project.FindAsync(input.ProjectId);
@@ -96,14 +96,14 @@ namespace HRM.Controllers
                     task.EmployeeId = input.EmployeeId;
                 }
             };
-            _dataContext.Task.Update(task);
+            _dataContext.Tasks.Update(task);
             await _dataContext.SaveChangesAsync();
             return Ok(task);
         }
         [HttpDelete("delete")]
         public async Task<ActionResult> DeleteTask(Guid id)
         {
-            _dataContext.Task.Remove(await _dataContext.Task.FindAsync(id));
+            _dataContext.Tasks.Remove(await _dataContext.Tasks.FindAsync(id));
             await _dataContext.SaveChangesAsync();
             return Ok("Removed");
         }

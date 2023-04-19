@@ -1,5 +1,10 @@
 import { Bank, Level, OptionOnLeave, Position, Priority, ProjectType, Status, StatusTask } from "../enums/Enum";
 
+export interface ApiResponse {
+    statusCode: number,
+    message: string,
+    data: any,
+}
 export interface LoginResponse {
     id: string;
     fullName: string;

@@ -18,8 +18,12 @@ export class AccountService {
   requestChangeInfor(data: Employee) {
     this.apiService
       .requestChangeInfor(data)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!', err.error.message);
+        return of(err);
+      }))
       .subscribe((response) => {
-        if (response.id) {
+        if (response.statusCode == 200) {
           this.notification.success('Request success!', '');
         }
       });
@@ -29,11 +33,11 @@ export class AccountService {
     this.apiService
       .getAllRequestChangeInfo()
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
-        this.requestChangeInfoList$.next(response);
+        this.requestChangeInfoList$.next(response.data as Employee[]);
       });
   }
 
@@ -41,11 +45,11 @@ export class AccountService {
     this.apiService
       .changePassword(payload)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
-        if (response.id) {
+        if (response.statusCode == 200) {
           this.notification.success('Successfully!!!', 'You have successfully changed your password!');
         }
       });

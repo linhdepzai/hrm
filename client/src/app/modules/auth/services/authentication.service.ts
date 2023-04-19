@@ -28,19 +28,20 @@ export class AuthenticationService {
   login(loginForm: Login) {
     this.loading.next(true);
     this.apiService.login(loginForm)
-      .pipe(catchError((err) => of(err)))
-      .subscribe((response: LoginResponse) => {
-        if (response.id) {
+      .pipe(catchError((err) => {
+        this.notification.error('Login Failed!!!', err.error.message);
+        return of(err);
+      }))
+      .subscribe((response) => {
+        if(response.statusCode == 200){
           if (loginForm.rememberMe == true) {
-            localStorage.setItem('user', JSON.stringify(response));
+            localStorage.setItem('user', JSON.stringify(response.data));
           } else {
-            sessionStorage.setItem('user', JSON.stringify(response));
+            sessionStorage.setItem('user', JSON.stringify(response.data));
           };
-          this.notification.success(`Hello ${response.fullName}!`, '');
+          this.notification.success(`Hello ${response.data.fullName}!`, '');
           this.router.navigate(['manage/home']);
           this.isLogin.next(true);
-        } else {
-          this.notification.error('Login Failed!!!', 'Your email or password is incorrected!!!');
         }
         this.loading.next(false);
       });

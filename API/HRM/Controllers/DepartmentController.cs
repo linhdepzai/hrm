@@ -6,12 +6,14 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using HRM.Entities;
 using System;
+using CoreApiResponse;
+using System.Net;
 
 namespace HRM.Controllers
 {
     [ApiController]
     [Route("api/department")]
-    public class DepartmentController : ControllerBase
+    public class DepartmentController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -20,13 +22,13 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getAll")]
-        public async Task<ActionResult> GetAll()
+        public async Task<IActionResult> GetAll()
         {
             var list = await _dataContext.Department.AsNoTracking().ToListAsync();
-            return Ok(list);
+            return CustomResult(list);
         }
         [HttpPost("save")]
-        public async Task<ActionResult> CreateOrEdit(CreateOrEditDepartmentDto input)
+        public async Task<IActionResult> CreateOrEdit(CreateOrEditDepartmentDto input)
         {
             if (input.Id == null)
             {
@@ -37,10 +39,10 @@ namespace HRM.Controllers
                 return await Create(input);
             }
         }
-        private async Task<ActionResult> Create(CreateOrEditDepartmentDto input)
+        private async Task<IActionResult> Create(CreateOrEditDepartmentDto input)
         {
             var newDepartment = await _dataContext.Department.AsNoTracking().FirstOrDefaultAsync(e => e.Name.ToLower() == input.Name.ToLower());
-            if (newDepartment != null) return BadRequest("DepartmentName is taken");
+            if (newDepartment != null) return CustomResult("DepartmentName is taken", HttpStatusCode.NotFound);
             var department = new Department
             {
                 Id = new Guid(),
@@ -49,9 +51,9 @@ namespace HRM.Controllers
             };
             await _dataContext.Department.AddAsync(department);
             await _dataContext.SaveChangesAsync();
-            return Ok(department);
+            return CustomResult(department);
         }
-        private async Task<ActionResult> Update(CreateOrEditDepartmentDto input)
+        private async Task<IActionResult> Update(CreateOrEditDepartmentDto input)
         {
             var department = await _dataContext.Department.FindAsync(input.Id);
             if(department != null)
@@ -61,14 +63,14 @@ namespace HRM.Controllers
             };
             _dataContext.Department.Update(department);
             await _dataContext.SaveChangesAsync();
-            return Ok(department);
+            return CustomResult(department);
         }
         [HttpDelete("delete")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             _dataContext.Department.Remove(await _dataContext.Department.FindAsync(id));
             await _dataContext.SaveChangesAsync();
-            return Ok("Removed");
+            return CustomResult("Removed");
         }
     }
 }

@@ -27,8 +27,8 @@ export class DepartmentService {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
       }))
-      .subscribe((response: DepartmentResponse[]) => {
-        this.departmentList$.next(response);
+      .subscribe((response) => {
+        this.departmentList$.next(response.data as DepartmentResponse[]);
       });
   }
 
@@ -36,17 +36,17 @@ export class DepartmentService {
     this.apiService
       .saveDepartment(payload)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', 'An error occurred during execution!');
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }))
       .subscribe((response) => {
-        if (response.id) {
-          this.notification.success('Successfully!', 'Department ' + response.name);
+        if (response.statusCode == 200) {
+          this.notification.success('Successfully!', 'Department ' + response.data.name);
           if (payload.id) {
-            this.departmentList$.value.splice(this.departmentList$.value.findIndex((item) => item.id === response.id), 1, response);
+            this.departmentList$.value.splice(this.departmentList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
             this.departmentList$.next([...this.departmentList$.value]);
           } else {
-            this.departmentList$.next([response, ...this.departmentList$.value]);
+            this.departmentList$.next([response.data, ...this.departmentList$.value]);
           };
         };
       });
