@@ -46,7 +46,7 @@ export class EmployeeService {
             this.employeeList$.value.splice(this.employeeList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
             this.employeeList$.next([...this.employeeList$.value]);
           } else {
-            this.employeeList$.next([response, ...this.employeeList$.value]);
+            this.employeeList$.next([response.data, ...this.employeeList$.value]);
           };
         };
       });

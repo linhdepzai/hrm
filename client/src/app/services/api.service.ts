@@ -1,18 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Status } from '../enums/Enum';
-import { ApiResponse, DepartmentResponse, LoginResponse, OnLeaveResponse, ProjectResponse, TimeKeepingResponse, TimeWorkingResponse } from '../interfaces/interfaceReponse';
-import { CheckinOrCheckout, CreateProject, Employee, Login } from '../interfaces/interfaces';
+import { ApiResponse, TimeKeepingResponse } from '../interfaces/interfaceReponse';
+import { ChangePassword, CheckinOrCheckout, CreateProject, Employee, Login, WorkingTimeRequest } from '../interfaces/interfaces';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  
 
-  constructor(private httpClient: HttpClient) { }
+
+  constructor(private httpClient: HttpClient, private notification: NzNotificationService) { }
 
   login(payload: Login): Observable<ApiResponse> {
     return this.httpClient.post<ApiResponse>(environment.baseUrl + 'account/login', payload);
@@ -22,7 +23,7 @@ export class ApiService {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/requestChangeInfor', payload);
   }
 
-  updateStatusUserInfo(payload: {id: string, status: Status}): Observable<ApiResponse> {
+  updateStatusUserInfo(payload: { id: string, status: Status }): Observable<ApiResponse> {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'employee/updateStatus', payload);
   }
 
@@ -66,35 +67,47 @@ export class ApiService {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'timeworking/getAll');
   }
 
-  getAllProject(): Observable<ApiResponse>{
+  getAllProject(): Observable<ApiResponse> {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getall');
   }
 
-  getOnlyProject(projectId: string): Observable<ApiResponse>{
+  getOnlyProject(projectId: string): Observable<ApiResponse> {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getAProject?projectId=' + projectId);
   }
 
-  saveProject(payload: CreateProject): Observable<ApiResponse>{
+  saveProject(payload: CreateProject): Observable<ApiResponse> {
     return this.httpClient.post<ApiResponse>(environment.baseUrl + 'project/save', payload);
   }
 
-  getTimeKeepingForUser(id: string, month: number, year: number): Observable<ApiResponse>{
+  getTimeKeepingForUser(id: string, month: number, year: number): Observable<ApiResponse> {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + `timekeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`);
   }
 
-  checkinOrCheckout(payload: CheckinOrCheckout): Observable<TimeKeepingResponse>{
+  checkinOrCheckout(payload: CheckinOrCheckout): Observable<TimeKeepingResponse> {
     return this.httpClient.post<TimeKeepingResponse>(environment.baseUrl + 'timekeeping/checkinOrCheckout', payload);
   }
 
-  getAllRequestChangeInfo(): Observable<ApiResponse>{
+  getAllRequestChangeInfo(): Observable<ApiResponse> {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAllRequestChangeInfo');
   }
 
-  complainDailyCheckin(payload: any): Observable<ApiResponse>{
+  complainDailyCheckin(payload: any): Observable<ApiResponse> {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timekeeping/complainDailyCheckin', payload);
   }
 
-  changePassword(payload: {id: string, password: string}): Observable<ApiResponse>{
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'changePassword', payload);
+  changePassword(payload: ChangePassword): Observable<ApiResponse> {
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/changePassword', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!', err.error.message);
+        return of(err);
+      }));
+  }
+
+  requestChangeTimeWorking(payload: WorkingTimeRequest): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'timeworking/requestChangeTimeWorking', payload);
+  }
+
+  getAllRequestChangeTimeWorkingForUser(id: string): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'account/getAllRequestChangeTimeWorkingForUser?id=' + id);
   }
 }

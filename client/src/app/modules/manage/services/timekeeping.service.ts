@@ -31,10 +31,15 @@ export class TimekeepingService {
       }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
+          if(response.data.photoCheckout == null) {
+            const timeCheckin = this.datepipe.transform(response.data.checkin, 'HH:mm');
+            this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
+          } else {
+            const timeCheckout = this.datepipe.transform(response.data.checkout, 'HH:mm');
+            this.notification.success('Checkout success!!!', 'You checkout at ' + timeCheckout);
+          }
           this.myTimeKeepingList$.value.splice(this.myTimeKeepingList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
           this.myTimeKeepingList$.next([...this.myTimeKeepingList$.value]);
-          const timeCheckin = this.datepipe.transform(response.checkin, 'HH:mm');
-          this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
         }
       });
   }

@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Status } from 'src/app/enums/Enum';
 import { LoginResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { AccountService } from '../../services/account.service';
 import { TimeworkingService } from '../../services/timeworking.service';
 
 @Component({
@@ -19,24 +21,28 @@ export class MyWorkingTimeComponent implements OnInit {
   status = Status;
 
   constructor(
+    private accountService: AccountService,
     private timeworkingService: TimeworkingService,
     private fb: FormBuilder,
     private datepipe: DatePipe,
+    private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.accountService.getAllRequestChangeTimeWorkingForUser(this.user.id);
     this.initForm();
     this.checkEdit();
-    this.timeworkingService.timeWorkingList$.subscribe((data) => {
-      this.timeWorkingList = data.filter((item) => item.employeeId == this.user.id);
-      this.workingTimeForm.patchValue(this.timeWorkingList[0]);
+    this.accountService.requestTimeWorkingList$.subscribe((data) => {
+      this.timeWorkingList = data;
+      this.workingTimeForm.patchValue(data[0]);
       this.calcTotalTime();
     });
   }
 
   initForm() {
     this.workingTimeForm = this.fb.group({
+      employeeId: [this.user.id, Validators.required],
       morningStartTime: [null, Validators.required],
       morningEndTime: [null, Validators.required],
       afternoonStartTime: [null, Validators.required],
@@ -80,6 +86,20 @@ export class MyWorkingTimeComponent implements OnInit {
   }
 
   submit() {
-
+    if (this.workingTimeForm.valid) {
+      if ((this.calcTotalTime() as number) >= 8) {
+        this.timeworkingService.requestChangeTimeWorking(this.workingTimeForm.value);
+        this.changeMode();
+      } else {
+        this.notification.error('Error!!!', 'Working time must be greater than or equal to 8 hours!')
+      }
+    } else {
+      Object.values(this.workingTimeForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 }

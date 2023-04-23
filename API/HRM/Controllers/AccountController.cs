@@ -6,6 +6,7 @@ using HRM.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HRM.Controllers
@@ -59,17 +60,17 @@ namespace HRM.Controllers
             var user = await _dataContext.Employee.FindAsync(input.Id);
             if (user != null)
             {
-                if (!input.Email.Contains(user.Email))
+                if (String.Compare(input.Email, user.Email) == 1)
                 {
-                    return CustomResult("This email is not corrected!", null, System.Net.HttpStatusCode.BadRequest);
+                    return CustomResult("This email is not corrected!", System.Net.HttpStatusCode.BadRequest);
                 }
-                else if (!input.OldPassword.Contains(user.Password))
+                else if (String.Compare(input.OldPassword, user.Password) == 1)
                 {
-                    return CustomResult("This old password is not corrected!", null, System.Net.HttpStatusCode.BadRequest);
+                    return CustomResult("This old password is not corrected!", System.Net.HttpStatusCode.BadRequest);
                 }
-                else if (!input.NewPassword.Contains(input.ConfirmPassword))
+                else if (String.Compare(input.NewPassword, input.ConfirmPassword) == 1)
                 {
-                    return CustomResult("This password confirm is not corrected!", null, System.Net.HttpStatusCode.BadRequest);
+                    return CustomResult("This password confirm is not corrected!", System.Net.HttpStatusCode.BadRequest);
                 }
                 else
                 {
@@ -145,6 +146,12 @@ namespace HRM.Controllers
                 await _dataContext.SaveChangesAsync();
                 return CustomResult(draft);
             }
+        }
+        [HttpGet("getAllRequestChangeTimeWorkingForUser")]
+        public async Task<IActionResult> getAllRequestChangeTimeWorkingForUser(Guid id)
+        {
+            var list = await _dataContext.TimeWorking.Where(i => i.EmployeeId == id).AsNoTracking().ToListAsync();
+            return CustomResult(list);
         }
     }
 }

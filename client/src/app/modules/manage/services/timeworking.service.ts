@@ -3,6 +3,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
+import { WorkingTimeRequest } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 
 @Injectable({
@@ -14,7 +15,8 @@ export class TimeworkingService {
   constructor(
     private apiService: ApiService,
     private message: NzMessageService,
-  ) { 
+    private notification: NzNotificationService,
+  ) {
     this.getAllTimeWorking();
   }
 
@@ -30,6 +32,18 @@ export class TimeworkingService {
           return new Date(b.applyDate).getTime() - new Date(a.applyDate).getTime();
         });
         this.timeWorkingList$.next(data);
+      });
+  }
+
+  requestChangeTimeWorking(payload: WorkingTimeRequest) {
+    this.apiService
+      .requestChangeTimeWorking(payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.timeWorkingList$.next([response.data, ...this.timeWorkingList$.value]);
       });
   }
 }

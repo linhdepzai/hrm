@@ -51,7 +51,7 @@ export class CreateOrEditEmployeeComponent implements OnInit {
       doB: [null, Validators.required],
       level: [Level.Intern, Validators.required],
       position: [Position.Dev, Validators.required],
-      departmentId: [null, Validators.required],
+      departmentId: [null],
       startingDate: [null, Validators.required],
       bank: [null],
       bankAccount: [null],

@@ -27,19 +27,12 @@ namespace HRM.Controllers
         public async Task<IActionResult> GetAll()
         {
             var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
-            return CustomResult(list); 
-        }
-        [HttpGet("getAllRequestOff")]
-        public async Task<IActionResult> GetAllRequestOff()
-        {
-            var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
-        [HttpPut("edit")]
-        public async Task<IActionResult> Update(CreateOrEditTimeWorkingDto input)
+        [HttpPost("requestChangeTimeWorking")]
+        public async Task<IActionResult> RequestChangeWorkingTime(CreateOrEditTimeWorkingDto input)
         {
-            var timeWorking = await _dataContext.TimeWorking.FindAsync(input.Id);
-            if (timeWorking == null) return CustomResult("Error", System.Net.HttpStatusCode.BadRequest);
+            var timeWorking = await _dataContext.TimeWorking.FirstOrDefaultAsync(i => i.EmployeeId == input.EmployeeId && i.Status == Status.Pending);
             if (timeWorking != null)
             {
                 timeWorking.EmployeeId = input.EmployeeId;
@@ -48,12 +41,30 @@ namespace HRM.Controllers
                 timeWorking.AfternoonStartTime = input.AfternoonStartTime;
                 timeWorking.AfternoonEndTime = input.AfternoonEndTime;
                 timeWorking.ApplyDate = input.ApplyDate;
-                timeWorking.RequestDate = input.RequestDate;
-                timeWorking.Status = Status.New;
-            };
-            _dataContext.TimeWorking.Update(timeWorking);
-            await _dataContext.SaveChangesAsync();
-            return CustomResult(timeWorking);
+                timeWorking.RequestDate = DateTime.Now;
+                timeWorking.Status = Status.Pending;
+                _dataContext.TimeWorking.Update(timeWorking);
+                await _dataContext.SaveChangesAsync();
+                return CustomResult(timeWorking);
+            }
+            else
+            {
+                var newTimeWorking = new TimeWorking
+                {
+                    Id = new Guid(),
+                    EmployeeId = input.EmployeeId,
+                    MorningStartTime = input.MorningStartTime,
+                    MorningEndTime = input.MorningEndTime,
+                    AfternoonStartTime= input.AfternoonStartTime,
+                    AfternoonEndTime= input.AfternoonEndTime,
+                    ApplyDate = input.ApplyDate,
+                    RequestDate = DateTime.Now,
+                    Status = Status.Pending,
+                };
+                await _dataContext.TimeWorking.AddAsync(newTimeWorking);
+                await _dataContext.SaveChangesAsync();
+                return CustomResult(newTimeWorking);
+            }
         }
         [HttpPut("updateStatus")]
         public async Task<IActionResult> UpdateStatus(UpdateStatusEmployeeDto input)

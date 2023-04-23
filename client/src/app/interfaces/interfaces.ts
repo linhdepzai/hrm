@@ -61,3 +61,20 @@ export interface CheckinOrCheckout {
     checkout: Date,
     photoCheckout: string,
 }
+
+export interface ChangePassword {
+    id: string,
+    email: string,
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string,
+}
+
+export interface WorkingTimeRequest {
+    employeeId: string,
+    morningStartTime: Date,
+    morningEndTime: Date,
+    afternoonStartTime: Date,
+    afternoonEndTime: Date,
+    applyDate: Date,
+}

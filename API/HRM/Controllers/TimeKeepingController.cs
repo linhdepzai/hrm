@@ -81,8 +81,8 @@ namespace HRM.Controllers
                 i.Date.Year == DateTime.Now.Year && i.Date.Month == DateTime.Now.Month && i.Date.Date == DateTime.Now.Date));
             if (checkoutToday != null)
             {
-                checkoutToday.Checkin = input.Checkout;
-                checkoutToday.PhotoCheckin = input.PhotoCheckout;
+                checkoutToday.Checkout = input.Checkout;
+                checkoutToday.PhotoCheckout = input.PhotoCheckout;
             }
             _dataContext.TimeKeeping.Update(checkoutToday);
             await _dataContext.SaveChangesAsync();
