@@ -110,4 +110,8 @@ export class ApiService {
   getAllRequestChangeTimeWorkingForUser(id: string): Observable<ApiResponse> {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'account/getAllRequestChangeTimeWorkingForUser?id=' + id);
   }
+
+  updateStatusChangeTimeWorking(payload: {id: string, status: number}): Observable<ApiResponse> {
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timeworking/updateStatus', payload);
+  }
 }

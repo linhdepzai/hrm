@@ -41,7 +41,10 @@ export interface OnLeaveResponse {
     dateLeave: Date,
     option: OptionOnLeave,
     reason: string,
-    status: Status
+    status: Status,
+    creationTime: Date,
+    lastModifierUserId: string,
+    lastModificationTime: Date,
 }
 
 export interface TimeWorkingResponse {

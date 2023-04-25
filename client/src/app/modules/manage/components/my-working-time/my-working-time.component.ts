@@ -35,7 +35,13 @@ export class MyWorkingTimeComponent implements OnInit {
     this.checkEdit();
     this.accountService.requestTimeWorkingList$.subscribe((data) => {
       this.timeWorkingList = data;
-      this.workingTimeForm.patchValue(data[0]);
+      let nearDate = Infinity;
+      data.forEach(item => {
+        if (item.status == Status.Approved && (new Date().getTime() - new Date(item.applyDate).getTime()) <= nearDate) {
+          nearDate = new Date().getTime() - new Date(item.applyDate).getTime();
+          this.workingTimeForm.patchValue(item);
+        }
+      });
       this.calcTotalTime();
     });
   }
@@ -85,10 +91,18 @@ export class MyWorkingTimeComponent implements OnInit {
     this.checkEdit();
   }
 
+  formatType(value: string[]) {
+    value.forEach(item => {
+      this.workingTimeForm.controls[item].setValue(new Date(this.workingTimeForm.controls[item].value));
+    });
+  }
+
   submit() {
     if (this.workingTimeForm.valid) {
       if ((this.calcTotalTime() as number) >= 8) {
+        this.formatType(['morningStartTime', 'morningEndTime', 'afternoonStartTime', 'afternoonEndTime', 'applyDate']);
         this.timeworkingService.requestChangeTimeWorking(this.workingTimeForm.value);
+        this.notification.success('Successfully!!!', 'Request change working time success!')
         this.changeMode();
       } else {
         this.notification.error('Error!!!', 'Working time must be greater than or equal to 8 hours!')

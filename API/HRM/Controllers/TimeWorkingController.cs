@@ -26,7 +26,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _dataContext.TimeWorking.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
+            var list = await _dataContext.TimeWorking.AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
         [HttpPost("requestChangeTimeWorking")]
@@ -36,11 +36,11 @@ namespace HRM.Controllers
             if (timeWorking != null)
             {
                 timeWorking.EmployeeId = input.EmployeeId;
-                timeWorking.MorningStartTime = input.MorningStartTime;
-                timeWorking.MorningEndTime = input.MorningEndTime;
-                timeWorking.AfternoonStartTime = input.AfternoonStartTime;
-                timeWorking.AfternoonEndTime = input.AfternoonEndTime;
-                timeWorking.ApplyDate = input.ApplyDate;
+                timeWorking.MorningStartTime = input.MorningStartTime.AddHours(7);
+                timeWorking.MorningEndTime = input.MorningEndTime.AddHours(7);
+                timeWorking.AfternoonStartTime = input.AfternoonStartTime.AddHours(7);
+                timeWorking.AfternoonEndTime = input.AfternoonEndTime.AddHours(7);
+                timeWorking.ApplyDate = input.ApplyDate.AddHours(7);
                 timeWorking.RequestDate = DateTime.Now;
                 timeWorking.Status = Status.Pending;
                 _dataContext.TimeWorking.Update(timeWorking);
@@ -53,11 +53,11 @@ namespace HRM.Controllers
                 {
                     Id = new Guid(),
                     EmployeeId = input.EmployeeId,
-                    MorningStartTime = input.MorningStartTime,
-                    MorningEndTime = input.MorningEndTime,
-                    AfternoonStartTime= input.AfternoonStartTime,
-                    AfternoonEndTime= input.AfternoonEndTime,
-                    ApplyDate = input.ApplyDate,
+                    MorningStartTime = input.MorningStartTime.AddHours(7),
+                    MorningEndTime = input.MorningEndTime.AddHours(7),
+                    AfternoonStartTime = input.AfternoonStartTime.AddHours(7),
+                    AfternoonEndTime = input.AfternoonEndTime.AddHours(7),
+                    ApplyDate = input.ApplyDate.AddHours(7),
                     RequestDate = DateTime.Now,
                     Status = Status.Pending,
                 };
@@ -67,23 +67,22 @@ namespace HRM.Controllers
             }
         }
         [HttpPut("updateStatus")]
-        public async Task<IActionResult> UpdateStatus(UpdateStatusEmployeeDto input)
+        public async Task<IActionResult> UpdateStatus(UpdateStatusTimeWorkingDto input)
         {
-            var employee = await _dataContext.Employee.FindAsync(input.Id);
-            if (employee != null)
+            var timeWorking = await _dataContext.TimeWorking.FindAsync(input.Id);
+            if (timeWorking != null)
             {
-                if (employee.Position != Position.PM)
+                timeWorking.Status = input.Status;
+                string applyDate = timeWorking.ApplyDate.ToString();
+                string today = DateTime.Now.ToString();
+                if (input.Status == Status.Approved && DateTime.Compare(DateTime.Parse(applyDate), DateTime.Parse(today)) < 0)
                 {
-                    employee.Status = Status.Pending;
-                }
-                else
-                {
-                    employee.Status = input.Status;
+                    timeWorking.ApplyDate = DateTime.Now;
                 }
             };
-            _dataContext.Employee.Update(employee);
+            _dataContext.TimeWorking.Update(timeWorking);
             await _dataContext.SaveChangesAsync();
-            return CustomResult(employee);
+            return CustomResult(timeWorking);
         }
     }
 }

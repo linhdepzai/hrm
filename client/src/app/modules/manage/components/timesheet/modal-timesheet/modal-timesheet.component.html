@@ -1,0 +1,39 @@
+<nz-modal
+    [(nzVisible)]="isVisibleModal"
+    nzWidth="1000px"
+    [nzTitle]="header"
+    [nzContent]="content"
+    [nzFooter]="null"
+    (nzOnCancel)="handleCancel()"
+></nz-modal>
+<ng-template #header>
+    <i class="fa-solid fa-calendar-days mr-5"></i>
+    <span>List Off {{ date | date: 'dd-MM-yyyy' }}</span>
+</ng-template>
+<ng-template #content>
+    <nz-table #table [nzData]="onleaveList" [nzShowTotal]="rangeTemplate">
+        <ng-template #rangeTemplate let-range="range" let-total>
+            {{ range[0] }}-{{ range[1] }} of {{ total }} items
+        </ng-template>
+        <thead>
+            <tr>
+                <th nzAlign="center">Account</th>
+                <th nzAlign="center">Option</th>
+                <th nzAlign="center">Reason</th>
+                <th nzAlign="center">Status</th>
+                <th nzAlign="center">Request At</th>
+                <th nzAlign="center">Approved At</th>
+            </tr>
+        </thead>
+        <tbody  cdkDropList (cdkDropListDropped)="drop($event)">
+            <tr *ngFor="let item of table.data" cdkDrag>
+                <td>{{ getAccountName(item.employeeId) }}</td>
+                <td>{{ getOptionRequestOff(item.option) }}</td>
+                <td>{{ item.reason }}</td>
+                <td nzAlign="center">{{ status[item.status] }}</td>
+                <td nzAlign="center">{{ item.creationTime | date: 'yyyy-MM-ddTHH:mm:ss' }}</td>
+                <td nzAlign="center">{{ item.lastModificationTime | date: 'yyyy-MM-ddTHH:mm:ss' }}</td>
+            </tr>
+        </tbody>
+    </nz-table>
+</ng-template>

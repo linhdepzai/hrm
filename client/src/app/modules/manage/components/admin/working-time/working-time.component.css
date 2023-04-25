@@ -1,6 +1,24 @@
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 
+::ng-deep .cdk-drag-preview {
+    display: table;
+}
+
+::ng-deep .cdk-drag-placeholder {
+    opacity: 0;
+}
+
 .search-name {
     margin: 0 1%;
     margin-bottom: 15px;
+}
+
+.filter {
+    margin-bottom: -10px;
+    float: right;
+}
+
+.pending:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }

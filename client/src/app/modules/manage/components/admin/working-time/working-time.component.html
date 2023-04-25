@@ -1,19 +1,25 @@
 <div class="title">Working Time</div>
-<nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" style="width: 20%;">
-    <nz-option nzLabel="Pending" [nzValue]="2"></nz-option>
-    <nz-option nzLabel="Approved" [nzValue]="3"></nz-option>
-</nz-select>
-<nz-select class="search-name" nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" style="width: 20%;">
+<nz-select class="search-name" nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null"
+    style="width: 20%;" (ngModelChange)="searchName($event)">
     <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
 </nz-select>
 <button nz-button nzType="primary" (click)="refresh()" class="btn-refresh">
     <i class="fa-solid fa-arrows-rotate mr-5"></i>
     <span>Refresh</span>
 </button>
-<nz-table #table>
+<nz-radio-group class="filter" [ngModel]="'Approve'" nzButtonStyle="solid" (ngModelChange)="changeFilter($event)">
+    <label nz-radio-button nzValue="All">All</label>
+    <label nz-radio-button nzValue="Approve">Approve</label>
+    <label nz-radio-button nzValue="Pending">Pending</label>
+</nz-radio-group>
+<nz-table #table [nzData]="filterList" [nzShowTotal]="rangeTemplate">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
     <thead>
         <tr>
             <th nzAlign="center">Name</th>
+            <th nzAlign="center">Apply Date</th>
             <th nzAlign="center">Morning Start Time</th>
             <th nzAlign="center">Morning End Time</th>
             <th nzAlign="center">Afternoon Start Time</th>
@@ -22,33 +28,24 @@
             <th nzAlign="center">Status</th>
         </tr>
     </thead>
-    <tbody>
-        <tr *ngFor="let data of table.data">
-            <ng-template *ngIf="data.status == 3 else pending">
-                <td>{{ getUserName(data.id) }}</td>
-                <td nzAlign="center">{{ data.morningStartTime }}</td>
-                <td nzAlign="center">{{ data.morningEndTime }}</td>
-                <td nzAlign="center">{{ data.afternoonStartTime }}</td>
-                <td nzAlign="center">{{ data.afternoonEndTime }}</td>
-                <td nzAlign="center">{{ calcTime(data.morningStartTime, data.morningEndTime) +
-                    calcTime(data.afternoonStartTime, data.afternoonEndTime) }}</td>
-                <td nzAlign="center">
-                    <span class="Approved">Approved</span>
-                </td>
-            </ng-template>
-            <ng-template #pending (click)="changeStatusWorkingTime(data)">
-                <td>{{ getUserName(data.id) }}</td>
-                <td nzAlign="center">{{ data.morningStartTime }}</td>
-                <td nzAlign="center">{{ data.morningEndTime }}</td>
-                <td nzAlign="center">{{ data.afternoonStartTime }}</td>
-                <td nzAlign="center">{{ data.afternoonEndTime }}</td>
-                <td nzAlign="center">{{ calcTime(data.morningStartTime, data.morningEndTime) +
-                    calcTime(data.afternoonStartTime, data.afternoonEndTime) }}</td>
-                <td nzAlign="center">
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag (click)="data.status != 3 ? changeStatusWorkingTime(data) : null" [ngClass]="data.status == 2 ? 'pending': ''">
+            <td>{{ getUserName(data.employeeId) }}</td>
+            <td nzAlign="center">{{ data.applyDate | date: 'dd/MM/yyyy' }}</td>
+            <td nzAlign="center">{{ data.morningStartTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ data.morningEndTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ data.afternoonStartTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ data.afternoonEndTime | date: 'HH:mm' }}</td>
+            <td nzAlign="center">{{ calcTime(data.morningStartTime | date: 'HH:mm', data.morningEndTime | date: 'HH:mm')
+                + calcTime(data.afternoonStartTime | date: 'HH:mm', data.afternoonEndTime | date: 'HH:mm') }}</td>
+            <td nzAlign="center">
+                <span *ngIf="data.status == 3 else pending" class="Approved">Approved</span>
+                <ng-template #pending>
                     <span class="Pending">Pending</span>
-                </td>
-            </ng-template>
+                </ng-template>
+            </td>
         </tr>
     </tbody>
 </nz-table>
-<app-modal-working-time [isVisibleModal]="isVisibleModal" [data]="itemWorkingTime" (cancel)="isVisibleModal = false"></app-modal-working-time>
+<app-modal-working-time [isVisibleModal]="isVisibleModal" [data]="itemWorkingTime"
+    (cancel)="isVisibleModal = false"></app-modal-working-time>

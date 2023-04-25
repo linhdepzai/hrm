@@ -28,7 +28,7 @@ export class EmployeeService {
         return of(err);
       }))
       .subscribe((response) => {
-        this.employeeList$.next(response.data as Employee[]);
+        this.employeeList$.next(response.data);
       });
   }
 

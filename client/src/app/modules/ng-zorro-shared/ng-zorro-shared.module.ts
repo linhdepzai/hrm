@@ -66,6 +66,7 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzAnchorModule } from 'ng-zorro-antd/anchor';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
+import { DragDropModule } from '@angular/cdk/drag-drop'
 
 @NgModule({
   declarations: [],
@@ -140,6 +141,7 @@ import { NzBackTopModule } from 'ng-zorro-antd/back-top';
     NzSpinModule,
     NzAnchorModule,
     NzBackTopModule,
+    DragDropModule,
   ]
 })
 export class NgZorroSharedModule { }

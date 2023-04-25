@@ -1,3 +1,16 @@
 <div class="title">Timesheet</div>
-<nz-calendar [ngModel]="date" (ngModelChange)="a($event)">
+<nz-calendar [ngModel]="date" (nzSelectChange)="selectDateRequest($event)" [nzMode]="'month'" [nzDateCell]="dateCellTpl"
+    [nzMonthCell]="monthCellTpl">
 </nz-calendar>
+<ng-template #dateCellTpl let-date>
+    <ng-container *ngFor="let item of onLeaveList">
+        <div *ngIf="formatDate(item.dateLeave) == formatDate(date)" (click)="openModal(date)">
+            <nz-avatar [nzSize]="20" nzIcon="user"
+                nzSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiuxu29YKej9hhnYkaDVBrbXaNs_25eRYABg&usqp=CAU"></nz-avatar>
+            <span nz-typography nzEllipsis>{{ getAccount(item.employeeId)?.fullName }}</span>
+        </div>
+    </ng-container>
+</ng-template>
+<ng-template #monthCellTpl let-month></ng-template>
+<app-modal-timesheet [isVisibleModal]="isVisibleModal" [date]="date"
+    (cancel)="isVisibleModal = false"></app-modal-timesheet>

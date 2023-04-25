@@ -21,3 +21,7 @@
     max-height: 98.234px;;
     overflow-y: auto;
 }
+
+.mirror {
+    transform: scaleX(-1);
+}

@@ -74,19 +74,19 @@ label {
 }
 
 .morning {
-    color:#2600ff;
+    color: #2600ff;
 }
 
 .afternoon {
-    color:#a11ec2;
+    color: #a11ec2;
 }
 
 .fullday {
-    color:#ff0000;
+    color: #ff0000;
 }
 
 .late {
-    color:#ff9100;
+    color: #ff9100;
 }
 
 .New {
@@ -128,4 +128,3 @@ label {
     border-color: #46b112 !important;
     background-color: #46b112 !important;
 }
-

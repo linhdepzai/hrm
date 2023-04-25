@@ -13,7 +13,7 @@
         <div nz-row [nzGutter]="24">
             <div nz-col nzSpan="16">
                 <div *ngIf="webcamImage; else imageCheckin">
-                    <img [src]="webcamImage.imageAsDataUrl" alt="Image Checkin" class="image-check">
+                    <img [src]="webcamImage.imageAsDataUrl" alt="Image Checkin" class="image-check mirror">
                 </div>
                 <ng-template #imageCheckin>
                     <div class="image-check">
@@ -31,13 +31,13 @@
                     <div class="image-check" style="border: 1px dashed #000; height: 49%;"></div>
                 </div>
                 <div *ngSwitchCase="1" style="height: 100%;">
-                    <img [src]="checkinList[0].photo" alt="Image Checkin" class="image-check">
+                    <img [src]="checkinList[0].photo" alt="Image Checkin" class="image-check mirror">
                     <div class="image-check" style="border: 1px dashed #000; height: 49%; margin-top: 24px;"></div>
                 </div>
                 <div *ngSwitchDefault>
-                    <img [src]="checkinList[0].photo" alt="Image Checkin" class="image-check"
+                    <img [src]="checkinList[0].photo" alt="Image Checkin" class="image-check mirror"
                         style="padding-bottom: 24px;">
-                    <img [src]="checkinList[1].photo" alt="Image Checkin" class="image-check">
+                    <img [src]="checkinList[1].photo" alt="Image Checkin" class="image-check mirror">
                 </div>
             </div>
         </div>

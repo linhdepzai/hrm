@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { Status } from 'src/app/enums/Enum';
+import { TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
+import { TimeworkingService } from 'src/app/modules/manage/services/timeworking.service';
 
 @Component({
   selector: 'app-modal-working-time',
@@ -8,11 +12,13 @@ import { FormGroup } from '@angular/forms';
 })
 export class ModalWorkingTimeComponent implements OnInit {
   @Input() isVisibleModal: boolean = false;
-  @Input() data: any;
+  @Input() data!: TimeWorkingResponse;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   workingTimeForm!: FormGroup;
 
   constructor(
+    private timeworkingService: TimeworkingService,
+    private notification: NzNotificationService
   ) { }
 
   ngOnInit(): void {
@@ -27,8 +33,10 @@ export class ModalWorkingTimeComponent implements OnInit {
     this.cancel.emit();
   }
 
-  submitForm() {
-
+  submitForm(value: string) {
+    this.timeworkingService.updateStatusChangeTimeWorking({id: this.data.id, status: value == 'approve' ? Status.Approved : Status.Rejected});
+    this.notification.success('Successfully', '');
+    this.cancel.emit();
   }
 
   calcTime(startTime: any, endTime: any) {
