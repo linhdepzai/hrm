@@ -99,8 +99,9 @@ export class ApiService {
       }));
   }
 
-  getAllOnLeave(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll')
+  getAllOnLeave(employeeId: string): Observable<ApiResponse> {
+    const id = employeeId.trim() != '' ? '?id=' + employeeId : '';
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll' + id)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

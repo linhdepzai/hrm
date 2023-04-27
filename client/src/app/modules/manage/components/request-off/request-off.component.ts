@@ -37,7 +37,7 @@ export class RequestOffComponent implements OnInit {
     this.requestList = [];
     this.optionRequestList = this.dataService.requestOffList;
     this.onleaveService.onLeaveList$.subscribe((data) => {
-      this.onLeaveList = data.filter((item) => item.employeeId == user.id);
+      this.onLeaveList = data;
     });
   }
 

@@ -47,8 +47,9 @@ as
 	while @i <= @totalUser
 	begin
 		declare @UserId uniqueidentifier = (select [Id] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
-		declare @StartTime time = cast((select [MorningStartTime] from TimeWorking where [EmployeeId] = @UserId) as time);
-		declare @EndTime time = cast((select [AfternoonEndTime] from TimeWorking where [EmployeeId] = @UserId) as time);
+		select top 1* from TimeWorking where EmployeeId = 'B35658A5-EEDD-4024-F44E-08DB40890FA4' and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc
+		declare @StartTime time = cast((select top 1 [MorningStartTime] from TimeWorking where [EmployeeId] = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc) as time);
+		declare @EndTime time = cast((select top 1 [AfternoonEndTime] from TimeWorking where [EmployeeId] = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc) as time);
 		declare @CheckDateOff int = (select count(*) as count from TimeKeeping where [EmployeeId] = @UserId and cast([Date] as date) = @Today);
 		if (@CheckDateOff <> 0)
 		begin
@@ -60,11 +61,11 @@ as
 				declare @Request int = (select [Option] from OnLeave where EmployeeId = @UserId and cast(DateLeave as date) = cast(getdate() as date) and Status = 3);
 				if (@Request = 1)
 				begin
-					set @StartTime = cast((select [AfternoonStartTime] from TimeWorking where [EmployeeId] = @UserId) as time)
+					set @StartTime = cast((select top 1 [AfternoonStartTime] from TimeWorking where [EmployeeId] = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc) as time)
 				end
 				else if (@Request = 2)
 				begin
-					set @EndTime = cast((select [MorningEndTime] from TimeWorking where [EmployeeId] = @UserId) as time);
+					set @EndTime = cast((select top 1 [MorningEndTime] from TimeWorking where [EmployeeId] = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc) as time);
 				end
 				else if (@Request = 4)
 				begin

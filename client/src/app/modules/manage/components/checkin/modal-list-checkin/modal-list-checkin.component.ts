@@ -3,6 +3,9 @@ import { LoginResponse, TimeKeepingResponse, TimeWorkingResponse } from 'src/app
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { TimekeepingService } from '../../../services/timekeeping.service';
 import { TimeworkingService } from '../../../services/timeworking.service';
+import { AccountService } from '../../../services/account.service';
+import { Status } from 'src/app/enums/Enum';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-modal-list-checkin',
@@ -13,7 +16,7 @@ export class ModalListCheckinComponent implements OnInit {
   @Input() visibleModal = false;
   @Output() cancel = new EventEmitter();
   myTimeKeepingList: TimeKeepingResponse[] = [];
-  myTimeWorking!: TimeWorkingResponse;
+  myTimeWorking: TimeWorkingResponse[] = [];
   monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   yearList: number[] = [];
   today = new Date();
@@ -26,8 +29,9 @@ export class ModalListCheckinComponent implements OnInit {
 
   constructor(
     private timekeepingService: TimekeepingService,
-    private timeworkingService: TimeworkingService,
+    private accountService: AccountService,
     private notification: NzNotificationService,
+    private datepipe: DatePipe,
   ) { }
 
   ngOnInit(): void {
@@ -35,13 +39,14 @@ export class ModalListCheckinComponent implements OnInit {
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, this.today.getFullYear() + i];
     };
-    this.timeworkingService.getAllTimeWorking();
     this.timekeepingService.myTimeKeepingList$.subscribe((data) => {
       this.myTimeKeepingList = data;
       this.totalPunish = data.filter(i => i.punish == true).length;
     });
-    this.timeworkingService.timeWorkingList$.subscribe((data) => {
-      this.myTimeWorking = data.find(i => i.employeeId = this.user.id)!;
+    this.accountService.requestTimeWorkingList$.subscribe((data) => {
+      this.myTimeWorking = data.filter(i => i.status == Status.Approved).sort((a,b) => {
+        return new Date(b.applyDate).getTime() - new Date(a.applyDate).getTime();
+      })!;
     })
   }
 
@@ -74,6 +79,10 @@ export class ModalListCheckinComponent implements OnInit {
     } else {
       this.notification.error('Please input your complain!', '')
     };
+  }
+
+  getTimeWorking(today: Date): TimeWorkingResponse {
+    return this.myTimeWorking.find(i => new Date(this.datepipe.transform(i.applyDate, 'yyyy/MM/dd')!).getTime() <= new Date(this.datepipe.transform(today, 'yyyy/MM/dd')!).getTime())!;
   }
 
   handleCancel() {

@@ -14,21 +14,22 @@ export class OnleaveService {
     private apiService: ApiService,
     private notification: NzNotificationService,
   ) {
-    this.getAllOnLeave();
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.getAllOnLeave(user.id);
   }
 
   requestOnLeave(form: any) {
     this.apiService
       .requestOnLeave(form)
       .subscribe((response) => {
-        this.getAllOnLeave();
+        this.getAllOnLeave(form.employeeId);
         this.notification.success('Successfully!!!', `There are ${response.data.onLeave.length} items have been added!`);
       });
   }
 
-  getAllOnLeave() {
+  getAllOnLeave(id: string) {
     this.apiService
-      .getAllOnLeave()
+      .getAllOnLeave(id)
       .subscribe((response) => {
         this.onLeaveList$.next(response.data);
       });

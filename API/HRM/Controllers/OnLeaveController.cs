@@ -22,10 +22,18 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(Guid? id)
         {
-            var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
-            return CustomResult(list);
+            if (id != null)
+            {
+                var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false && i.EmployeeId == id).AsNoTracking().ToListAsync();
+                return CustomResult(list);
+            }
+            else
+            {
+                var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
+                return CustomResult(list);
+            }
         }
         [HttpPost("requestLeave")]
         public async Task<IActionResult> Create(CreateOrEditOnLeaveDto input)

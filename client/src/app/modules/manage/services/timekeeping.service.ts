@@ -1,6 +1,5 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { TimeKeepingResponse } from 'src/app/interfaces/interfaceReponse';
@@ -28,11 +27,11 @@ export class TimekeepingService {
       .subscribe((response) => {
         if (response.statusCode == 200) {
           if(response.data.photoCheckout == null) {
-            response.data.checkout = new Date(new Date(response.data.checkout).getTime() - 7 * 60 * 60 * 1000);
+            response.data.checkin = new Date(new Date(response.data.checkin).getTime() - 7 * 60 * 60 * 1000);
             const timeCheckin = this.datepipe.transform(response.data.checkin, 'HH:mm');
             this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
           } else {
-            response.data.checkin = new Date(new Date(response.data.checkin).getTime() - 7 * 60 * 60 * 1000);
+            response.data.checkout = new Date(new Date(response.data.checkout).getTime() - 7 * 60 * 60 * 1000);
             const timeCheckout = this.datepipe.transform(response.data.checkout, 'HH:mm');
             this.notification.success('Checkout success!!!', 'You checkout at ' + timeCheckout);
           }

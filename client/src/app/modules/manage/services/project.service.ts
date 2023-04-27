@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Priority, ProjectType, StatusTask } from 'src/app/enums/Enum';
@@ -28,7 +27,6 @@ export class ProjectService {
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
-    private message: NzMessageService,
     private employeeService: EmployeeService,
   ) { 
     this.getAllProject();

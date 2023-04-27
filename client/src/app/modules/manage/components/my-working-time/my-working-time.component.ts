@@ -30,7 +30,6 @@ export class MyWorkingTimeComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.accountService.getAllRequestChangeTimeWorkingForUser(this.user.id);
     this.initForm();
     this.checkEdit();
     this.accountService.requestTimeWorkingList$.subscribe((data) => {

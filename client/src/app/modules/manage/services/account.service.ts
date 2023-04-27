@@ -16,7 +16,10 @@ export class AccountService {
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
-  ) { }
+  ) { 
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.getAllRequestChangeTimeWorkingForUser(user.id);
+  }
 
   requestChangeInfor(data: Employee) {
     this.apiService
