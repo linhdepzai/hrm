@@ -35,6 +35,7 @@ export class ModalListCheckinComponent implements OnInit {
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, this.today.getFullYear() + i];
     };
+    this.timeworkingService.getAllTimeWorking();
     this.timekeepingService.myTimeKeepingList$.subscribe((data) => {
       this.myTimeKeepingList = data;
       this.totalPunish = data.filter(i => i.punish == true).length;

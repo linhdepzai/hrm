@@ -24,10 +24,6 @@ export class TimeworkingService {
   getAllTimeWorking() {
     this.apiService
       .getAllTimeWorking()
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
       .subscribe((response) => {
         const data = (response.data as TimeWorkingResponse[]).sort((a, b) => {
           return new Date(b.applyDate).getTime() - new Date(a.applyDate).getTime();
@@ -39,10 +35,6 @@ export class TimeworkingService {
   requestChangeTimeWorking(payload: WorkingTimeRequest) {
     this.apiService
       .requestChangeTimeWorking(payload)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
           response.data.morningStartTime = new Date(new Date(response.data.morningStartTime).getTime() - 7 * 60 * 60 * 1000);

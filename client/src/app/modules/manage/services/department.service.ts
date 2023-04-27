@@ -15,7 +15,6 @@ export class DepartmentService {
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
-    private message: NzMessageService,
   ) { 
     this.getAllDepartment();
   }
@@ -23,10 +22,6 @@ export class DepartmentService {
   getAllDepartment() {
     this.apiService
       .getAllDepartment()
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
       .subscribe((response) => {
         this.departmentList$.next(response.data as DepartmentResponse[]);
       });
@@ -35,10 +30,6 @@ export class DepartmentService {
   saveDepartment(payload: Department) {
     this.apiService
       .saveDepartment(payload)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', 'Department ' + response.data.name);

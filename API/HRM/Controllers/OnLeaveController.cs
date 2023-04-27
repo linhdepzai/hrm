@@ -1,11 +1,11 @@
 ﻿using HRM.Data;
-using HRM.DTOs.EmployeeDto;
 using HRM.Entities;
 using HRM.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 using HRM.DTOs.OnLeaveDto;
 using CoreApiResponse;
 
@@ -24,7 +24,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _dataContext.OnLeave.AsNoTracking().ToListAsync();
+            var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
         [HttpPost("requestLeave")]
@@ -32,7 +32,7 @@ namespace HRM.Controllers
         {
             foreach (var i in input.OnLeave)
             {
-                var checkLeave = await _dataContext.OnLeave.AsNoTracking().FirstOrDefaultAsync(e => e.EmployeeId == input.EmployeeId && e.DateLeave == i.DateLeave);
+                var checkLeave = await _dataContext.OnLeave.AsNoTracking().FirstOrDefaultAsync(e => e.EmployeeId == input.EmployeeId && e.DateLeave == i.DateLeave && e.IsDeleted == false);
                 if (checkLeave != null)
                 {
                     checkLeave.Option = i.Option;
@@ -63,6 +63,20 @@ namespace HRM.Controllers
             _dataContext.OnLeave.Remove(await _dataContext.OnLeave.FindAsync(id));
             await _dataContext.SaveChangesAsync();
             return CustomResult(id);
+        }
+
+        [HttpPut("updateStatus")]
+        public async Task<IActionResult> updateStatus(UpdateStatusRequestOffDto input)
+        {
+            var item = await _dataContext.OnLeave.FindAsync(input.Id);
+            if (item != null)
+            {
+                item.LastModifierUserId = input.PmId;
+                item.Status = input.Status;
+            }
+            _dataContext.Update(item);
+            await _dataContext.SaveChangesAsync();
+            return CustomResult(item);
         }
     }
 }

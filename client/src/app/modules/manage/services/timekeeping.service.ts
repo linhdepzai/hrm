@@ -25,16 +25,14 @@ export class TimekeepingService {
   checkinOrCheckout(data: CheckinOrCheckout) {
     this.apiService
       .checkinOrCheckout(data)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
           if(response.data.photoCheckout == null) {
+            response.data.checkout = new Date(new Date(response.data.checkout).getTime() - 7 * 60 * 60 * 1000);
             const timeCheckin = this.datepipe.transform(response.data.checkin, 'HH:mm');
             this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
           } else {
+            response.data.checkin = new Date(new Date(response.data.checkin).getTime() - 7 * 60 * 60 * 1000);
             const timeCheckout = this.datepipe.transform(response.data.checkout, 'HH:mm');
             this.notification.success('Checkout success!!!', 'You checkout at ' + timeCheckout);
           }
@@ -47,10 +45,6 @@ export class TimekeepingService {
   getTimeKeepingForUser(id: string, month: number, year: number) {
     this.apiService
       .getTimeKeepingForUser(id, month, year)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         const myTimeKeepingList = (response.data as TimeKeepingResponse[]).sort((a, b) => {
           return new Date(b.date).getTime() - new Date(a.date).getTime();

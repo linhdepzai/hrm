@@ -37,10 +37,6 @@ export class ProjectService {
   getAllProject() {
     this.apiService
       .getAllProject()
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
       .subscribe((response) => {
         this.projectList$.next(response.data);
       });
@@ -49,10 +45,6 @@ export class ProjectService {
   getOnlyProject(projectId: string) {
     this.apiService
       .getOnlyProject(projectId)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         this.project$.next(response.data);
         this.employeeService.getAllEmployee();
@@ -63,10 +55,6 @@ export class ProjectService {
   saveProject(payload: CreateProject) {
     this.apiService
       .saveProject(payload)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', 'This project has been created!');

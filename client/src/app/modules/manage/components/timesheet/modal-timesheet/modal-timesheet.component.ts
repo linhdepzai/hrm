@@ -61,4 +61,14 @@ export class ModalTimesheetComponent implements OnChanges {
       });
     return requestOff;
   }
+
+  actionRequestOff(action: string, id: string){
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    const payload = {
+      id: id,
+      pmId: user.id,
+      status: action == 'approve' ? Status.Approved : Status.Rejected
+    }
+    this.onLeaveService.updateStatusRequestOff(payload);
+  }
 }

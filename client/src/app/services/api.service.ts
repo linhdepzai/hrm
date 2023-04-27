@@ -6,93 +6,177 @@ import { Status } from '../enums/Enum';
 import { ApiResponse, TimeKeepingResponse } from '../interfaces/interfaceReponse';
 import { ChangePassword, CheckinOrCheckout, CreateProject, Employee, Login, WorkingTimeRequest } from '../interfaces/interfaces';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-
-  constructor(private httpClient: HttpClient, private notification: NzNotificationService) { }
+  constructor(
+    private httpClient: HttpClient,
+    private notification: NzNotificationService,
+    private message: NzMessageService,
+  ) { }
 
   login(payload: Login): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'account/login', payload);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'account/login', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   requestChangeInfor(payload: Employee): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/requestChangeInfor', payload);
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/requestChangeInfor', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   updateStatusUserInfo(payload: { id: string, status: Status }): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'employee/updateStatus', payload);
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'employee/updateStatus', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getAllDepartment(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'department/getAll');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'department/getAll')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
   }
 
   saveDepartment(payload: any): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'department/save', payload);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'department/save', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   deleteDepartment(id: any): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'department/delete?id=' + id);
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'department/delete?id=' + id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getAllEmployee(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAll');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAll')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
   }
 
   saveEmployee(payload: Employee): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'employee/save', payload);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'employee/save', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   deleteEmployee(id: any): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'employee/delete?id=' + id);
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'employee/delete?id=' + id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   requestOnLeave(payload: any): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'onleave/requestLeave', payload);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'onleave/requestLeave', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getAllOnLeave(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
   }
 
   deleteOnLeave(id: string): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'onleave/delete?id=' + id);
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'onleave/delete?id=' + id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getAllTimeWorking(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'timeworking/getAll');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'timeworking/getAll')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
   }
 
   getAllProject(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getall');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getall')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
   }
 
   getOnlyProject(projectId: string): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getAProject?projectId=' + projectId);
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getAProject?projectId=' + projectId)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   saveProject(payload: CreateProject): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'project/save', payload);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'project/save', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getTimeKeepingForUser(id: string, month: number, year: number): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `timekeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`);
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `timekeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
-  checkinOrCheckout(payload: CheckinOrCheckout): Observable<TimeKeepingResponse> {
-    return this.httpClient.post<TimeKeepingResponse>(environment.baseUrl + 'timekeeping/checkinOrCheckout', payload);
+  checkinOrCheckout(payload: CheckinOrCheckout): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'timekeeping/checkinOrCheckout', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getAllRequestChangeInfo(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAllRequestChangeInfo');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAllRequestChangeInfo')
+      .pipe(catchError((err) => {
+        this.notification.error('Error!', err.error.message);
+        return of(err);
+      }));
   }
 
   complainDailyCheckin(payload: any): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timekeeping/complainDailyCheckin', payload);
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timekeeping/complainDailyCheckin', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   changePassword(payload: ChangePassword): Observable<ApiResponse> {
@@ -104,14 +188,34 @@ export class ApiService {
   }
 
   requestChangeTimeWorking(payload: WorkingTimeRequest): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'timeworking/requestChangeTimeWorking', payload);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'timeworking/requestChangeTimeWorking', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 
   getAllRequestChangeTimeWorkingForUser(id: string): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'account/getAllRequestChangeTimeWorkingForUser?id=' + id);
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'account/getAllRequestChangeTimeWorkingForUser?id=' + id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!', err.error.message);
+        return of(err);
+      }));
   }
 
-  updateStatusChangeTimeWorking(payload: {id: string, status: number}): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timeworking/updateStatus', payload);
+  updateStatusChangeTimeWorking(payload: { id: string, status: number }): Observable<ApiResponse> {
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timeworking/updateStatus', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
+
+  updateStatusRequestOff(payload: { id: string, pmId: string, status: number }): Observable<ApiResponse> {
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'onleave/updateStatus', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
   }
 }

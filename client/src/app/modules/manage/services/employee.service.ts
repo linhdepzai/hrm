@@ -5,6 +5,7 @@ import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Level, Position } from 'src/app/enums/Enum';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class EmployeeService {
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
-    private message: NzMessageService,
+    private accountService: AccountService,
   ) { 
     this.getAllEmployee();
   }
@@ -23,10 +24,6 @@ export class EmployeeService {
   getAllEmployee() {
     this.apiService
       .getAllEmployee()
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
       .subscribe((response) => {
         this.employeeList$.next(response.data);
       });
@@ -35,10 +32,6 @@ export class EmployeeService {
   saveEmployee(payload: Employee) {
     this.apiService
       .saveEmployee(payload)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', `Create ${Level[response.data.level]} ${Position[response.data.position]} ${response.data.fullName}`);
@@ -55,15 +48,19 @@ export class EmployeeService {
   deleteEmployee(id: string) {
     this.apiService
       .deleteEmployee(id)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         const index = this.employeeList$.value.findIndex((item) => item.id == id);
         this.employeeList$.value.splice(index, 1);
         this.employeeList$.next([...this.employeeList$.value]);
         this.notification.success('Successfully!!!', response.message);
+      });
+  }
+
+  getAllRequestChangeInfo() {
+    this.apiService
+      .getAllRequestChangeInfo()
+      .subscribe((response) => {
+        this.accountService.requestChangeInfoList$.next(response.data);
       });
   }
 }

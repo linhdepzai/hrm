@@ -21,10 +21,6 @@ export class AccountService {
   requestChangeInfor(data: Employee) {
     this.apiService
       .requestChangeInfor(data)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Request success!', '');
@@ -32,25 +28,9 @@ export class AccountService {
       });
   }
 
-  getAllRequestChangeInfo() {
-    this.apiService
-      .getAllRequestChangeInfo()
-      .pipe(catchError((err) => {
-        this.notification.error('Error!', err.error.message);
-        return of(err);
-      }))
-      .subscribe((response) => {
-        this.requestChangeInfoList$.next(response.data as Employee[]);
-      });
-  }
-
   getAllRequestChangeTimeWorkingForUser(id: string) {
     this.apiService
       .getAllRequestChangeTimeWorkingForUser(id)
-      .pipe(catchError((err) => {
-        this.notification.error('Error!', err.error.message);
-        return of(err);
-      }))
       .subscribe((response) => {
         this.requestTimeWorkingList$.next(response.data);
       });
