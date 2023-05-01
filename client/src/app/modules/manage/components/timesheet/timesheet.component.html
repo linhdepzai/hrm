@@ -7,7 +7,7 @@
         <div *ngIf="formatDate(item.dateLeave) == formatDate(date)" (click)="openModal(date)">
             <nz-avatar [nzSize]="20" nzIcon="user"
                 nzSrc="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTiuxu29YKej9hhnYkaDVBrbXaNs_25eRYABg&usqp=CAU"></nz-avatar>
-            <span nz-typography nzEllipsis>{{ getAccount(item.employeeId)?.fullName }}</span>
+            <span nz-typography nzEllipsis>{{ getAccount(item.employeeId).fullName }}</span>
         </div>
     </ng-container>
 </ng-template>

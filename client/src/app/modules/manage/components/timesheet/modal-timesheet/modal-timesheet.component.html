@@ -34,8 +34,10 @@
                 <td nzAlign="center" [ngClass]="status[item.status]">{{ status[item.status] }}</td>
                 <td nzAlign="center">{{ item.creationTime | date: 'yyyy-MM-ddTHH:mm:ss' }}</td>
                 <td nzAlign="center">
-                    {{ item.lastModificationTime | date: 'yyyy-MM-ddTHH:mm:ss' }} by 
-                    {{ getAccountName(item.lastModifierUserId) }}
+                    <span *ngIf="item.lastModificationTime">
+                        {{ item.lastModificationTime | date: 'yyyy-MM-ddTHH:mm:ss' }} by 
+                        {{ getAccountName(item.lastModifierUserId) }}
+                    </span>
                 </td>
                 <td nzAlign="center">
                     <ng-container *ngIf="item.status != 3">

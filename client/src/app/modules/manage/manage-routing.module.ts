@@ -12,6 +12,7 @@ import { RequestOffComponent } from './components/request-off/request-off.compon
 import { MyWorkingTimeComponent } from './components/my-working-time/my-working-time.component';
 import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component';
+import { EvaluateComponent } from './components/admin/evaluate/evaluate.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -20,6 +21,7 @@ const routes: Routes = [
     path: 'admin', component: AdminComponent, children: [
       {path: 'users', component: UsersComponent},
       {path: 'working-time', component: WorkingTimeComponent},
+      {path: 'evaluate', component: EvaluateComponent},
     ]
   },
   { path: 'timesheet', component: TimesheetComponent },

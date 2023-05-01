@@ -29,6 +29,8 @@ import { ModalListCheckinComponent } from './components/checkin/modal-list-check
 import { ModalChangePasswordComponent } from './components/profile/modal-change-password/modal-change-password.component';
 import { NgZorroSharedModule } from '../ng-zorro-shared/ng-zorro-shared.module';
 import { ModalTimesheetComponent } from './components/timesheet/modal-timesheet/modal-timesheet.component';
+import { EvaluateComponent } from './components/admin/evaluate/evaluate.component';
+import { EditEvaluateComponent } from './components/admin/evaluate/edit-evaluate/edit-evaluate.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -53,7 +55,9 @@ registerLocaleData(en);
         TeamProjectComponent,
         ModalListCheckinComponent,
         ModalChangePasswordComponent,
-        ModalTimesheetComponent
+        ModalTimesheetComponent,
+        EvaluateComponent,
+        EditEvaluateComponent,
     ],
     exports: [
         ManageRoutingModule,

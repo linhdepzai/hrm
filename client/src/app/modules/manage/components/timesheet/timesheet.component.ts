@@ -32,7 +32,7 @@ export class TimesheetComponent implements OnInit {
     return this.datepipe.transform(date, 'MM/dd/YYYY');
   }
 
-  getAccount(id: string) {
+  getAccount(id: string): Employee {
     let employee!: Employee;
     this.employeeService.employeeList$
       .subscribe((data: Employee[]) => {

@@ -20,6 +20,7 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.projectList = this.projectService.projectList$;
+    console.log(this.projectList)
   }
 
   openModal() {

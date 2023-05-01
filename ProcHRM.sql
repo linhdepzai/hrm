@@ -105,3 +105,24 @@ as
 		set @i = @i + 1;
 	end
 go
+--Tao review hang thang
+create or alter proc createReviewMonth --Run at 01 every month
+as
+	declare @i int = 1;
+	declare @totalPm int = (select count(*) from MemberProject where [Type] = 1);
+	while @i <= @totalPm
+	begin
+		declare @projectId uniqueidentifier = (select [ProjectId] from (select row_number() over(order by [CreationTime] asc) as row, * from MemberProject where [Type] = 1) c where row = @i);
+		declare @leader uniqueidentifier = (select [EmployeeId] from MemberProject where [ProjectId] = @projectId and [Type] = 1);
+		declare @totalMember int = (select count(*) from MemberProject where [ProjectId] = @projectId and [Type] = 2);
+		declare @j int = 1;
+		while @j <= @totalMember
+		begin
+			declare @member uniqueidentifier = (select [EmployeeId] from (select row_number() over(order by [CreationTime] asc) as row, * from MemberProject where [ProjectId] = @projectId and [Type] = 2) c where row = @j);
+			declare @oldLevel int = (select [Level] from Employee where [Id] = @member);
+			insert into Evaluate([Id], [DateEvaluate], [PMId], [EmployeeId], [OldLevel], [NewLevel], [Note], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), getdate(), @leader, @member, @oldLevel, @oldLevel, '', getdate(), @leader, 0);
+			set @j = @j + 1;
+		end
+		set @i = @i + 1;
+	end
+go

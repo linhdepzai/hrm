@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Status } from '../enums/Enum';
+import { Level, Status } from '../enums/Enum';
 import { ApiResponse, TimeKeepingResponse } from '../interfaces/interfaceReponse';
 import { ChangePassword, CheckinOrCheckout, CreateProject, Employee, Login, WorkingTimeRequest } from '../interfaces/interfaces';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -214,6 +214,22 @@ export class ApiService {
 
   updateStatusRequestOff(payload: { id: string, pmId: string, status: number }): Observable<ApiResponse> {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'onleave/updateStatus', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
+
+  getAllEvaluate(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'evaluate/Evaluate')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
+  updateEvaluate(payload: { id: string, newLevel: Level, note: string }): Observable<ApiResponse> {
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'evaluate/Update', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

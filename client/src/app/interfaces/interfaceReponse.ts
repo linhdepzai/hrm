@@ -83,3 +83,14 @@ export interface TimeKeepingResponse {
     complain: string,
     punish: boolean,
 }
+
+export interface Evaluate {
+    id: string,
+    dateEvaluate: Date,
+    pmId: string,
+    employeeId: string,
+    oldLevel: Level,
+    newLevel: Level,
+    note: string,
+    lastModifierUserId: string | null,
+}

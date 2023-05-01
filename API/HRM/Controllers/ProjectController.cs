@@ -13,12 +13,13 @@ using Microsoft.EntityFrameworkCore;
 using HRM.DTOs.ProjectDto;
 using HRM.Entities;
 using HRM.DTOs.EmployeeDto;
+using CoreApiResponse;
 
 namespace HRM.Controllers
 {
     [Route("api/project")]
     [ApiController]
-    public class ProjectController : ControllerBase
+    public class ProjectController : BaseController
     {
         private readonly DataContext _dataContext;
 
@@ -27,7 +28,7 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getall")]
-        public async Task<ActionResult<List<GetAllProjectDto>>> GetAllProject()
+        public async Task<IActionResult> GetAllProject()
         {
             var projectList = await (from p in _dataContext.Project
                                      join m in _dataContext.MemberProject on p.Id equals m.ProjectId
@@ -47,10 +48,10 @@ namespace HRM.Controllers
                                          StatusCode = p.StatusCode,
                                          Pm = e.FullName,
                                      }).AsNoTracking().ToListAsync();
-            return Ok(projectList);
+            return CustomResult(projectList);
         }
         [HttpGet("getAProject")]
-        public async Task<ActionResult<CreateOrEditProjectDto>> GetAProject(Guid projectId)
+        public async Task<IActionResult> GetAProject(Guid projectId)
         {
             var member = await (from p in _dataContext.Project
                                 join m in _dataContext.MemberProject on p.Id equals m.ProjectId
@@ -62,7 +63,7 @@ namespace HRM.Controllers
                                     Type = m.Type,
                                 }).AsNoTracking().ToListAsync();
             var project = await _dataContext.Project.FirstOrDefaultAsync(e => e.Id == projectId); 
-            return new CreateOrEditProjectDto
+            return CustomResult(new CreateOrEditProjectDto
             {
                 Id = project.Id,
                 ProjectName = project.ProjectName,
@@ -73,10 +74,10 @@ namespace HRM.Controllers
                 PriorityCode = project.PriorityCode,
                 StatusCode = project.StatusCode,
                 Members = member,
-            };
+            });
         }
         [HttpPost("save")]
-        public async Task<ActionResult> CreateOrEdit(CreateOrEditProjectDto input)
+        public async Task<IActionResult> CreateOrEdit(CreateOrEditProjectDto input)
         {
             if (input.Id == null)
             {
@@ -87,7 +88,7 @@ namespace HRM.Controllers
                 return await Update(input);
             }
         }
-        private async Task<ActionResult> Create(CreateOrEditProjectDto input)
+        private async Task<IActionResult> Create(CreateOrEditProjectDto input)
         {
             var projectNameNull = string.IsNullOrWhiteSpace(input.ProjectName);
             if (projectNameNull) return BadRequest("ProjectName not null");
@@ -118,9 +119,9 @@ namespace HRM.Controllers
                 await _dataContext.MemberProject.AddAsync(member);
             }
             await _dataContext.SaveChangesAsync();
-            return Ok(data);
+            return CustomResult(data);
         }
-        private async Task<ActionResult> Update(CreateOrEditProjectDto input)
+        private async Task<IActionResult> Update(CreateOrEditProjectDto input)
         {
             var project = await _dataContext.Project.FindAsync(input.Id);
             if (project != null)
@@ -175,16 +176,16 @@ namespace HRM.Controllers
                 }
             }
             await _dataContext.SaveChangesAsync();
-            return Ok(project);
+            return CustomResult(project);
         }
         [HttpDelete("delete")]
-        public async Task<ActionResult> DeleteProject(Guid id)
+        public async Task<IActionResult> DeleteProject(Guid id)
         {
             _dataContext.Tasks.RemoveRange(await _dataContext.Tasks.Where(e => e.ProjectId == id).ToListAsync());
             await _dataContext.SaveChangesAsync();
             _dataContext.Project.Remove(await _dataContext.Project.FindAsync(id));
             await _dataContext.SaveChangesAsync();
-            return Ok("Removed");
+            return CustomResult("Removed");
         }
     }
 }

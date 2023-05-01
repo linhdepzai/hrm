@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private departmentService: DepartmentService,
-  ) { 
+  ) {
   }
 
   ngOnInit(): void {
@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
     this.isVisibleModalChangePassword = true;
   }
 
-  getDepartment(id: string) {
+  getDepartment(id: string): DepartmentResponse {
     let department!: DepartmentResponse;
     this.departmentService.departmentList$
       .subscribe((data: DepartmentResponse[]) => {

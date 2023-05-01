@@ -26,8 +26,8 @@
                 <i class="fa-solid sex" [ngClass]="user.sex ? 'fa-mars' : 'fa-venus'"></i>
                 <app-tag [label]="level[user.level]" size></app-tag>
                 <app-tag [label]="position[user.position]" size></app-tag>
-                <app-tag *ngIf="user.departmentId" [label]="getDepartment(user.departmentId)?.name"
-                    [color]="getDepartment(user.departmentId)?.color" size></app-tag>
+                <app-tag *ngIf="user.departmentId" [label]="getDepartment(user.departmentId).name"
+                    [color]="getDepartment(user.departmentId).color" size></app-tag>
             </div>
         </div>
     </div>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="line">
                     <span class="fw-bold">Department: </span>
-                    <span>{{ getDepartment(user.departmentId)?.name }}</span>
+                    <span *ngIf="user.departmentId">{{ getDepartment(user.departmentId).name }}</span>
                 </div>
             </div>
         </div>

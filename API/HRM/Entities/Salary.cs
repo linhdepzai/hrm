@@ -9,6 +9,7 @@ namespace HRM.Entities
         [ForeignKey("Employee")]
         public Guid EmployeeId { get; set; }
         public int Money { get; set; }
+        public int Welfare { get; set; }
         public DateTime DateReview { get; set; }
     }
 }

@@ -1,0 +1,23 @@
+<div class="title">Evaluate</div>
+<nz-table #table [nzData]="evaluateList" [nzShowTotal]="rangeTemplate">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center">Name</th>
+            <th nzAlign="center">Date</th>
+            <th nzAlign="center">Old Level</th>
+            <th nzAlign="center">New Level</th>
+        </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag [ngClass]="data.lastModifierUserId == null ? 'evaluate fw-bold': ''" (click)="openModal(data)">
+            <td>{{ getUserName(data.employeeId) }}</td>
+            <td nzAlign="center">{{ data.dateEvaluate | date: 'dd/MM/yyyy' }}</td>
+            <td nzAlign="center">{{ level[data.oldLevel] }}</td>
+            <td nzAlign="center">{{ level[data.newLevel] }}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<app-edit-evaluate [visible]="visibleModal" [data]="data" (cancel)="visibleModal = false"></app-edit-evaluate>

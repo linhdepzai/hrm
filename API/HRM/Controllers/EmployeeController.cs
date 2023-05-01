@@ -98,6 +98,15 @@ namespace HRM.Controllers
                 Status = Status.Approved,
             };
             await _dataContext.TimeWorking.AddAsync(timeWorking);
+            var salary = new Salary
+            {
+                Id = new Guid(),
+                EmployeeId = employee.Id,
+                Money = 0,
+                Welfare = 0,
+                DateReview = DateTime.Now,
+            };
+            await _dataContext.Salary.AddAsync(salary);
             await _dataContext.SaveChangesAsync();
             return CustomResult(employee);
         }
