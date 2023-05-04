@@ -25,7 +25,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(userList);
             /*var dp_params = new DynamicParameters();
             // dp_params.Add("@projectId", projectId, DbType.Guid);
@@ -36,7 +36,7 @@ namespace HRM.Controllers
         [HttpGet("getAllRequestChangeInfo")]
         public async Task<IActionResult> GetAllRequestChangeInfo()
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending && i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(userList);
         }
         [HttpPost("save")]
@@ -113,7 +113,7 @@ namespace HRM.Controllers
         private async Task<IActionResult> Update(CreateOrEditEmployeeDto input)
         {
             var employee = await _dataContext.Employee.FindAsync(input.Id);
-            if (employee.LeaveDate == null) return CustomResult("Employee has retired can't update", System.Net.HttpStatusCode.BadRequest);
+            if (employee.LeaveDate != null) return CustomResult("Employee has retired can't update", System.Net.HttpStatusCode.BadRequest);
             if (employee != null)
             {
                 employee.FullName = input.FullName;
@@ -147,6 +147,7 @@ namespace HRM.Controllers
             var employeeDraft = await _dataContext.Employee.FindAsync(input.Id);
             if (input.Status == Status.Rejected)
             {
+                employeeDraft.DeleteUserId = input.PmId;
                 _dataContext.Employee.Remove(await _dataContext.Employee.FindAsync(input.Id));
                 await _dataContext.SaveChangesAsync();
                 return CustomResult("Rejected");
@@ -172,8 +173,10 @@ namespace HRM.Controllers
                     employee.DateOfIssue = employeeDraft.DateOfIssue;
                     employee.IssuedBy = employeeDraft.IssuedBy;
                     employee.Status = Status.Approved;
+                    employee.LastModifierUserId = input.PmId;
                 };
                 _dataContext.Employee.Update(employee);
+                employeeDraft.DeleteUserId = input.PmId;
                 _dataContext.Employee.Remove(await _dataContext.Employee.FindAsync(input.Id));
                 await _dataContext.SaveChangesAsync();
                 return CustomResult(employee);

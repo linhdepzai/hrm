@@ -1,8 +1,8 @@
 --Hang ngay se xoa cac ban ghi request pending
 create or alter proc removeRequestOffPending --run at 11:59
 as
-	declare @AdminId uniqueidentifier = (select [Id] from Employee where [DepartmentId] is null and [Position] = 0);
-	update OnLeave set [IsDeleted] = 1, [DeletionTime] = getdate(), [DeleteUserId] = @AdminId where [Status] <> 3 and cast(getdate() as date) > cast([DateLeave] as date);
+	declare @AdminId uniqueidentifier = (select [Id] from Employee where [DepartmentId] is null and [Position] = 0 and [IsDeleted] = 0 and [Status] = 3);
+	update OnLeave set [IsDeleted] = 1, [DeletionTime] = getdate(), [DeleteUserId] = @AdminId where [Status] != 3 and cast(getdate() as date) > cast([DateLeave] as date);
 go
 --Hang ngay se tao 1 ban ghi check in
 --Neu ngay hom day co request off fullday thi ko tao ban ghi

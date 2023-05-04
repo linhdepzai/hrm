@@ -5,7 +5,8 @@ import { Bank, Level, Position } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from '../../../services/department.service';
-import { AccountService } from '../../../services/account.service';
+import { ApiService } from 'src/app/services/api.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-modal-change-info',
@@ -24,11 +25,12 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
 
   constructor(
     private departmentService: DepartmentService,
-    private accountService: AccountService,
+    private notification: NzNotificationService,
+    private apiService: ApiService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
-  
+
   ngOnInit(): void {
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
@@ -52,7 +54,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
       doB: [null, Validators.required],
       level: [Level.Intern, Validators.required],
       position: [Position.Dev, Validators.required],
-      departmentId: [null, Validators.required],
+      departmentId: [null],
       startingDate: [null, Validators.required],
       bank: [null],
       bankAccount: [null],
@@ -69,7 +71,14 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   submitForm() {
     if (this.infoForm.valid) {
       this.infoForm.controls['userCode'].setValue(this.user.userCode);
-      this.accountService.requestChangeInfor(this.infoForm.value);
+      this.apiService
+        .requestChangeInfor(this.infoForm.value)
+        .subscribe((response) => {
+          if (response.statusCode == 200) {
+            this.notification.success('Request success!', '');
+            this.handleCancel();
+          }
+        });
     } else {
       Object.values(this.infoForm.controls).forEach(control => {
         if (control.invalid) {

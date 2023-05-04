@@ -35,7 +35,7 @@ export class ApiService {
       }));
   }
 
-  updateStatusUserInfo(payload: { id: string, status: Status }): Observable<ApiResponse> {
+  updateStatusUserInfo(payload: { id: string, pmId: string, status: Status }): Observable<ApiResponse> {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'employee/updateStatus', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);

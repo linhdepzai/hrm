@@ -3,10 +3,6 @@
     style="width: 20%;" (ngModelChange)="searchName($event)">
     <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
 </nz-select>
-<button nz-button nzType="primary" (click)="refresh()" class="btn-refresh">
-    <i class="fa-solid fa-arrows-rotate mr-5"></i>
-    <span>Refresh</span>
-</button>
 <nz-radio-group class="filter" [ngModel]="'Approve'" nzButtonStyle="solid" (ngModelChange)="changeFilter($event)">
     <label nz-radio-button nzValue="All">All</label>
     <label nz-radio-button nzValue="Approve">Approve</label>
@@ -26,10 +22,11 @@
             <th nzAlign="center">Afternoon End Time</th>
             <th nzAlign="center">Total Time</th>
             <th nzAlign="center">Status</th>
+            <th nzAlign="center">Action</th>
         </tr>
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
-        <tr *ngFor="let data of table.data" cdkDrag (click)="data.status != 3 ? changeStatusWorkingTime(data) : null" [ngClass]="data.status == 2 ? 'pending': ''">
+        <tr *ngFor="let data of table.data" cdkDrag>
             <td>{{ getUserName(data.employeeId) }}</td>
             <td nzAlign="center">{{ data.applyDate | date: 'dd/MM/yyyy' }}</td>
             <td nzAlign="center">{{ data.morningStartTime | date: 'HH:mm' }}</td>
@@ -43,6 +40,11 @@
                 <ng-template #pending>
                     <span class="Pending">Pending</span>
                 </ng-template>
+            </td>
+            <td nzAlign="center">
+                <button *ngIf="data.status != 3" nz-button nzType="primary" (click)="changeStatusWorkingTime(data)">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
             </td>
         </tr>
     </tbody>

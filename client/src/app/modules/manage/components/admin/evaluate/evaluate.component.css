@@ -8,7 +8,6 @@
     opacity: 0;
 }
 
-.evaluate:hover {
-    cursor: pointer;
-    text-decoration: underline;
+nz-select {
+    margin: 0 0.5% !important;
 }

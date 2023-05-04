@@ -48,8 +48,6 @@ export class WorkingTimeComponent implements OnInit {
     return name;
   }
 
-  refresh() { }
-
   calcTime(startTime: any, endTime: any) {
     const total = endTime.substring(0, 2) - startTime.substring(0, 2);
     const totalMinute = (endTime.substring(3, 5) - startTime.substring(3, 5)) / 60;

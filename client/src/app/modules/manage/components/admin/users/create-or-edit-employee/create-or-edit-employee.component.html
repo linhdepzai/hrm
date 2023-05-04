@@ -50,7 +50,8 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Level</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Level!">
                 <nz-select [ngModel]="employeeForm.value.level" formControlName="level" id="level">
-                    <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of levelList | async"></nz-option>
+                    <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                        *ngFor="let item of levelList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
@@ -58,15 +59,18 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Position!">
                 <nz-select [ngModel]="employeeForm.value.position" formControlName="position" id="position">
-                    <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of positionList | async"></nz-option>
+                    <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                        *ngFor="let item of positionList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-row>
             <nz-form-label nz-col [nzSpan]="6" nzRequired nzFor="name">Department</nz-form-label>
             <nz-form-control nz-col [nzSpan]="11" nzErrorTip="The input is not valid Department!">
-                <nz-select [ngModel]="" nzPlaceHolder="Choose department..." formControlName="departmentId" id="departmentId">
-                    <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of departmentList | async"></nz-option>
+                <nz-select [ngModel]="" nzPlaceHolder="Choose department..." formControlName="departmentId"
+                    id="departmentId">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+                        *ngFor="let item of departmentList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
@@ -105,7 +109,8 @@
                 <span nz-tooltip nzTooltipTitle="Bảo hiểm">Insurance Status</span>
             </nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24">
-                <input nz-input placeholder="Enter your insurance status" formControlName="insuranceStatus" id="insuranceStatus" />
+                <input nz-input placeholder="Enter your insurance status" formControlName="insuranceStatus"
+                    id="insuranceStatus" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -121,7 +126,8 @@
                 <span nz-tooltip nzTooltipTitle="Quê quán">Place of Origin</span>
             </nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24">
-                <input nz-input placeholder="Enter your place of origin" formControlName="placeOfOrigin" id="placeOfOrigin" />
+                <input nz-input placeholder="Enter your place of origin" formControlName="placeOfOrigin"
+                    id="placeOfOrigin" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -129,7 +135,8 @@
                 <span nz-tooltip nzTooltipTitle="Nơi thường trú">Place of Residence</span>
             </nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24">
-                <input nz-input placeholder="Enter your place of residence" formControlName="placeOfResidence" id="placeOfResidence" />
+                <input nz-input placeholder="Enter your place of residence" formControlName="placeOfResidence"
+                    id="placeOfResidence" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -151,9 +158,32 @@
     </form>
 </ng-template>
 <ng-template #footer>
-    <button nz-button nzType="primary" style="float: right;" (click)="submitForm()">
-        <i class="fa-solid fa-check mr-5"></i>
-        <span>Submit</span>
-    </button>
-</ng-template>
-<app-create-department-modal [isVisibleModal]="isVisibleModal" (cancel)="isVisibleModal = false"></app-create-department-modal>
+    <ng-container *ngIf="mode == 'request'; else createOrEdit">
+        <button nz-button nzDanger nzType="primary" style="float: right;" (click)="submitForm('reject')">
+            <i class="fa-solid fa-xmark mr-5"></i>
+            <span>Reject</span>
+        </button>
+        <button nz-button nzType="primary" style="float: right;" (click)="submitForm('approve')">
+            <i class="fa-solid fa-check mr-5"></i>
+            <span>Approve</span>
+        </button>
+    </ng-container>
+    <ng-template #createOrEdit>
+        <button *ngIf="!isEdit else edit" nz-button nzType="primary" style="float: right;" (click)="changeMode()">
+            <i class="fa-solid fa-pen-to-square mr-5"></i>
+            <span>Edit</span>
+        </button>
+        <ng-template #edit>
+            <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm('edit')">
+                <i class="fa-solid fa-check mr-5"></i>
+                <span>Submit</span>
+            </button>
+            <button *ngIf="mode == 'update'" style="float: right;" nz-button nzDanger nzType="default"
+                (click)="changeMode()">
+                <i class="fa-solid fa-xmark mr-5"></i>
+                <span>Cancel</span>
+            </button>
+        </ng-template>
+    </ng-template>
+    <app-create-department-modal [isVisibleModal]="isVisibleModal"
+        (cancel)="isVisibleModal = false"></app-create-department-modal>

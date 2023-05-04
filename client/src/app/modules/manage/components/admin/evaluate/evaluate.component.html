@@ -1,4 +1,15 @@
 <div class="title">Evaluate</div>
+<div style="margin-bottom: 15px;">
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
+    </nz-select>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search month..." [ngModel]="null" (ngModelChange)="searchMonth($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of monthList"></nz-option>
+    </nz-select>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search year..." [ngModel]="null" (ngModelChange)="searchYear($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of yearList"></nz-option>
+    </nz-select>
+</div>
 <nz-table #table [nzData]="evaluateList" [nzShowTotal]="rangeTemplate">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
@@ -9,14 +20,20 @@
             <th nzAlign="center">Date</th>
             <th nzAlign="center">Old Level</th>
             <th nzAlign="center">New Level</th>
+            <th nzAlign="center">Action</th>
         </tr>
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
-        <tr *ngFor="let data of table.data" cdkDrag [ngClass]="data.lastModifierUserId == null ? 'evaluate fw-bold': ''" (click)="openModal(data)">
+        <tr *ngFor="let data of table.data" cdkDrag [ngClass]="data.lastModifierUserId == null ? 'fw-bold': ''">
             <td>{{ getUserName(data.employeeId) }}</td>
             <td nzAlign="center">{{ data.dateEvaluate | date: 'dd/MM/yyyy' }}</td>
             <td nzAlign="center">{{ level[data.oldLevel] }}</td>
             <td nzAlign="center">{{ level[data.newLevel] }}</td>
+            <td nzAlign="center">
+                <button nz-button nzType="primary" (click)="openModal(data)">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+            </td>
         </tr>
     </tbody>
 </nz-table>

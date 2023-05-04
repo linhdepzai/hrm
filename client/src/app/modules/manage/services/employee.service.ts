@@ -11,11 +11,11 @@ import { AccountService } from './account.service';
 })
 export class EmployeeService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
+  public requestChangeInfoList$ = new BehaviorSubject<Employee[]>([]);
 
   constructor(
     private apiService: ApiService,
     private notification: NzNotificationService,
-    private accountService: AccountService,
   ) { 
     this.getAllEmployee();
   }
@@ -59,7 +59,7 @@ export class EmployeeService {
     this.apiService
       .getAllRequestChangeInfo()
       .subscribe((response) => {
-        this.accountService.requestChangeInfoList$.next(response.data);
+        this.requestChangeInfoList$.next(response.data);
       });
   }
 }

@@ -1,11 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
-import { Bank, Level, Position } from 'src/app/enums/Enum';
-import { Department } from 'src/app/interfaces/interfaces';
+import { Bank, Level, Position, Status } from 'src/app/enums/Enum';
+import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DepartmentService } from 'src/app/modules/manage/services/department.service';
 import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
+import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -13,8 +15,10 @@ import { DataService } from 'src/app/services/data.service';
   templateUrl: './create-or-edit-employee.component.html',
   styleUrls: ['./create-or-edit-employee.component.css']
 })
-export class CreateOrEditEmployeeComponent implements OnInit {
+export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   @Input() visible: boolean = false;
+  @Input() data: Employee | undefined;
+  @Input() mode: string = 'create';
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   title: string = 'Create';
   employeeForm!: FormGroup;
@@ -23,17 +27,33 @@ export class CreateOrEditEmployeeComponent implements OnInit {
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<Department[]>();
   isVisibleModal: boolean = false;
+  isEdit: boolean = false;
 
   constructor(
     private departmentService: DepartmentService,
     private employeeService: EmployeeService,
+    private apiService: ApiService,
     private dataService: DataService,
+    private notification: NzNotificationService,
     private fb: FormBuilder,
     private datepipe: DatePipe,
-  ) { }
+  ) {
+    this.initForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.employeeForm.reset();
+    this.isEdit = true;
+    if (this.mode == 'create') {
+      this.title = 'Create';
+      this.employeeForm.enable();
+    } else {
+      this.employeeForm.patchValue(this.data!);
+      this.changeMode();
+    }
+  }
 
   ngOnInit(): void {
-    this.initForm();
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.dataService.positionList;
@@ -65,24 +85,55 @@ export class CreateOrEditEmployeeComponent implements OnInit {
     });
   }
 
-  submitForm() {
-    this.employeeForm.controls['startingDate'].setValue(this.datepipe.transform(new Date(), 'YYYY-MM-dd'));
-    if (this.employeeForm.valid) {
-      this.employeeService.saveEmployee(this.employeeForm.value);
-      this.close();
+  submitForm(mode: string) {
+    if (mode == 'edit') {
+      this.employeeForm.controls['startingDate'].setValue(this.datepipe.transform(new Date(), 'YYYY-MM-dd'));
+      if (this.employeeForm.valid) {
+        this.employeeService.saveEmployee(this.employeeForm.value);
+        this.close();
+      } else {
+        Object.values(this.employeeForm.controls).forEach(control => {
+          if (control.invalid) {
+            control.markAsDirty();
+            control.updateValueAndValidity({ onlySelf: true });
+          }
+        });
+      }
     } else {
-      Object.values(this.employeeForm.controls).forEach(control => {
-        if (control.invalid) {
-          control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
-        }
-      });
+      const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+      const payload = {
+        id: this.data?.id!,
+        pmId: user.id,
+        status: mode == 'reject' ? Status.Rejected : Status.Approved,
+      }
+      this.apiService
+        .updateStatusUserInfo(payload)
+        .subscribe((response) => {
+          if (response.statusCode == 200) {
+            this.notification.success('Successfully', '');
+            const index = this.employeeService.requestChangeInfoList$.value.findIndex((item) => item.id == payload.id);
+            this.employeeService.requestChangeInfoList$.value.splice(index, 1);
+            this.employeeService.requestChangeInfoList$.next([...this.employeeService.requestChangeInfoList$.value]);
+            this.employeeService.getAllEmployee();
+            this.close();
+          }
+        })
     }
   }
 
   close(): void {
     this.resetForm();
     this.cancel.emit();
+  }
+
+  changeMode() {
+    this.isEdit = !this.isEdit;
+    this.title = (this.isEdit ? 'Update: ' : 'View: ') + this.data!.fullName;
+    if (this.isEdit) {
+      this.employeeForm.enable();
+    } else {
+      this.employeeForm.disable();
+    }
   }
 
   resetForm() {

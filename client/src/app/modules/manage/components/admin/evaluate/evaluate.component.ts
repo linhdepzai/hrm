@@ -5,6 +5,8 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { EmployeeService } from '../../../services/employee.service';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { Level } from 'src/app/enums/Enum';
+import { Observable } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-evaluate',
@@ -16,17 +18,25 @@ export class EvaluateComponent implements OnInit {
   level = Level;
   visibleModal: boolean = false;
   data!: Evaluate;
+  employeeList = new Observable<Employee[]>();
+  monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  yearList: number[] = [];
 
   constructor(
     private evaluateService: EvaluateService,
     private employeeService: EmployeeService,
-  ){}
+    private datepipe: DatePipe,
+  ) { }
 
   ngOnInit(): void {
+    this.employeeList = this.employeeService.employeeList$;
     this.evaluateService.getAllEvaluate();
     this.evaluateService.evaluateList$.subscribe((data) => {
       this.evaluateList = data;
     });
+    for (let i = -10; i <= 10; i++) {
+      this.yearList = [...this.yearList, new Date().getFullYear() + i];
+    };
   }
 
   drop(event: CdkDragDrop<string[], string[], any>): void {
@@ -45,8 +55,40 @@ export class EvaluateComponent implements OnInit {
     return name;
   }
 
-  openModal(data: Evaluate){
+  openModal(data: Evaluate) {
     this.data = data;
     this.visibleModal = true;
+  }
+
+  searchName(id: string) {
+    this.evaluateService.evaluateList$.subscribe((data) => {
+      this.evaluateList = data;
+    });
+    if (id != null) {
+      this.evaluateList = this.evaluateList.filter(i => i.employeeId == id);
+    }
+  }
+
+  searchMonth(month: number) {
+    this.evaluateService.evaluateList$.subscribe((data) => {
+      this.evaluateList = data;
+    });
+    if (month != null) {
+      this.evaluateList = this.evaluateList.filter(i => new Date(i.dateEvaluate).getMonth() == month);
+    }
+  }
+
+  searchYear(year: number) {
+    this.evaluateService.evaluateList$.subscribe((data) => {
+      this.evaluateList = data;
+    });
+    if (year != null) {
+      this.evaluateList = this.evaluateList.filter(i =>
+        new Date(new Date(i.dateEvaluate).getDate() + '/' + new Date(i.dateEvaluate).getMonth() + '/' + new Date(i.dateEvaluate).getFullYear()).getFullYear() == year);
+      this.yearList = [];
+      for (let i = -10; i <= 10; i++) {
+        this.yearList = [...this.yearList, year + i];
+      };
+    }
   }
 }

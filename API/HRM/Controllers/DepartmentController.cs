@@ -32,11 +32,11 @@ namespace HRM.Controllers
         {
             if (input.Id == null)
             {
-                return await Update(input);
+                return await Create(input);
             }
             else
             {
-                return await Create(input);
+                return await Update(input);
             }
         }
         private async Task<IActionResult> Create(CreateOrEditDepartmentDto input)

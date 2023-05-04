@@ -1,27 +1,30 @@
 <div class="title">Users</div>
 <div style="margin-bottom: 15px;">
-    <button nz-button nzType="primary" (click)="visible = true" class="mr-per">
+    <button nz-button nzType="primary" (click)="openModal(undefined, 'create')" class="mr-per">
         <i class="fa-solid fa-user-plus mr-5"></i>
         <span>Create</span>
     </button>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" style="width: 20%;">
-        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList"></nz-option>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.fullName" *ngFor="let item of employeeList"></nz-option>
     </nz-select>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search level..." [ngModel]="null" style="width: 10%;">
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search level..." [ngModel]="null" (ngModelChange)="filterLevel($event)" style="width: 10%;">
         <nz-option [nzLabel]="item.label" [nzValue]="item.value" *ngFor="let item of levelList | async"></nz-option>
     </nz-select>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search position..." [ngModel]="null" style="width: 10%;">
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search position..." [ngModel]="null" (ngModelChange)="filterPosition($event)" style="width: 10%;">
         <nz-option [nzLabel]="item.label" [nzValue]="item.value" *ngFor="let item of positionList | async"></nz-option>
     </nz-select>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search department..." [ngModel]="null" style="width: 20%;">
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search department..." [ngModel]="null" (ngModelChange)="filterDepartment($event)" style="width: 20%;">
         <nz-option [nzLabel]="item.name" [nzValue]="item.id" *ngFor="let item of departmentList | async"></nz-option>
     </nz-select>
-    <button nz-button nzType="primary" (click)="refresh()" class="ml-per btn-refresh">
-        <i class="fa-solid fa-arrows-rotate mr-5"></i>
-        <span>Refresh</span>
-    </button>
+    <nz-radio-group class="filter" [ngModel]="'Approve'" nzButtonStyle="solid" (ngModelChange)="changeFilter($event)">
+        <label nz-radio-button nzValue="Approve">Approve</label>
+        <label nz-radio-button nzValue="Pending">Pending</label>
+    </nz-radio-group>
 </div>
-<nz-table #table [nzData]="employeeList">
+<nz-table #table [nzData]="employeeList" [nzShowTotal]="rangeTemplate">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
     <thead>
         <tr>
             <th nzAlign="center">Name</th>
@@ -34,8 +37,8 @@
             <th nzAlign="center">Action</th>
         </tr>
     </thead>
-    <tbody>
-        <tr [id]="data.id" *ngFor="let data of table.data">
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag>
             <td>{{ data.fullName }}</td>
             <td nzAlign="center">
                 <i class="fa-solid" [ngClass]="data.sex == true ? 'fa-mars' : 'fa-venus'"></i>
@@ -51,7 +54,7 @@
                     [label]="getDepartmentName(data.departmentId).name"></app-tag>
             </td>
             <td nzAlign="center">
-                <button nz-button nzType="primary" class="btn-action mr-5">
+                <button nz-button nzType="primary" class="btn-action mr-5" (click)="openModal(data, statusMode == 'Pending' ? 'request' : 'update')">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
                 <button nz-button nzDanger nzType="primary" class="btn-action">
@@ -61,4 +64,4 @@
         </tr>
     </tbody>
 </nz-table>
-<app-create-or-edit-employee [visible]="visible" (cancel)="visible = false"></app-create-or-edit-employee>
+<app-create-or-edit-employee [visible]="visible" [data]="data" [mode]="modalMode" (cancel)="visible = false"></app-create-or-edit-employee>
