@@ -8,17 +8,6 @@
         Middle = 4,
         Junior = 5,
     }
-    public enum Position
-    {
-        Dev = 1,
-        QA = 2,
-        BA = 3,
-        PM = 4,
-        DevOps = 5,
-        DataEngineer = 6,
-        ScrumMaster = 7,
-        HR = 8,
-    }
     public enum Status
     {
         New = 1,

@@ -191,31 +191,7 @@ namespace HRM.Controllers
         }
         public static string Random(CreateOrEditEmployeeDto input)
         {
-            string randomStr = "0";
-            switch (input.Position)
-            {
-                case Position.Dev:
-                    randomStr += "1";
-                    break;
-                case Position.QA:
-                    randomStr += "2";
-                    break;
-                case Position.BA:
-                    randomStr += "3";
-                    break;
-                case Position.PM:
-                    randomStr += "4";
-                    break;
-                case Position.DevOps:
-                    randomStr += "5";
-                    break;
-                case Position.DataEngineer:
-                    randomStr += "6";
-                    break;
-                case Position.ScrumMaster:
-                    randomStr += "7";
-                    break;
-            }
+            string randomStr = "0" + input.Position;
             if (input.Sex == true) randomStr += "01"; else randomStr += "02";
             randomStr += DateTime.Now.ToString("yy");
             try

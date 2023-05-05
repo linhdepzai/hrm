@@ -3,7 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
-import { Bank, Level, Position, Status } from 'src/app/enums/Enum';
+import { Bank, Level, Status } from 'src/app/enums/Enum';
+import { Position } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DepartmentService } from 'src/app/modules/manage/services/department.service';
 import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
@@ -23,7 +24,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   title: string = 'Create';
   employeeForm!: FormGroup;
   levelList = new Observable<{ value: Level; label: string }[]>();
-  positionList = new Observable<{ value: Position; label: string }[]>();
+  positionList = new Observable<Position[]>();
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<Department[]>();
   isVisibleModal: boolean = false;
@@ -70,7 +71,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
       phone: [null, Validators.required],
       doB: [null, Validators.required],
       level: [Level.Intern, Validators.required],
-      position: [Position.Dev, Validators.required],
+      position: [1, Validators.required],
       departmentId: [null],
       startingDate: [null, Validators.required],
       bank: [null],
@@ -139,7 +140,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   resetForm() {
     this.employeeForm.reset();
     this.employeeForm.controls['level'].setValue(Level.Intern);
-    this.employeeForm.controls['position'].setValue(Position.Dev);
+    this.employeeForm.controls['position'].setValue(1);
     this.employeeForm.controls['sex'].setValue(true);
   }
 }

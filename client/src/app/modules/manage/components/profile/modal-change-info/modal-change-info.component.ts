@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Bank, Level, Position } from 'src/app/enums/Enum';
+import { Bank, Level } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from '../../../services/department.service';
@@ -19,7 +19,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   infoForm!: FormGroup;
   levelList = new Observable<{ value: Level; label: string }[]>();
-  positionList = new Observable<{ value: Position; label: string }[]>();
+  positionList = new Observable<{ id: number; name: string, color: string }[]>();
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<DepartmentResponse[]>();
 
@@ -53,7 +53,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
       phone: [null, Validators.required],
       doB: [null, Validators.required],
       level: [Level.Intern, Validators.required],
-      position: [Position.Dev, Validators.required],
+      position: [1, Validators.required],
       departmentId: [null],
       startingDate: [null, Validators.required],
       bank: [null],

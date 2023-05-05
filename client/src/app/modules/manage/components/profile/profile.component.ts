@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Level, Position } from 'src/app/enums/Enum';
-import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { Level } from 'src/app/enums/Enum';
+import { DepartmentResponse, LoginResponse, Position } from 'src/app/interfaces/interfaceReponse';
 import { DepartmentService } from '../../services/department.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-profile',
@@ -13,10 +14,10 @@ export class ProfileComponent implements OnInit {
   isVisibleModalChangeProfile: boolean = false;
   isVisibleModalChangePassword: boolean = false;
   level = Level;
-  position = Position;
 
   constructor(
     private departmentService: DepartmentService,
+    protected dataService: DataService,
   ) {
   }
 
@@ -37,11 +38,10 @@ export class ProfileComponent implements OnInit {
   }
 
   getDepartment(id: string): DepartmentResponse {
-    let department!: DepartmentResponse;
-    this.departmentService.departmentList$
-      .subscribe((data: DepartmentResponse[]) => {
-        department = data.find(d => d.id == id)!;
-      });
-    return department;
+    return this.departmentService.departmentList$.value.find(d => d.id == id)!;
+  }
+
+  getPosition(id: number): Position {
+    return this.dataService.positionList.value.find(i => i.id == id)!;
   }
 }

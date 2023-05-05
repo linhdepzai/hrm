@@ -2,7 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
-import { Level, Position } from 'src/app/enums/Enum';
+import { Level } from 'src/app/enums/Enum';
+import { Position } from 'src/app/interfaces/interfaceReponse';
 import { CreateProject, Employee } from 'src/app/interfaces/interfaces';
 import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
 import { ProjectService } from 'src/app/modules/manage/services/project.service';
@@ -18,9 +19,8 @@ export class TeamProjectComponent implements OnInit {
   @Output() previous = new EventEmitter<CreateProject>();
   employeeList: Employee[] = [];
   memberList: { member: Employee, type: 1 | 2 }[] = [];
-  position = Position;
   level = Level;
-  positionList = new Observable<{ value: Position, label: string }[]>();
+  positionList = new Observable<Position[]>();
   memberForm!: FormGroup;
 
   constructor(
@@ -62,6 +62,10 @@ export class TeamProjectComponent implements OnInit {
       this.memberList.splice(index, 1);
       this.memberList = [...this.memberList];
     }
+  }
+
+  getPositionName(id: number) {
+    return this.dataService.positionList.value.find(i => i.id == id)?.name;
   }
 
   changeTypeMember(type: 1 | 2, user: Employee) {

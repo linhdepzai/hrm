@@ -28,16 +28,6 @@ export enum Level {
     Junior = 5,
 }
 
-export enum Position {
-    Dev = 1,
-    QA = 2,
-    BA = 3,
-    PM = 4,
-    DevOps = 5,
-    DataEngineer = 6,
-    ScrumMaster = 7,
-}
-
 export enum Status {
     New = 1,
     Pending = 2,

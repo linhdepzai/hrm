@@ -14,7 +14,7 @@ namespace HRM.DTOs.EmployeeDto
         public string Phone { get; set; }
         public DateTime DoB { get; set; }
         public Level Level { get; set; }
-        public Position Position { get; set; }
+        public int Position { get; set; }
         public Guid? DepartmentId { get; set; }
         public DateTime StartingDate { get; set; }
         public string Bank { get; set; }

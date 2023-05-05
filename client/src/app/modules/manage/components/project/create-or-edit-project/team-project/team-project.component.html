@@ -7,7 +7,7 @@
             </nz-select>
             <div style="width: 2%;"></div>
             <nz-select [ngModel]="" class="search">
-                <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                <nz-option [nzValue]="item.id" [nzLabel]="item.name"
                     *ngFor="let item of positionList | async"></nz-option>
             </nz-select>
         </div>
@@ -19,7 +19,7 @@
                             <div nz-col [nzSpan]="12">
                                 <div>
                                     <span>{{ item.member.fullName }}</span>
-                                    <app-tag [label]="position[item.member.position]" size></app-tag>
+                                    <app-tag [label]="getPositionName(item.member.position)" size></app-tag>
                                     <app-tag [label]="level[item.member.level]" size></app-tag>
                                 </div>
                                 <span nz-typography nzEllipsis>{{ item.member.email }}</span>
@@ -46,7 +46,7 @@
             </nz-select>
             <div style="width: 2%;"></div>
             <nz-select [ngModel]="" class="search">
-                <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                <nz-option [nzValue]="item.id" [nzLabel]="item.name"
                     *ngFor="let item of positionList | async"></nz-option>
             </nz-select>
         </div>
@@ -63,7 +63,7 @@
                             <div nz-col [nzSpan]="16">
                                 <div>
                                     <span>{{ item.fullName }}</span>
-                                    <app-tag [label]="position[item.position]" size></app-tag>
+                                    <app-tag [label]="getPositionName(item.position)" size></app-tag>
                                     <app-tag [label]="level[item.level]" size></app-tag>
                                 </div>
                                 <span nz-typography nzEllipsis>{{ item.email }}</span>

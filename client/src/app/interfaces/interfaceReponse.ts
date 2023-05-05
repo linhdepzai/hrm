@@ -1,4 +1,4 @@
-import { Bank, Level, OptionOnLeave, Position, Priority, ProjectType, Status, StatusTask } from "../enums/Enum";
+import { Bank, Level, OptionOnLeave, Priority, ProjectType, Status, StatusTask } from "../enums/Enum";
 
 export interface ApiResponse {
     statusCode: number,
@@ -13,7 +13,7 @@ export interface LoginResponse {
     phone: string,
     doB: Date,
     level: Level,
-    position: Position,
+    position: number,
     departmentId: string,
     startingDate: Date,
     bank: Bank | null,
@@ -93,4 +93,10 @@ export interface Evaluate {
     newLevel: Level,
     note: string,
     lastModifierUserId: string | null,
+}
+
+export interface Position {
+    id: number,
+    name: string,
+    color: string,
 }

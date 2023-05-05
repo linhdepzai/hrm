@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Bank, Level, OptionOnLeave, Position, Priority, ProjectType, StatusTask } from '../enums/Enum';
+import { Bank, Level, OptionOnLeave, Priority, ProjectType, StatusTask } from '../enums/Enum';
+import { ApiService } from './api.service';
+import { Position } from '../interfaces/interfaceReponse';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +10,7 @@ import { Bank, Level, OptionOnLeave, Position, Priority, ProjectType, StatusTask
 export class DataService {
   themeColor: BehaviorSubject<string> = new BehaviorSubject<string>('#096dd9');
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
-  public positionList = new BehaviorSubject<{ value: Position, label: string }[]>([]);
+  public positionList = new BehaviorSubject<Position[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
   public iconList = new BehaviorSubject<string[]>([]);
   public requestOffList = new BehaviorSubject<{ value: OptionOnLeave, label: string }[]>([]);
@@ -16,8 +18,19 @@ export class DataService {
   public statusTaskList = new BehaviorSubject<{ value: StatusTask, label: string }[]>([]);
   public projectTypeList = new BehaviorSubject<{ value: ProjectType, label: string }[]>([]);
 
-  constructor() {
+  constructor(
+    private apiService: ApiService,
+  ) {
+    this.getAllPosition();
     this.dataList();
+  }
+
+  getAllPosition() {
+    this.apiService.getAllPosition().subscribe((response) => {
+      if (response.statusCode == 200) {
+        this.positionList.next(response.data);
+      };
+    });
   }
 
   dataList() {
@@ -27,14 +40,6 @@ export class DataService {
       { value: Level.Junior, label: 'Junior' },
       { value: Level.Middle, label: 'Middle' },
       { value: Level.Senior, label: 'Senior' }]);
-    this.positionList.next([
-      { value: Position.Dev, label: 'Dev' },
-      { value: Position.QA, label: 'QA' },
-      { value: Position.BA, label: 'BA' },
-      { value: Position.PM, label: 'PM' },
-      { value: Position.DevOps, label: 'DevOps' },
-      { value: Position.DataEngineer, label: 'DataEngineer' },
-      { value: Position.ScrumMaster, label: 'ScrumMaster' }]);
     this.requestOffList.next([
       { value: OptionOnLeave.OffMorning, label: 'Off Morning' },
       { value: OptionOnLeave.OffAfternoon, label: 'Off Afternoon' },

@@ -23,7 +23,7 @@ namespace HRM.Entities
         [Required]
         public Level Level { get; set; }
         [Required]
-        public Position Position { get; set; }
+        public int Position { get; set; }
         [ForeignKey("Department")]
         public Guid? DepartmentId { get; set; }
         [Required]

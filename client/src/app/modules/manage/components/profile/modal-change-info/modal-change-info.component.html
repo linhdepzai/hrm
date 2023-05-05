@@ -58,7 +58,7 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Position!">
                 <nz-select [ngModel]="infoForm.value.position" formControlName="position" id="position">
-                    <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of positionList | async"></nz-option>
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of positionList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>

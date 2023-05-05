@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject } from 'rxjs';
-import { Level, Position } from 'src/app/enums/Enum';
+import { Level } from 'src/app/enums/Enum';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
-import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +32,7 @@ export class EmployeeService {
       .saveEmployee(payload)
       .subscribe((response) => {
         if (response.statusCode == 200) {
-          this.notification.success('Successfully!', `Create ${Level[response.data.level]} ${Position[response.data.position]} ${response.data.fullName}`);
+          this.notification.success('Successfully!', `Create ${Level[response.data.level]} ${response.data.fullName}`);
           if (payload.id) {
             this.employeeList$.value.splice(this.employeeList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
             this.employeeList$.next([...this.employeeList$.value]);
