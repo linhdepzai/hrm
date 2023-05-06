@@ -26,12 +26,12 @@ namespace HRM.Controllers
         {
             if (id != null)
             {
-                var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false && i.EmployeeId == id).AsNoTracking().ToListAsync();
+                var list = await _dataContext.OnLeave.Where(i => i.EmployeeId == id).AsNoTracking().ToListAsync();
                 return CustomResult(list);
             }
             else
             {
-                var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
+                var list = await _dataContext.OnLeave.AsNoTracking().ToListAsync();
                 return CustomResult(list);
             }
         }
@@ -40,7 +40,7 @@ namespace HRM.Controllers
         {
             foreach (var i in input.OnLeave)
             {
-                var checkLeave = await _dataContext.OnLeave.AsNoTracking().FirstOrDefaultAsync(e => e.EmployeeId == input.EmployeeId && e.DateLeave == i.DateLeave && e.IsDeleted == false);
+                var checkLeave = await _dataContext.OnLeave.AsNoTracking().FirstOrDefaultAsync(e => e.EmployeeId == input.EmployeeId && e.DateLeave == i.DateLeave);
                 if (checkLeave != null)
                 {
                     checkLeave.Option = i.Option;

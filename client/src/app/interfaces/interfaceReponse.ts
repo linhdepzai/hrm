@@ -100,3 +100,11 @@ export interface Position {
     name: string,
     color: string,
 }
+
+export interface Payoff {
+    id: string,
+    employeeId: string,
+    reason: string,
+    amount: number,
+    date: Date,
+}

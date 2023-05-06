@@ -1,0 +1,41 @@
+<div class="title">Punish</div>
+<div style="margin-bottom: 15px;">
+    <button nz-button nzType="primary" (click)="openModal(undefined, 'create')" class="mr-per">
+        <i class="fa-solid fa-user-plus mr-5"></i>
+        <span>Create</span>
+    </button>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList"></nz-option>
+    </nz-select>
+</div>
+<nz-table #table [nzData]="payoffList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '50vh'}">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center">Name</th>
+            <th nzAlign="center">Reason</th>
+            <th nzAlign="center">Amount</th>
+            <th nzAlign="center">Date</th>
+            <th nzAlign="center">Action</th>
+        </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag>
+            <td>{{ getUserName(data.employeeId) }}</td>
+            <td>{{ data.reason }}</td>
+            <td nzAlign="center">{{ data.amount }}</td>
+            <td nzAlign="center">{{ data.date | date: 'dd/MM/yyyy' }}</td>
+            <td nzAlign="center">
+                <button nz-button nzType="primary" class="mr-5" (click)="openModal(data, 'update')">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button nz-button nzDanger nzType="primary">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<app-modal-payoff [visible]="visibleModal" [data]="data" [mode]="mode" (cancel)="visibleModal = false"></app-modal-payoff>

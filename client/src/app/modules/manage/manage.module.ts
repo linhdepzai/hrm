@@ -31,6 +31,8 @@ import { NgZorroSharedModule } from '../ng-zorro-shared/ng-zorro-shared.module';
 import { ModalTimesheetComponent } from './components/timesheet/modal-timesheet/modal-timesheet.component';
 import { EvaluateComponent } from './components/admin/evaluate/evaluate.component';
 import { EditEvaluateComponent } from './components/admin/evaluate/edit-evaluate/edit-evaluate.component';
+import { PayoffComponent } from './components/payoff/payoff.component';
+import { ModalPayoffComponent } from './components/payoff/modal-payoff/modal-payoff.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -58,6 +60,8 @@ registerLocaleData(en);
         ModalTimesheetComponent,
         EvaluateComponent,
         EditEvaluateComponent,
+        PayoffComponent,
+        ModalPayoffComponent,
     ],
     exports: [
         ManageRoutingModule,

@@ -13,6 +13,7 @@ import { MyWorkingTimeComponent } from './components/my-working-time/my-working-
 import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component';
 import { EvaluateComponent } from './components/admin/evaluate/evaluate.component';
+import { PayoffComponent } from './components/payoff/payoff.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
       {path: 'users', component: UsersComponent},
       {path: 'working-time', component: WorkingTimeComponent},
       {path: 'evaluate', component: EvaluateComponent},
+      {path: 'punish', component: PayoffComponent},
     ]
   },
   { path: 'timesheet', component: TimesheetComponent },

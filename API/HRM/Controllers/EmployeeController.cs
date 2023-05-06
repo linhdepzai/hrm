@@ -25,7 +25,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync();
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
             return CustomResult(userList);
             /*var dp_params = new DynamicParameters();
             // dp_params.Add("@projectId", projectId, DbType.Guid);
@@ -36,7 +36,7 @@ namespace HRM.Controllers
         [HttpGet("getAllRequestChangeInfo")]
         public async Task<IActionResult> GetAllRequestChangeInfo()
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending && i.IsDeleted == false).AsNoTracking().ToListAsync();
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
             return CustomResult(userList);
         }
         [HttpPost("save")]

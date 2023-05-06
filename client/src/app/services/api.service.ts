@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Level, Status } from '../enums/Enum';
-import { ApiResponse, TimeKeepingResponse } from '../interfaces/interfaceReponse';
+import { ApiResponse, Payoff, TimeKeepingResponse } from '../interfaces/interfaceReponse';
 import { ChangePassword, CheckinOrCheckout, CreateProject, Employee, Login, WorkingTimeRequest } from '../interfaces/interfaces';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -240,6 +240,22 @@ export class ApiService {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'position/getAll')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
+  getAllPayoff(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'payoff/getall')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
+  savePayoff(payload: Payoff): Observable<ApiResponse> {
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'payoff/Save', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
         return of(err);
       }));
   }

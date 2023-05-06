@@ -1,0 +1,60 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" [nzTitle]="header" [nzContent]="content" (nzOnClose)="close()"
+    nzWidth="50%" [nzFooter]="footer">
+</nz-drawer>
+<ng-template #header>
+    <i class="fa-solid fa-user-pen'"></i>
+    <span class="ml-5">{{ title }}</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="payoffForm" class="login-form">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Employee</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <nz-select nzShowSearch nzAllowClear [ngModel]="payoffForm.value.employeeId"
+                    nzPlaceHolder="Enter your name" formControlName="employeeId" id="employeeId">
+                    <nz-option [nzLabel]="item.fullName" [nzValue]="item.id"
+                        *ngFor="let item of employeeList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Date</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid date!">
+                <nz-date-picker style="width: 100%;" formControlName="date" id="date"></nz-date-picker>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Amount</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid amount!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ" style="width: 100%">
+                        <nz-input-number [nzStep]="1000" formControlName="amount" id="amount"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Reason</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid reason!">
+                <textarea nz-input placeholder="Reason..." [rows]="10" [nzAutosize]="{ minRows: 3, maxRows: 10 }"
+                    formControlName="reason" id="reason"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button *ngIf="!isEdit else edit" nz-button nzType="primary" style="float: right;" (click)="changeMode()">
+        <i class="fa-solid fa-pen-to-square mr-5"></i>
+        <span>Edit</span>
+    </button>
+    <ng-template #edit>
+        <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm()">
+            <i class="fa-solid fa-check mr-5"></i>
+            <span>Submit</span>
+        </button>
+        <button *ngIf="mode == 'update'" style="float: right;" nz-button nzDanger nzType="default" (click)="changeMode()">
+            <i class="fa-solid fa-xmark mr-5"></i>
+            <span>Cancel</span>
+        </button>
+    </ng-template>
+</ng-template>
