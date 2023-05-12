@@ -1,13 +1,13 @@
-﻿using HRM.Enum;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HRM.DTOs.SalaryDto
+namespace HRM.Entities
 {
-    public class UpdateSalaryDto
+    public class EmployeeSalary : BaseEntity<Guid>
     {
-        public Guid Id { get; set; }
-        public Guid ActionId { get; set; }
+        [ForeignKey("Employee")]
+        public Guid EmployeeId { get; set; }
+        [ForeignKey("Salary")]
         public Guid Salary { get; set; }
         public DateTime Date { get; set; }
         public int TotalWorkdays { get; set; }

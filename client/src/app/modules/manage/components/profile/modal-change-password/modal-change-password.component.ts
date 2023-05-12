@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
-import { AccountService } from '../../../services/account.service';
 import { ChangePassword } from 'src/app/interfaces/interfaces';
 import { ApiService } from 'src/app/services/api.service';
 

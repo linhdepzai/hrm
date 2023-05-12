@@ -6,6 +6,7 @@ using HRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HRM.Controllers
@@ -23,7 +24,7 @@ namespace HRM.Controllers
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _dataContext.Payoff.AsNoTracking().ToListAsync();
+            var list = await _dataContext.Payoff.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
         [HttpPost("Save")]
@@ -71,7 +72,7 @@ namespace HRM.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            _dataContext.Department.Remove(await _dataContext.Department.FindAsync(id));
+            _dataContext.Payoff.Remove(await _dataContext.Payoff.FindAsync(id));
             await _dataContext.SaveChangesAsync();
             return CustomResult("Removed");
         }

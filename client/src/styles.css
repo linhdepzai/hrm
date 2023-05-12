@@ -33,6 +33,10 @@ body {
     outline: 1px solid slategrey;
 }
 
+nz-input-number, nz-input-number-group {
+    width: 100% !important;
+}
+
 .mr-5 {
     margin-right: 5px !important;
 }

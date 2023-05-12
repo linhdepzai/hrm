@@ -4,6 +4,8 @@ import { Payoff } from 'src/app/interfaces/interfaceReponse';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from 'src/app/interfaces/interfaces';
+import { ApiService } from 'src/app/services/api.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-payoff',
@@ -16,10 +18,13 @@ export class PayoffComponent implements OnInit {
   data: Payoff | undefined;
   employeeList: Employee[] = [];
   mode: string = 'create';
+  totalAmount: number = 0;
 
   constructor(
     private payoffService: PayoffService,
+    private apiService: ApiService,
     private employeeService: EmployeeService,
+    private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -54,5 +59,13 @@ export class PayoffComponent implements OnInit {
     if (id != null) {
       this.payoffList = this.payoffList.filter(i => i.employeeId == id);
     };
+  }
+
+  deleteItem(id: string){
+    this.apiService.deletePayoff(id).subscribe((response) => {
+      if(response.statusCode == 200) {
+        this.notification.success('Successfully!', '');
+      }
+    })
   }
 }

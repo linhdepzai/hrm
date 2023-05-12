@@ -259,4 +259,12 @@ export class ApiService {
         return of(err);
       }));
   }
+
+  deletePayoff(id: string): Observable<ApiResponse> {
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'payoff/delete?id=' + id)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
 }

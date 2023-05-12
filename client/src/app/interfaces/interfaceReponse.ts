@@ -108,3 +108,23 @@ export interface Payoff {
     amount: number,
     date: Date,
 }
+
+export interface Salary {
+    id: string,
+    salaryCode: string,
+    level: Level,
+    position: number,
+    money: number,
+    welfare: number,
+}
+
+export interface SalaryForEmployee {
+    id: string,
+    employeeId: string,
+    salary: string,
+    date: Date,
+    totalWorkdays: number,
+    punish: number,
+    bounty: number,
+    actualSalary: number
+}

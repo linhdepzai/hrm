@@ -44,7 +44,7 @@ namespace HRM.Entities
         public ICollection<OnLeave> OnLeave { get; set; }
         public ICollection<TimeWorking> TimeWorking { get; set; }
         public ICollection<Evaluate> Evaluate { get; set; }
-        public ICollection<Salary> Salary { get; set; }
+        public ICollection<EmployeeSalary> EmployeeSalary { get; set; }
         public ICollection<Tasks> Tasks { get; set; }
         public ICollection<Message> MessagesSent { get; set; }
         public ICollection<Message> MessagesReceived { get; set; }

@@ -4,14 +4,16 @@ using HRM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HRM.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230509062809_AddColumnDateToTableEmployeeSalary")]
+    partial class AddColumnDateToTableEmployeeSalary
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,12 +179,6 @@ namespace HRM.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ActualSalary")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Bounty")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -210,17 +206,11 @@ namespace HRM.Migrations
                     b.Property<Guid?>("LastModifierUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Punish")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("Salary")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("SalaryId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TotalWorkdays")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -479,9 +469,6 @@ namespace HRM.Migrations
 
                     b.Property<Guid?>("LastModifierUserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Punish")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");

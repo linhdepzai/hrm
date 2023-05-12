@@ -14,6 +14,8 @@ import { ProjectComponent } from './components/project/project.component';
 import { TaskComponent } from './components/task/task.component';
 import { EvaluateComponent } from './components/admin/evaluate/evaluate.component';
 import { PayoffComponent } from './components/payoff/payoff.component';
+import { SalaryComponent } from './components/salary/salary.component';
+import { SalaryForEmployeeComponent } from './components/salary-for-employee/salary-for-employee.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -24,6 +26,8 @@ const routes: Routes = [
       {path: 'working-time', component: WorkingTimeComponent},
       {path: 'evaluate', component: EvaluateComponent},
       {path: 'punish', component: PayoffComponent},
+      {path: 'salary-management', component: SalaryComponent},
+      {path: 'salary-for-employee', component: SalaryForEmployeeComponent},
     ]
   },
   { path: 'timesheet', component: TimesheetComponent },

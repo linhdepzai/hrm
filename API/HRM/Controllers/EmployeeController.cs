@@ -25,7 +25,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved).AsNoTracking().ToListAsync();
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(userList);
             /*var dp_params = new DynamicParameters();
             // dp_params.Add("@projectId", projectId, DbType.Guid);
@@ -36,7 +36,7 @@ namespace HRM.Controllers
         [HttpGet("getAllRequestChangeInfo")]
         public async Task<IActionResult> GetAllRequestChangeInfo()
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending).AsNoTracking().ToListAsync();
+            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending && i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(userList);
         }
         [HttpPost("save")]
@@ -98,15 +98,14 @@ namespace HRM.Controllers
                 Status = Status.Approved,
             };
             await _dataContext.TimeWorking.AddAsync(timeWorking);
-            var salary = new Salary
+            var salary = await _dataContext.Salary.FirstOrDefaultAsync(i => i.Level == input.Level && i.Position == input.Position);
+            var employeeSalary = new EmployeeSalary
             {
                 Id = new Guid(),
                 EmployeeId = employee.Id,
-                Money = 0,
-                Welfare = 0,
-                DateReview = DateTime.Now,
+                Salary = salary.Id,
             };
-            await _dataContext.Salary.AddAsync(salary);
+            await _dataContext.EmployeeSalary.AddAsync(employeeSalary);
             await _dataContext.SaveChangesAsync();
             return CustomResult(employee);
         }

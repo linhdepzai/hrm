@@ -47,7 +47,7 @@ as
 	while @i <= @totalUser
 	begin
 		declare @UserId uniqueidentifier = (select [Id] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
-		select top 1* from TimeWorking where EmployeeId = 'B35658A5-EEDD-4024-F44E-08DB40890FA4' and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc
+		select top 1* from TimeWorking where EmployeeId = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc
 		declare @StartTime time = cast((select top 1 [MorningStartTime] from TimeWorking where [EmployeeId] = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc) as time);
 		declare @EndTime time = cast((select top 1 [AfternoonEndTime] from TimeWorking where [EmployeeId] = @UserId and cast([ApplyDate] as Date) < @Today order by [ApplyDate] desc) as time);
 		declare @CheckDateOff int = (select count(*) as count from TimeKeeping where [EmployeeId] = @UserId and cast([Date] as date) = @Today);
@@ -79,27 +79,27 @@ as
 			if (@Checkin = cast('00:00:00.0000000' as time) and @Checkout = cast('00:00:00.0000000' as time))
 			begin
 				update TimeKeeping set [Punish] = 1, [LastModificationTime] = getdate(), [LastModifierUserId] = @UserId where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
-				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'No check in, check out', 100000, getdate(), getdate(), @UserId, 0);
+				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [Punish], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'No check in, check out', 100000, getdate(), 0, getdate(), @UserId, 0);
 			end
 			else if (@Checkin = cast('00:00:00.0000000' as time))
 			begin
 				update TimeKeeping set [Punish] = 1, [LastModificationTime] = getdate(), [LastModifierUserId] = @UserId where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
-				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'No check in', 50000, getdate(), getdate(), @UserId, 0);
+				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [Punish], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'No check in', 50000, getdate(), 0, getdate(), @UserId, 0);
 			end
 			else if (@Checkout = cast('00:00:00.0000000' as time))
 			begin
 				update TimeKeeping set [Punish] = 1, [LastModificationTime] = getdate(), [LastModifierUserId] = @UserId where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
-				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'No check out', 50000, getdate(), getdate(), @UserId, 0);
+				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [Punish], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'No check out', 50000, getdate(), 0, getdate(), @UserId, 0);
 			end
 			else if (@Checkin > @StartTime)
 			begin
 				update TimeKeeping set [Punish] = 1, [LastModificationTime] = getdate(), [LastModifierUserId] = @UserId where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
-				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'Check in late', 20000, getdate(), getdate(), @UserId, 0);
+				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [Punish], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'Check in late', 20000, getdate(), 0, getdate(), @UserId, 0);
 			end
 			else if (@Checkout < @EndTime)
 			begin
 				update TimeKeeping set [Punish] = 1, [LastModificationTime] = getdate(), [LastModifierUserId] = @UserId where [EmployeeId] = @UserId and cast([Date] as date) = @Today;
-				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'Check out early', 20000, getdate(), getdate(), @UserId, 0);
+				insert into Payoff([Id], [EmployeeId], [Reason], [Amount], [Date], [Punish], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), @UserId, 'Check out early', 20000, getdate(), 0, getdate(), @UserId, 0);
 			end
 		end
 		set @i = @i + 1;
@@ -123,6 +123,35 @@ as
 			insert into Evaluate([Id], [DateEvaluate], [PMId], [EmployeeId], [OldLevel], [NewLevel], [Note], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), getdate(), @leader, @member, @oldLevel, @oldLevel, '', getdate(), @leader, 0);
 			set @j = @j + 1;
 		end
+		set @i = @i + 1;
+	end
+go
+-- Tinh luong hang thang
+create or alter proc autoCalSalary --Run at 01 every month
+as
+	declare @i int = 1;
+	declare @totalUser int = (select count(*) from Employee where Status = 3 and LeaveDate is null);
+	while @i <= @totalUser
+	begin
+		declare @UserId uniqueidentifier = (select [Id] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
+		-- cal salary
+		declare @Level int = (select [Level] from Employee where [Id] = @UserId);
+		declare @Position int = (select [Position] from Employee where [Id] = @UserId);
+		declare @Salary uniqueidentifier = (select top 1[Id] from Salary where [Level] = @Level and [Position] = @Position order by [CreationTime] desc);
+		-- cal totalWorkday
+		declare @totalWorkday int = (select count(*) from TimeKeeping where EmployeeId = @UserId and datepart(month, [Date]) = (datepart(month, getdate()) - 1) and [Punish] = 0);
+		-- cal total punish
+		declare @totalPunish int = (select sum([Amount]) from Payoff where EmployeeId = @UserId and datepart(month, [Date]) = (datepart(month, getdate()) - 1) and [IsDeleted] = 0 and [Punish] = 0);
+		if(@totalPunish is null) begin set @totalPunish = 0 end;
+		-- cal total bounty
+		declare @totalBounty int = (select sum([Amount]) from Payoff where EmployeeId = @UserId and datepart(month, [Date]) = (datepart(month, getdate()) - 1) and [IsDeleted] = 0 and [Punish] = 1);
+		if(@totalBounty is null) begin set @totalBounty = 0 end;
+		-- cal total actualSalary
+		declare @Money int = (select [Money] from Salary where [Id] = @Salary);
+		declare @Welfare int = (select [Welfare] from Salary where [Id] = @Salary);
+		declare @ActualSalary int = @Money + @Welfare + @totalBounty - @totalPunish;
+		insert into EmployeeSalary ([Id], [Date], [totalWorkdays], [EmployeeId], [Salary], [Punish], [Bounty], [ActualSalary], [CreatorUserId], [CreationTime], [IsDeleted])
+			values (newid(), getdate(), @totalWorkday, @UserId, @Salary, @totalPunish, @totalBounty, @ActualSalary, '00000000-0000-0000-0000-000000000000', getdate(), 0);
 		set @i = @i + 1;
 	end
 go

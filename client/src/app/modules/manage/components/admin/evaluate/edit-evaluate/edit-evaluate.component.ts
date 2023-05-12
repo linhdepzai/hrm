@@ -61,12 +61,7 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
   }
 
   getUserName(id: string) {
-    let name: string | undefined;
-    this.employeeService.employeeList$
-      .subscribe((data: Employee[]) => {
-        name = data.find(d => d.id == id)?.fullName;
-      });
-    return name;
+    return this.employeeService.employeeList$.value.find(d => d.id == id)?.fullName;
   }
 
   changeMode() {

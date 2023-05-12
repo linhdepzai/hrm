@@ -33,6 +33,10 @@ import { EvaluateComponent } from './components/admin/evaluate/evaluate.componen
 import { EditEvaluateComponent } from './components/admin/evaluate/edit-evaluate/edit-evaluate.component';
 import { PayoffComponent } from './components/payoff/payoff.component';
 import { ModalPayoffComponent } from './components/payoff/modal-payoff/modal-payoff.component';
+import { SalaryComponent } from './components/salary/salary.component';
+import { ModalSalaryComponent } from './components/salary/modal-salary/modal-salary.component';
+import { SalaryForEmployeeComponent } from './components/salary-for-employee/salary-for-employee.component';
+import { ModalSalaryForEmployeeComponent } from './components/salary-for-employee/modal-salary-for-employee/modal-salary-for-employee.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -62,6 +66,10 @@ registerLocaleData(en);
         EditEvaluateComponent,
         PayoffComponent,
         ModalPayoffComponent,
+        SalaryComponent,
+        ModalSalaryComponent,
+        SalaryForEmployeeComponent,
+        ModalSalaryForEmployeeComponent,
     ],
     exports: [
         ManageRoutingModule,

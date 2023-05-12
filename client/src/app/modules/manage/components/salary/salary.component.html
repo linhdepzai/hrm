@@ -1,0 +1,34 @@
+<div class="title">Salary Management</div>
+<div style="margin-bottom: 15px;">
+    <button nz-button nzType="primary" (click)="visibleModal = true" class="mr-per">
+        <i class="fa-solid fa-user-plus mr-5"></i>
+        <span>Create</span>
+    </button>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.salaryCode" [nzValue]="item.id" *ngFor="let item of salaryList"></nz-option>
+    </nz-select>
+</div>
+<nz-table #table [nzData]="salaryList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: null, y: '49.5vh'}">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center">Code</th>
+            <th nzAlign="center">Position</th>
+            <th nzAlign="center">Level</th>
+            <th nzAlign="center">Money</th>
+            <th nzAlign="center">Welfare</th>
+        </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag>
+            <td>{{ data.salaryCode }}</td>
+            <td nzAlign="center">{{ getDepartmentName(data.position) }}</td>
+            <td nzAlign="center">{{ level[data.level] }}</td>
+            <td nzAlign="center">{{ formatVND(data.money) }}</td>
+            <td nzAlign="center">{{ formatVND(data.welfare) }}</td>
+        </tr>
+    </tbody>
+</nz-table>
+<app-modal-salary [isVisibleModal]="visibleModal" (cancel)="visibleModal = false"></app-modal-salary>

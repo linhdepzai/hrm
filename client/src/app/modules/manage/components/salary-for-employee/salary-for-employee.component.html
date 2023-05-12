@@ -1,0 +1,31 @@
+<div class="title">Salary</div>
+<nz-table #table [nzData]="salaryForEmployeeList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'hidden', y: '49.5vh'}">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center">Employee</th>
+            <th nzAlign="center">Date</th>
+            <th nzAlign="center">Salary</th>
+            <th nzAlign="center">Workdays</th>
+            <th nzAlign="center">Actual</th>
+            <th nzAlign="center">Action</th>
+        </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag>
+            <td>{{ getEmployeeName(data.employeeId) }}</td>
+            <td nzAlign="center">{{ data.date | date: 'dd/MM/yyyy' }}</td>
+            <td nzAlign="center">{{ getSalaryName(data.salary) }}</td>
+            <td nzAlign="center">{{ data.totalWorkdays }}</td>
+            <td nzAlign="center">{{ formatVND(data.actualSalary) }}</td>
+            <td nzAlign="center">
+                <button nz-button nzType="primary" (click)="openModal(data)">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<app-modal-salary-for-employee [visible]="visibleModal" [data]="data" (cancel)="visibleModal = false"></app-modal-salary-for-employee>

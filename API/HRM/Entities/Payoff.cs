@@ -10,6 +10,7 @@ namespace HRM.Entities
         public Guid EmployeeId { get; set; }
         public string Reason { get; set; }
         public int Amount { get; set; }
+        public bool Punish { get; set; }
         public DateTime Date { get; set; }
     }
 }

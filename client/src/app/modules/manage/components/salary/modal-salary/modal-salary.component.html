@@ -1,0 +1,59 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="isVisibleModal" [nzTitle]="header" [nzContent]="content"
+    (nzOnClose)="handleCancel()" nzWidth="50%" [nzFooter]="footer">
+</nz-drawer>
+<ng-template #header>
+    <i class="fa-solid fa-user-pen'"></i>
+    <span class="ml-5">Create</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="salaryForm">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Level</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Level!">
+                <nz-select [ngModel]="salaryForm.value.level" formControlName="level" id="level">
+                    <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                        *ngFor="let item of levelList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Position!">
+                <nz-select [ngModel]="salaryForm.value.position" formControlName="position" id="position">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+                        *ngFor="let item of positionList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Money</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid money!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
+                        <nz-input-number [nzStep]="1000" formControlName="money" id="money"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Welfare</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid welfare!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
+                        <nz-input-number [nzStep]="1000" formControlName="welfare" id="welfare"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm()">
+        <i class="fa-solid fa-check mr-5"></i>
+        <span>Submit</span>
+    </button>
+    <button style="float: right;" nz-button nzDanger nzType="default" (click)="handleCancel()">
+        <i class="fa-solid fa-xmark mr-5"></i>
+        <span>Cancel</span>
+    </button>
+</ng-template>
