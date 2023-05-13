@@ -5,11 +5,9 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { Level } from 'src/app/enums/Enum';
 import { Evaluate } from 'src/app/interfaces/interfaceReponse';
-import { Employee } from 'src/app/interfaces/interfaces';
-import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
-import { EvaluateService } from 'src/app/modules/manage/services/evaluate.service';
-import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { EvaluateService } from 'src/app/services/evaluate.service';
 
 @Component({
   selector: 'app-edit-evaluate',
@@ -29,7 +27,6 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
     private employeeService: EmployeeService,
     private evaluateService: EvaluateService,
     private notification: NzNotificationService,
-    private apiService: ApiService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
@@ -78,7 +75,7 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
   }
 
   submitForm() {
-    this.apiService.updateEvaluate(this.evaluateForm.value)
+    this.evaluateService.updateEvaluate(this.evaluateForm.value)
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', '');

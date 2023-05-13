@@ -15,6 +15,7 @@ import { SettingComponent } from './layout/setting/setting.component';
 import { NgZorroSharedModule } from './modules/ng-zorro-shared/ng-zorro-shared.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MemberModule } from './modules/member/member.module';
 registerLocaleData(en);
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ registerLocaleData(en);
     AppRoutingModule,
     AuthModule,
     ManageModule,
+    MemberModule,
     NgZorroSharedModule,
   ],
   providers: [

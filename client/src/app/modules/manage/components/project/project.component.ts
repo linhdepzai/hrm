@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProjectResponse } from 'src/app/interfaces/interfaceReponse';
-import { ProjectService } from '../../services/project.service';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-project',
@@ -19,8 +19,8 @@ export class ProjectComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.projectService.getAllProject();
     this.projectList = this.projectService.projectList$;
-    console.log(this.projectList)
   }
 
   openModal() {

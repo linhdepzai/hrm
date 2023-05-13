@@ -11,6 +11,6 @@
         <app-general-project [backForm]="generalForm" (next)="actionPage($event, 'next')"></app-general-project>
     </div>
     <ng-template #team>
-        <app-team-project [generalForm]="generalForm" (previous)="actionPage($event, 'previous')"></app-team-project>
+        <app-team-project [generalForm]="generalForm" (previous)="actionPage($event, 'previous')" (submit)="cancel.emit()"></app-team-project>
     </ng-template>
 </ng-template>

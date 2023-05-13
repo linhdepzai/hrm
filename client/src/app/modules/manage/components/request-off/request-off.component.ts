@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { OptionOnLeave, Status } from 'src/app/enums/Enum';
 import { LoginResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
-import { OnleaveService } from '../../services/onleave.service';
+import { OnleaveService } from 'src/app/services/onleave.service';
 
 @Component({
   selector: 'app-request-off',
@@ -34,6 +34,7 @@ export class RequestOffComponent implements OnInit {
 
   ngOnInit(): void {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.onleaveService.getAllOnLeave(user.id);
     this.requestList = [];
     this.optionRequestList = this.dataService.requestOffList;
     this.onleaveService.onLeaveList$.subscribe((data) => {
@@ -121,7 +122,15 @@ export class RequestOffComponent implements OnInit {
       nzTitle: `Delete request in ${this.datepipe.transform(date, 'dd/MM/YYYY')}?`,
       nzOnOk: () =>
         new Promise((resolve) => {
-          this.onleaveService.deleteOnLeave(id);
+          this.onleaveService.deleteOnLeave(id)
+            .subscribe((response) => {
+              if (response.statusCode == 200) {
+                const index = this.onleaveService.onLeaveList$.value.findIndex((item) => item.id == response.data.id);
+                this.onleaveService.onLeaveList$.value.splice(index, 1);
+                this.onleaveService.onLeaveList$.next([...this.onleaveService.onLeaveList$.value]);
+                this.notification.success('Successfully!', response.message);
+              }
+            });
           setTimeout(resolve, 1000);
         }).catch(() => console.log('Oops errors!'))
     });

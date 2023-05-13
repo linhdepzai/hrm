@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { SalaryService } from '../../../services/salary.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { Position } from 'src/app/interfaces/interfaceReponse';
 import { Level } from 'src/app/enums/Enum';
 import { DataService } from 'src/app/services/data.service';
+import { SalaryService } from 'src/app/services/salary.service';
 
 @Component({
   selector: 'app-modal-salary',

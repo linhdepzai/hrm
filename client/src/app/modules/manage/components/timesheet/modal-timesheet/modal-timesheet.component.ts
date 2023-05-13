@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { OnleaveService } from '../../../services/onleave.service';
 import { OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { DatePipe } from '@angular/common';
 import { Employee } from 'src/app/interfaces/interfaces';
-import { EmployeeService } from '../../../services/employee.service';
 import { DataService } from 'src/app/services/data.service';
 import { Status } from 'src/app/enums/Enum';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { OnleaveService } from 'src/app/services/onleave.service';
 
 @Component({
   selector: 'app-modal-timesheet',
@@ -25,6 +26,7 @@ export class ModalTimesheetComponent implements OnChanges {
     private dataService: DataService,
     private onLeaveService: OnleaveService,
     private datepipe: DatePipe,
+    private notification: NzNotificationService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -62,13 +64,20 @@ export class ModalTimesheetComponent implements OnChanges {
     return requestOff;
   }
 
-  actionRequestOff(action: string, id: string){
+  actionRequestOff(action: string, id: string) {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     const payload = {
       id: id,
       pmId: user.id,
       status: action == 'approve' ? Status.Approved : Status.Rejected
     }
-    this.onLeaveService.updateStatusRequestOff(payload);
+    this.onLeaveService.updateStatusRequestOff(payload)
+      .subscribe((response) => {
+        if (response.statusCode == 200) {
+          this.onLeaveService.onLeaveList$.value.splice(this.onLeaveService.onLeaveList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+          this.onLeaveService.onLeaveList$.next([...this.onLeaveService.onLeaveList$.value]);
+          this.notification.success('Successfully!', response.message);
+        }
+      });
   }
 }

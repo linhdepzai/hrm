@@ -1,13 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Payoff } from 'src/app/interfaces/interfaceReponse';
-import { PayoffService } from '../../../services/payoff.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
-import { EmployeeService } from '../../../services/employee.service';
 import { Observable } from 'rxjs';
 import { Employee } from 'src/app/interfaces/interfaces';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { PayoffService } from 'src/app/services/payoff.service';
 
 @Component({
   selector: 'app-modal-payoff',
@@ -28,7 +27,6 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
     private employeeService: EmployeeService,
     private payoffService: PayoffService,
     private notification: NzNotificationService,
-    private apiService: ApiService,
     private fb: FormBuilder,
   ) { 
     this.initForm(); 
@@ -78,7 +76,7 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
   submitForm() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.payoffForm.controls['actionId'].setValue(user.id);
-    this.apiService.savePayoff(this.payoffForm.value)
+    this.payoffService.savePayoff(this.payoffForm.value)
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', '');

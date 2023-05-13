@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 import { Level } from 'src/app/enums/Enum';
 import { Position } from 'src/app/interfaces/interfaceReponse';
 import { CreateProject, Employee } from 'src/app/interfaces/interfaces';
-import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
-import { ProjectService } from 'src/app/modules/manage/services/project.service';
 import { DataService } from 'src/app/services/data.service';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-team-project',
@@ -17,6 +17,7 @@ import { DataService } from 'src/app/services/data.service';
 export class TeamProjectComponent implements OnInit {
   @Input() generalForm!: CreateProject;
   @Output() previous = new EventEmitter<CreateProject>();
+  @Output() submit = new EventEmitter<CreateProject>();
   employeeList: Employee[] = [];
   memberList: { member: Employee, type: 1 | 2 }[] = [];
   level = Level;
@@ -32,6 +33,7 @@ export class TeamProjectComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.employeeService.getAllEmployee();
     this.positionList = this.dataService.positionList;
     this.memberForm = this.fb.group({
       members: this.fb.array([]),
@@ -91,8 +93,13 @@ export class TeamProjectComponent implements OnInit {
         (this.memberForm.controls['members'] as FormArray).push(memberForm);
       });
       this.generalForm.members = this.memberForm.value.members;
-      console.log(this.generalForm)
-      this.projectService.saveProject(this.generalForm);
+      this.projectService.saveProject(this.generalForm)
+        .subscribe((response) => {
+          if (response.statusCode == 200) {
+            this.notification.success('Successfully!', 'This project has been created!');
+            this.submit.emit();
+          }
+        });;
     }
   }
 }

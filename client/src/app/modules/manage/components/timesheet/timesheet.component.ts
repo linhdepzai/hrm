@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { OnleaveService } from '../../services/onleave.service';
 import { OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
-import { EmployeeService } from '../../services/employee.service';
 import { Employee } from 'src/app/interfaces/interfaces';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { OnleaveService } from 'src/app/services/onleave.service';
 
 @Component({
   selector: 'app-timesheet',
@@ -22,6 +22,8 @@ export class TimesheetComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.onleaveService.getAllOnLeave('');
+    this.employeeService.getAllEmployee();
     this.onleaveService.onLeaveList$.subscribe((data) => {
       this.onLeaveList = data;
     });
@@ -33,12 +35,7 @@ export class TimesheetComponent implements OnInit {
   }
 
   getAccount(id: string): Employee {
-    let employee!: Employee;
-    this.employeeService.employeeList$
-      .subscribe((data: Employee[]) => {
-        employee = data.find(d => d.id == id)!;
-      });
-    return employee;
+    return this.employeeService.employeeList$.value.find(d => d.id == id)!;
   }
 
   openModal(date: Date) {

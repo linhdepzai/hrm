@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DepartmentService } from 'src/app/modules/manage/services/department.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { DataService } from 'src/app/services/data.service';
+import { DepartmentService } from 'src/app/services/department.service';
 
 @Component({
   selector: 'app-create-department-modal',
@@ -18,6 +19,7 @@ export class CreateDepartmentModalComponent implements OnInit {
     private departmentService: DepartmentService,
     private dataService: DataService,
     private fb: FormBuilder,
+    private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -36,8 +38,19 @@ export class CreateDepartmentModalComponent implements OnInit {
 
   submitForm() {
     if (this.departmentForm.valid) {
-      this.departmentService.saveDepartment(this.departmentForm.value);
-      this.handleCancel();
+      this.departmentService.saveDepartment(this.departmentForm.value)
+      .subscribe((response) => {
+        if (response.statusCode == 200) {
+          this.notification.success('Successfully!', 'Department ' + response.data.name);
+          if (this.departmentForm.value.id) {
+            this.departmentService.departmentList$.value.splice(this.departmentService.departmentList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+            this.departmentService.departmentList$.next([...this.departmentService.departmentList$.value]);
+          } else {
+            this.departmentService.departmentList$.next([response.data, ...this.departmentService.departmentList$.value]);
+          };
+          this.handleCancel();
+        };
+      });
     } else {
       Object.values(this.departmentForm.controls).forEach(control => {
         if (control.invalid) {

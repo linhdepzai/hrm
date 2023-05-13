@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, of } from 'rxjs';
-import { ApiService } from 'src/app/services/api.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Login } from 'src/app/interfaces/interfaces';
-import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { ApiLoginService } from './api-login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,7 @@ export class AuthenticationService {
   constructor(
     private notification: NzNotificationService,
     private router: Router,
-    private apiService: ApiService
+    private apiLoginService: ApiLoginService
   ) {
     if (sessionStorage.getItem('user') || localStorage.getItem('user')) {
       this.isLogin.next(true);
@@ -27,7 +26,7 @@ export class AuthenticationService {
 
   login(loginForm: Login) {
     this.loading.next(true);
-    this.apiService.login(loginForm)
+    this.apiLoginService.login(loginForm)
       .pipe(catchError((err) => {
         this.notification.error('Login Failed!!!', err.error.message);
         return of(err);

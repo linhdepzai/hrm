@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { Bank, Level } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
-import { DepartmentService } from '../../../services/department.service';
-import { ApiService } from 'src/app/services/api.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { DepartmentService } from 'src/app/services/department.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-modal-change-info',
@@ -25,8 +25,8 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
 
   constructor(
     private departmentService: DepartmentService,
+    private accountService: AccountService,
     private notification: NzNotificationService,
-    private apiService: ApiService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
@@ -71,7 +71,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   submitForm() {
     if (this.infoForm.valid) {
       this.infoForm.controls['userCode'].setValue(this.user.userCode);
-      this.apiService
+      this.accountService
         .requestChangeInfor(this.infoForm.value)
         .subscribe((response) => {
           if (response.statusCode == 200) {

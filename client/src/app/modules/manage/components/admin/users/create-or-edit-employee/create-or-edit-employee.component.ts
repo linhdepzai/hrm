@@ -6,10 +6,9 @@ import { Observable } from 'rxjs';
 import { Bank, Level, Status } from 'src/app/enums/Enum';
 import { Position } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
-import { DepartmentService } from 'src/app/modules/manage/services/department.service';
-import { EmployeeService } from 'src/app/modules/manage/services/employee.service';
-import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
+import { DepartmentService } from 'src/app/services/department.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-create-or-edit-employee',
@@ -33,7 +32,6 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   constructor(
     private departmentService: DepartmentService,
     private employeeService: EmployeeService,
-    private apiService: ApiService,
     private dataService: DataService,
     private notification: NzNotificationService,
     private fb: FormBuilder,
@@ -90,8 +88,19 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
     if (mode == 'edit') {
       this.employeeForm.controls['startingDate'].setValue(this.datepipe.transform(new Date(), 'YYYY-MM-dd'));
       if (this.employeeForm.valid) {
-        this.employeeService.saveEmployee(this.employeeForm.value);
-        this.close();
+        this.employeeService.saveEmployee(this.employeeForm.value)
+          .subscribe((response) => {
+            if (response.statusCode == 200) {
+              this.notification.success('Successfully!', `Create ${Level[response.data.level]} ${response.data.fullName}`);
+              if (this.employeeForm.value.id) {
+                this.employeeService.employeeList$.value.splice(this.employeeService.employeeList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+                this.employeeService.employeeList$.next([...this.employeeService.employeeList$.value]);
+              } else {
+                this.employeeService.employeeList$.next([response.data, ...this.employeeService.employeeList$.value]);
+              };
+            };
+            this.close();
+          });
       } else {
         Object.values(this.employeeForm.controls).forEach(control => {
           if (control.invalid) {
@@ -107,7 +116,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
         pmId: user.id,
         status: mode == 'reject' ? Status.Rejected : Status.Approved,
       }
-      this.apiService
+      this.employeeService
         .updateStatusUserInfo(payload)
         .subscribe((response) => {
           if (response.statusCode == 200) {

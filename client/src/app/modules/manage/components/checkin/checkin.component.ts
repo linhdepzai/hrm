@@ -2,10 +2,12 @@ import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WebcamImage, WebcamUtil } from 'ngx-webcam';
 import { Observable, Subject } from 'rxjs';
 import { LoginResponse, TimeKeepingResponse } from 'src/app/interfaces/interfaceReponse';
-import { TimekeepingService } from '../../services/timekeeping.service';
+import { AccountService } from 'src/app/services/account.service';
+import { TimekeepingService } from 'src/app/services/timekeeping.service';
 
 @Component({
   selector: 'app-checkin',
@@ -33,10 +35,12 @@ export class CheckinComponent implements OnInit, OnDestroy {
     private modal: NzModalService,
     private datepipe: DatePipe,
     private fb: FormBuilder,
+    private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.timekeepingService.getTimeKeepingForUser(this.user.id, new Date().getMonth() + 1, new Date().getFullYear());
     this.timekeepingService.myTimeKeepingList$.subscribe((data) => {
       this.myTimeKeepingList = data;
       this.checkTimeKeepingToday();
@@ -117,8 +121,23 @@ export class CheckinComponent implements OnInit, OnDestroy {
       nzWidth: '640px',
       nzOnOk: () =>
         new Promise((resolve) => {
-          this.timekeepingService.checkinOrCheckout(this.checkinForm.value);
-          this.checkTimeKeepingToday();
+          this.timekeepingService.checkinOrCheckout(this.checkinForm.value)
+          .subscribe((response) => {
+            if (response.statusCode == 200) {
+              if(response.data.photoCheckout == null) {
+                response.data.checkin = new Date(new Date(response.data.checkin).getTime() - 7 * 60 * 60 * 1000);
+                const timeCheckin = this.datepipe.transform(response.data.checkin, 'HH:mm');
+                this.notification.success('Checkin success!!!', 'You checkin at ' + timeCheckin);
+              } else {
+                response.data.checkout = new Date(new Date(response.data.checkout).getTime() - 7 * 60 * 60 * 1000);
+                const timeCheckout = this.datepipe.transform(response.data.checkout, 'HH:mm');
+                this.notification.success('Checkout success!!!', 'You checkout at ' + timeCheckout);
+              }
+              this.timekeepingService.myTimeKeepingList$.value.splice(this.timekeepingService.myTimeKeepingList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+              this.timekeepingService.myTimeKeepingList$.next([...this.timekeepingService.myTimeKeepingList$.value]);
+            }
+            this.checkTimeKeepingToday();
+          });
           setTimeout(resolve, 1000);
         }).catch(() => console.log('Oops errors!'))
     });

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SalaryService } from '../../services/salary.service';
 import { SalaryForEmployee } from 'src/app/interfaces/interfaceReponse';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { EmployeeService } from '../../services/employee.service';
+import { SalaryService } from 'src/app/services/salary.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-salary-for-employee',

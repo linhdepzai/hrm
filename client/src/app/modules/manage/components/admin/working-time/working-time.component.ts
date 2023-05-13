@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Employee } from 'src/app/interfaces/interfaces';
-import { EmployeeService } from '../../../services/employee.service';
-import { TimeworkingService } from '../../../services/timeworking.service';
 import { TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
 import { Status } from 'src/app/enums/Enum';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { TimeworkingService } from 'src/app/services/timeworking.service';
 
 @Component({
   selector: 'app-working-time',
@@ -26,6 +26,7 @@ export class WorkingTimeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.employeeService.getAllEmployee();
     this.employeeList = this.employeeService.employeeList$;
     this.timeWorkingService.getAllTimeWorking();
     this.timeWorkingService.timeWorkingList$.subscribe((data) => {

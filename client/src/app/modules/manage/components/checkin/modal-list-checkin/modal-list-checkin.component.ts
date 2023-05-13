@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { LoginResponse, TimeKeepingResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { TimekeepingService } from '../../../services/timekeeping.service';
-import { TimeworkingService } from '../../../services/timeworking.service';
-import { AccountService } from '../../../services/account.service';
+import { AccountService } from '../../../../../services/account.service';
 import { Status } from 'src/app/enums/Enum';
 import { DatePipe } from '@angular/common';
+import { TimekeepingService } from 'src/app/services/timekeeping.service';
 
 @Component({
   selector: 'app-modal-list-checkin',
@@ -36,6 +35,7 @@ export class ModalListCheckinComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.accountService.getAllRequestChangeTimeWorkingForUser(this.user.id);
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, this.today.getFullYear() + i];
     };
@@ -44,7 +44,7 @@ export class ModalListCheckinComponent implements OnInit {
       this.totalPunish = data.filter(i => i.punish == true).length;
     });
     this.accountService.requestTimeWorkingList$.subscribe((data) => {
-      this.myTimeWorking = data.filter(i => i.status == Status.Approved).sort((a,b) => {
+      this.myTimeWorking = data.filter(i => i.status == Status.Approved).sort((a, b) => {
         return new Date(b.applyDate).getTime() - new Date(a.applyDate).getTime();
       })!;
     })
@@ -74,7 +74,11 @@ export class ModalListCheckinComponent implements OnInit {
         id: id,
         complain: complain,
       };
-      this.timekeepingService.complainDailyCheckin(payload);
+      this.timekeepingService.complainDailyCheckin(payload)
+        .subscribe((response) => {
+          this.timekeepingService.myTimeKeepingList$.value.splice(this.timekeepingService.myTimeKeepingList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+          this.timekeepingService.myTimeKeepingList$.next([...this.timekeepingService.myTimeKeepingList$.value]);
+        });
       this.visibleComplain = false;
     } else {
       this.notification.error('Please input your complain!', '')

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Level } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse, Position } from 'src/app/interfaces/interfaceReponse';
-import { DepartmentService } from '../../services/department.service';
 import { DataService } from 'src/app/services/data.service';
+import { DepartmentService } from 'src/app/services/department.service';
 
 @Component({
   selector: 'app-profile',
@@ -22,6 +22,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.departmentService.getAllDepartment();
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
   }
 

@@ -3,7 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Status } from 'src/app/enums/Enum';
 import { TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
-import { TimeworkingService } from 'src/app/modules/manage/services/timeworking.service';
+import { TimeworkingService } from 'src/app/services/timeworking.service';
 
 @Component({
   selector: 'app-modal-working-time',
@@ -34,9 +34,13 @@ export class ModalWorkingTimeComponent implements OnInit {
   }
 
   submitForm(value: string) {
-    this.timeworkingService.updateStatusChangeTimeWorking({id: this.data.id, status: value == 'approve' ? Status.Approved : Status.Rejected});
-    this.notification.success('Successfully', '');
-    this.cancel.emit();
+    this.timeworkingService.updateStatusChangeTimeWorking({ id: this.data.id, status: value == 'approve' ? Status.Approved : Status.Rejected })
+      .subscribe((response) => {
+        this.timeworkingService.timeWorkingList$.value.splice(this.timeworkingService.timeWorkingList$.value.findIndex((item) => item.id == response.data.id), 1, response.data);
+        this.timeworkingService.timeWorkingList$.next([...this.timeworkingService.timeWorkingList$.value]);
+        this.notification.success('Successfully', '');
+        this.cancel.emit();
+      });
   }
 
   calcTime(startTime: any, endTime: any) {

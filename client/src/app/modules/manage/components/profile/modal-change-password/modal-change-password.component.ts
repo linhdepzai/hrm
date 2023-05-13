@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { ChangePassword } from 'src/app/interfaces/interfaces';
-import { ApiService } from 'src/app/services/api.service';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-modal-change-password',
@@ -17,7 +17,7 @@ export class ModalChangePasswordComponent implements OnInit {
   user!: LoginResponse;
 
   constructor(
-    private apiService: ApiService,
+    private accountService: AccountService,
     private notification: NzNotificationService,
     private fb: FormBuilder,
   ) { }
@@ -36,7 +36,7 @@ export class ModalChangePasswordComponent implements OnInit {
   submitForm() {
     if (this.changePasswordForm.valid) {
       this.changePasswordForm.value.id = this.user.id;
-      this.apiService
+      this.accountService
       .changePassword(this.changePasswordForm.value as ChangePassword)
       .subscribe((response) => {
         if (response.statusCode == 200) {

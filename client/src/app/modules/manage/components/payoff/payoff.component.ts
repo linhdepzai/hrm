@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { PayoffService } from '../../services/payoff.service';
 import { Payoff } from 'src/app/interfaces/interfaceReponse';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { EmployeeService } from '../../services/employee.service';
 import { Employee } from 'src/app/interfaces/interfaces';
-import { ApiService } from 'src/app/services/api.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { PayoffService } from 'src/app/services/payoff.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-payoff',
@@ -22,16 +21,14 @@ export class PayoffComponent implements OnInit {
 
   constructor(
     private payoffService: PayoffService,
-    private apiService: ApiService,
     private employeeService: EmployeeService,
     private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
     this.payoffService.getAllPayoff();
-    this.payoffService.payoffList$.subscribe((data) => {
-      this.payoffList = data;
-    });
+    this.employeeService.getAllEmployee();
+    this.payoffService.payoffList$.subscribe((data) => { this.payoffList = data });
     this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
   }
 
@@ -62,7 +59,7 @@ export class PayoffComponent implements OnInit {
   }
 
   deleteItem(id: string){
-    this.apiService.deletePayoff(id).subscribe((response) => {
+    this.payoffService.deletePayoff(id).subscribe((response) => {
       if(response.statusCode == 200) {
         this.notification.success('Successfully!', '');
       }

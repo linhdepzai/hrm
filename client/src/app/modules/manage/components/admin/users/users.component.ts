@@ -4,9 +4,9 @@ import { Level } from 'src/app/enums/Enum';
 import { DepartmentResponse, Position } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
-import { EmployeeService } from '../../../services/employee.service';
-import { DepartmentService } from '../../../services/department.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { DepartmentService } from 'src/app/services/department.service';
 
 @Component({
   selector: 'app-users',
@@ -31,6 +31,8 @@ export class UsersComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.departmentService.getAllDepartment();
+    this.employeeService.getAllEmployee();
     this.employeeService.getAllRequestChangeInfo();
     this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.departmentService.departmentList$;

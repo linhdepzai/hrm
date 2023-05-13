@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Priority, ProjectType, StatusTask } from 'src/app/enums/Enum';
 import { CreateProject } from 'src/app/interfaces/interfaces';
-import { ProjectService } from 'src/app/modules/manage/services/project.service';
 import { DataService } from 'src/app/services/data.service';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-general-project',

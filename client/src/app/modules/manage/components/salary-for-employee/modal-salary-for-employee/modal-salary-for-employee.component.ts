@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '../../../services/employee.service';
 import { Salary, SalaryForEmployee } from 'src/app/interfaces/interfaceReponse';
-import { SalaryService } from '../../../services/salary.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
+import { EmployeeService } from 'src/app/services/employee.service';
+import { SalaryService } from 'src/app/services/salary.service';
 
 @Component({
   selector: 'app-modal-salary-for-employee',

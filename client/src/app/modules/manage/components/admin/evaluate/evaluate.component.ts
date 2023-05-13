@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { EvaluateService } from '../../../services/evaluate.service';
 import { Evaluate } from 'src/app/interfaces/interfaceReponse';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { EmployeeService } from '../../../services/employee.service';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { Level } from 'src/app/enums/Enum';
 import { Observable } from 'rxjs';
-import { DatePipe } from '@angular/common';
+import { EvaluateService } from 'src/app/services/evaluate.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-evaluate',
@@ -25,10 +24,10 @@ export class EvaluateComponent implements OnInit {
   constructor(
     private evaluateService: EvaluateService,
     private employeeService: EmployeeService,
-    private datepipe: DatePipe,
   ) { }
 
   ngOnInit(): void {
+    this.employeeService.getAllEmployee();
     this.employeeList = this.employeeService.employeeList$;
     this.evaluateService.getAllEvaluate();
     this.evaluateService.evaluateList$.subscribe((data) => {

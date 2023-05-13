@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Bank, Level, OptionOnLeave, Priority, ProjectType, StatusTask } from '../enums/Enum';
-import { ApiService } from './api.service';
-import { Position } from '../interfaces/interfaceReponse';
+import { ApiResponse, Position } from '../interfaces/interfaceReponse';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Injectable({
   providedIn: 'root'
@@ -19,18 +21,25 @@ export class DataService {
   public projectTypeList = new BehaviorSubject<{ value: ProjectType, label: string }[]>([]);
 
   constructor(
-    private apiService: ApiService,
+    private httpClient: HttpClient,
+    private message: NzMessageService,
   ) {
     this.getAllPosition();
     this.dataList();
   }
 
+
   getAllPosition() {
-    this.apiService.getAllPosition().subscribe((response) => {
-      if (response.statusCode == 200) {
-        this.positionList.next(response.data);
-      };
-    });
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'position/getAll')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+      .subscribe((response) => {
+        if (response.statusCode == 200) {
+          this.positionList.next(response.data);
+        };
+      });;
   }
 
   dataList() {
