@@ -6,7 +6,6 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { WebcamImage, WebcamUtil } from 'ngx-webcam';
 import { Observable, Subject } from 'rxjs';
 import { LoginResponse, TimeKeepingResponse } from 'src/app/interfaces/interfaceReponse';
-import { AccountService } from 'src/app/services/account.service';
 import { TimekeepingService } from 'src/app/services/timekeeping.service';
 
 @Component({

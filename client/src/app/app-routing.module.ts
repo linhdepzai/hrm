@@ -17,6 +17,11 @@ const routes: Routes = [
       { path: '', loadChildren: () => import('./modules/manage/manage.module').then((m) => m.ManageModule) }
     ], canActivate: [AuthGuard]
   },
+  {
+    path: 'member', component: MainLayoutComponent, children: [
+      { path: '', loadChildren: () => import('./modules/member/member.module').then((m) => m.MemberModule) }
+    ], canActivate: [AuthGuard]
+  },
   { path: '**', component: PageNotFoundComponent }
 ];
 
