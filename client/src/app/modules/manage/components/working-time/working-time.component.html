@@ -5,7 +5,7 @@
 </nz-select>
 <nz-radio-group class="filter" [ngModel]="'Approve'" nzButtonStyle="solid" (ngModelChange)="changeFilter($event)">
     <label nz-radio-button nzValue="All">All</label>
-    <label nz-radio-button nzValue="Approve">Approve</label>
+    <label nz-radio-button nzValue="Approve">Approved</label>
     <label nz-radio-button nzValue="Pending">Pending</label>
 </nz-radio-group>
 <nz-table #table [nzData]="filterList" [nzShowTotal]="rangeTemplate">

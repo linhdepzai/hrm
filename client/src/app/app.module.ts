@@ -16,30 +16,36 @@ import { NgZorroSharedModule } from './modules/ng-zorro-shared/ng-zorro-shared.m
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberModule } from './modules/member/member.module';
+import { MessageComponent } from './modules/member/components/message/message.component';
+import { MessageDetailComponent } from './modules/member/components/message/message-detail/message-detail.component';
+import { TagComponent } from "./shared/components/tag/tag.component";
 registerLocaleData(en);
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    MainLayoutComponent,
-    PageNotFoundComponent,
-    SidebarComponent,
-    LoginLayoutComponent,
-    SettingComponent,
-  ],
-  imports: [
-    CommonModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    AuthModule,
-    ManageModule,
-    MemberModule,
-    NgZorroSharedModule,
-  ],
-  providers: [
-    { provide: NZ_I18N, useValue: en_US },
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        MainLayoutComponent,
+        PageNotFoundComponent,
+        SidebarComponent,
+        LoginLayoutComponent,
+        SettingComponent,
+        MessageComponent,
+        MessageDetailComponent,
+    ],
+    providers: [
+        { provide: NZ_I18N, useValue: en_US },
+    ],
+    bootstrap: [AppComponent],
+    imports: [
+        CommonModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        AuthModule,
+        ManageModule,
+        MemberModule,
+        NgZorroSharedModule,
+        TagComponent
+    ]
 })
 export class AppModule { }

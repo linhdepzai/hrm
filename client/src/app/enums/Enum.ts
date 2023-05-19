@@ -40,6 +40,7 @@ export enum OptionOnLeave {
     OffAfternoon = 2,
     OffFullDay = 3,
     Late = 4,
+    LeaveEarly = 5,
 }
 export enum Priority {
     Normal = 1,

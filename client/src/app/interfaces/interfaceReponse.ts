@@ -25,7 +25,8 @@ export interface LoginResponse {
     placeOfResidence: string,
     dateOfIssue: string,
     issuedBy: string,
-    userCode: string
+    userCode: string,
+    token: string,
 }
 
 export interface DepartmentResponse {

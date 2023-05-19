@@ -3,8 +3,10 @@ using HRM.Data;
 using HRM.DTOs.AccountDto;
 using HRM.Entities;
 using HRM.Enum;
+using HRM.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,10 +18,15 @@ namespace HRM.Controllers
     public class AccountController : BaseController
     {
         private readonly DataContext _dataContext;
+        private readonly ITokenService _tokenService;
 
-        public AccountController(DataContext dataContext)
+        public AccountController(
+            DataContext dataContext,
+            ITokenService tokenService
+            )
         {
             _dataContext = dataContext;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
@@ -51,6 +58,7 @@ namespace HRM.Controllers
                 DateOfIssue = user.DateOfIssue,
                 IssuedBy = user.IssuedBy,
                 UserCode = user.UserCode,
+                Token = _tokenService.CreateToken(user),
             };
             return CustomResult(account);
         }

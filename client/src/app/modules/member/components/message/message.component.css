@@ -1,0 +1,38 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.card {
+    margin-left: 0px !important;
+    padding: 12px;
+    border-bottom: 1px solid #000;
+    --bs-card-border-width: 0;
+}
+
+.title {
+    font-weight: bold;
+    font-size: large;
+    width: 92%;
+    text-align: left;
+    padding-top: 15px;
+    border-bottom: 0.5px solid;
+    position: absolute;
+    top: 0;
+    background: #fff;
+}
+
+.fa-xmark {
+    float: right;
+    cursor: pointer;
+}
+
+.content {
+    margin: 25px 0;
+    padding-right: 21px;
+    overflow: auto;
+    position: absolute;
+    width: 96%;
+}
+
+app-tag {
+    right: 35px;
+    position: absolute;
+}

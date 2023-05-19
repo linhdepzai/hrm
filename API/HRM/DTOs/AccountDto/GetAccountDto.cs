@@ -25,5 +25,6 @@ namespace HRM.DTOs.AccountDto
         public string DateOfIssue { get; set; }
         public string IssuedBy { get; set; }
         public string UserCode { get; set; }
+        public string Token { get; set; }
     }
 }

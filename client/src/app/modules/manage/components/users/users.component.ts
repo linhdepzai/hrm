@@ -23,6 +23,10 @@ export class UsersComponent implements OnInit {
   data: Employee | undefined;
   modalMode: string = 'create';
   statusMode: string = 'Approve';
+  filterUserName!: string | null;
+  filterUserLevel!: Level | null;
+  filterUserPosition!: number | null;
+  filterUserDepartment!: string | null;
 
   constructor(
     private employeeService: EmployeeService,
@@ -75,31 +79,39 @@ export class UsersComponent implements OnInit {
     return this.dataService.positionList.value.find(i => i.id == id)?.name;
   }
 
-  searchName(name: string) {
+  filterUser() {
     this.changeFilter(this.statusMode);
-    if (name != null) {
-      this.employeeList = this.employeeList.filter(i => i.fullName == name);
+    if (this.filterUserName != null) {
+      this.employeeList = this.employeeList.filter(i => i.fullName == this.filterUserName);
     }
+    if (this.filterUserLevel != null) {
+      this.employeeList = this.employeeList.filter(i => i.level == this.filterUserLevel);
+    }
+    if (this.filterUserPosition != null) {
+      this.employeeList = this.employeeList.filter(i => i.position == this.filterUserPosition);
+    }
+    if (this.filterUserDepartment != null) {
+      this.employeeList = this.employeeList.filter(i => i.departmentId == this.filterUserDepartment);
+    }
+  }
+
+  searchName(name: string) {
+    this.filterUserName = name;
+    this.filterUser();
   }
 
   filterLevel(level: number) {
-    this.changeFilter(this.statusMode);
-    if (level != null) {
-      this.employeeList = this.employeeList.filter(i => i.level == level);
-    }
+    this.filterUserLevel = level;
+    this.filterUser();
   }
 
   filterPosition(position: number) {
-    this.changeFilter(this.statusMode);
-    if (position != null) {
-      this.employeeList = this.employeeList.filter(i => i.position == position);
-    }
+    this.filterUserPosition = position;
+    this.filterUser();
   }
 
   filterDepartment(department: string) {
-    this.changeFilter(this.statusMode);
-    if (department != null) {
-      this.employeeList = this.employeeList.filter(i => i.departmentId == department);
-    }
+    this.filterUserDepartment = department;
+    this.filterUser();
   }
 }

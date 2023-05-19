@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 export class HeaderComponent {
   visibleSidebar = false;
   visibleSetting = false;
+  visibleMessage = false;
   isVisibleModalChangePassword = false;
 
   openSidebar(): void {
@@ -28,5 +29,13 @@ export class HeaderComponent {
 
   openModalChangePassword(): void {
     this.isVisibleModalChangePassword = true;
+  }
+
+  openMessage(): void {
+    this.visibleMessage = true;
+  }
+
+  closeMessage(): void {
+    this.visibleMessage = false;
   }
 }

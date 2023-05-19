@@ -10,7 +10,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   providedIn: 'root'
 })
 export class DataService {
-  themeColor: BehaviorSubject<string> = new BehaviorSubject<string>('#096dd9');
+  themeColor: BehaviorSubject<string> = new BehaviorSubject<string>('#a08c0e');
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
   public positionList = new BehaviorSubject<Position[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
@@ -24,6 +24,8 @@ export class DataService {
     private httpClient: HttpClient,
     private message: NzMessageService,
   ) {
+    const themeColor = JSON.parse(localStorage.getItem('themeColor') || sessionStorage.getItem('themeColor') || '[]');
+    this.themeColor.next(themeColor.length == 0 ? '#a08c0e' : themeColor);
     this.getAllPosition();
     this.dataList();
   }
@@ -53,7 +55,8 @@ export class DataService {
       { value: OptionOnLeave.OffMorning, label: 'Off Morning' },
       { value: OptionOnLeave.OffAfternoon, label: 'Off Afternoon' },
       { value: OptionOnLeave.OffFullDay, label: 'Off Full Day' },
-      { value: OptionOnLeave.Late, label: 'Late/Leave Early' }]);
+      { value: OptionOnLeave.Late, label: 'Late' },
+      { value: OptionOnLeave.LeaveEarly, label: 'Leave Early' }]);
     this.bankList.next([Bank.Techcombank, Bank.ACB, Bank.Agribank,
     Bank.BIDV, Bank.DongABank, Bank.MBB, Bank.MSB, Bank.OCB,
     Bank.Sacombank, Bank.ShinhanBank, Bank.TPBank, Bank.VCB,

@@ -1,4 +1,15 @@
 <div class="title">Salary</div>
+<div style="margin-bottom: 15px;">
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
+    </nz-select>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search level..." [ngModel]="null" (ngModelChange)="filterMonth($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of monthList"></nz-option>
+    </nz-select>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search position..." [ngModel]="null" (ngModelChange)="filterYear($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of yearList"></nz-option>
+    </nz-select>
+</div>
 <nz-table #table [nzData]="salaryForEmployeeList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'hidden', y: '49.5vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items

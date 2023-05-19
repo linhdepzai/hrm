@@ -7,6 +7,12 @@
     <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
         <nz-option [nzLabel]="item.salaryCode" [nzValue]="item.id" *ngFor="let item of salaryList"></nz-option>
     </nz-select>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search level..." [ngModel]="null" (ngModelChange)="filterLevel($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.label" [nzValue]="item.value" *ngFor="let item of levelList | async"></nz-option>
+    </nz-select>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search position..." [ngModel]="null" (ngModelChange)="filterPosition($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.name" [nzValue]="item.id" *ngFor="let item of positionList | async"></nz-option>
+    </nz-select>
 </div>
 <nz-table #table [nzData]="salaryList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: null, y: '49.5vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>

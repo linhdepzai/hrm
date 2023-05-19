@@ -39,7 +39,7 @@ export class AuthenticationService {
             sessionStorage.setItem('user', JSON.stringify(response.data));
           };
           this.notification.success(`Hello ${response.data.fullName}!`, '');
-          this.router.navigate(['manage/home']);
+          this.router.navigate(['member/home']);
           this.isLogin.next(true);
         }
         this.loading.next(false);

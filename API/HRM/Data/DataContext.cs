@@ -26,18 +26,11 @@ namespace HRM.Data
         public DbSet<MemberProject> MemberProject { get; set; }
         public DbSet<Position> Position { get; set; }
         public DbSet<EmployeeSalary> EmployeeSalary { get; set; }
+        public DbSet<Notification> Notification { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             //builder.ApplyBaseEntityConfiguration();
-            builder.Entity<Message>()
-                .HasOne(u => u.Sender)
-                .WithMany(m => m.MessagesSent)
-                .OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<Message>()
-                .HasOne(u => u.Recipient)
-                .WithMany(m => m.MessagesReceived)
-                .OnDelete(DeleteBehavior.Restrict);
         }
         public override int SaveChanges()
         {

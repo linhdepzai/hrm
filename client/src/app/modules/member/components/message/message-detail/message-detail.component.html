@@ -1,0 +1,18 @@
+<div class="content">
+    <div *ngFor="let item of messageThreadSource" class="message"
+        [ngStyle]="{justifyContent: item.senderId == user.id ? 'right' : 'left'}">
+        <ng-container *ngIf="item.senderId == user.id; else recipient">
+            <span class="expand">{{ item.messageSent | date: 'dd/MM/yyyy HH:mm' }}</span>
+            <span class="myMessage">{{ item.content }}</span>
+            <nz-avatar class="ml-5" [nzSize]="32" nzIcon="user" [nzSrc]="item.recipientPhotoUrl"></nz-avatar>
+        </ng-container>
+        <ng-template #recipient>
+            <nz-avatar class="mr-5" [nzSize]="32" nzIcon="user" [nzSrc]="item.senderPhotoUrl"></nz-avatar>
+            <span class="yourMessage">{{ item.content }}</span>
+            <span class="expand">{{ item.messageSent | date: 'dd/MM/yyyy HH:mm' }}</span>
+        </ng-template>
+    </div>
+</div>
+<div class="footer">
+    <input id="chat" nz-input placeholder="Aa" [ngModel]="" (keydown)="onChat($event)">
+</div>

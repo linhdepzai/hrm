@@ -17,7 +17,7 @@
         <nz-option [nzLabel]="item.name" [nzValue]="item.id" *ngFor="let item of departmentList | async"></nz-option>
     </nz-select>
     <nz-radio-group class="filter" [ngModel]="'Approve'" nzButtonStyle="solid" (ngModelChange)="changeFilter($event)">
-        <label nz-radio-button nzValue="Approve">Approve</label>
+        <label nz-radio-button nzValue="Approve">Approved</label>
         <label nz-radio-button nzValue="Pending">Pending</label>
     </nz-radio-group>
 </div>

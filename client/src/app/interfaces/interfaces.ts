@@ -8,6 +8,7 @@ export interface Login {
 
 export interface Employee {
     id: string | null,
+    avatar: string,
     userCode: string,
     fullName: string,
     sex: true,
@@ -80,3 +81,26 @@ export interface WorkingTimeRequest {
     afternoonEndTime: Date,
     applyDate: Date,
 }
+
+export interface Notification {
+    id: string;
+    content: string;
+    employeeId: string;
+    createDate: Date;
+    isRead: boolean;
+    anyId?: string;
+}
+
+export interface Message {
+    id: string;
+    senderId: string;
+    senderUserName: string;
+    senderPhotoUrl: string,
+    recipientId: string;
+    recipientUserName: string;
+    recipientPhotoUrl: string,
+    content: string;
+    dateRead?: Date;
+    messageSent: Date;
+    totalUnSeen: number,
+  }

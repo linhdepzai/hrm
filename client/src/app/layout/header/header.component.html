@@ -1,12 +1,12 @@
-<div class="logo" routerLink="/manage/home">
-    <img src="../../../assets/logo.jpg" alt="Logo">
-    <span class="name">HRM</span>
+<div class="logo" routerLink="/member/home">
+    <img src="../../../assets/HRMLogo.png" alt="Logo">
+    <!-- <span class="name">HRM</span> -->
 </div>
 <button nz-button nzType="primary" (click)="openSidebar()" class="btn-menu">
     <i class="fa-solid fa-bars fa-2x" style="margin-top: -3px;"></i>
 </button>
 <span class="config-option">
-    <i class="fa-solid fa-comment-dots fa-2x"></i>
+    <i class="fa-solid fa-comment-dots fa-2x" (click)="openMessage()"></i>
     <i class="fa-solid fa-bell fa-2x"></i>
     <a href="https://docs.google.com/document/d/1FQ7DLaRJC_h0cUiAfYHsAp1FEEOO8v_9y4WDEadkvwI/edit?usp=sharing"
         target="_blank" class="fa-solid fa-file-lines fa-2x"></a>
@@ -34,6 +34,12 @@
     (nzOnClose)="closeSetting()" [nzContent]="setting">
     <ng-template #setting>
         <app-setting></app-setting>
+    </ng-template>
+</nz-drawer>
+<nz-drawer [nzClosable]="false" nzWidth="40%" [nzVisible]="visibleMessage" nzPlacement="right"
+    (nzOnClose)="closeMessage()" [nzContent]="message">
+    <ng-template #message>
+        <app-message></app-message>
     </ng-template>
 </nz-drawer>
 <app-modal-change-password [isVisibleModal]="isVisibleModalChangePassword"

@@ -8,6 +8,7 @@ namespace HRM.Entities
 {
     public class Employee : BaseEntity<Guid>
     {
+        public string Avatar { get; set; }
         public string UserCode { get; set; }
         [Required, StringLength(50)]
         public string FullName { get; set; }

@@ -20,6 +20,9 @@ export class EvaluateComponent implements OnInit {
   employeeList = new Observable<Employee[]>();
   monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   yearList: number[] = [];
+  filterEvaluateName!: string | null;
+  filterEvaluateMonth!: number | null;
+  filterEvaluateYear!: number | null;
 
   constructor(
     private evaluateService: EvaluateService,
@@ -59,35 +62,36 @@ export class EvaluateComponent implements OnInit {
     this.visibleModal = true;
   }
 
-  searchName(id: string) {
-    this.evaluateService.evaluateList$.subscribe((data) => {
-      this.evaluateList = data;
-    });
-    if (id != null) {
-      this.evaluateList = this.evaluateList.filter(i => i.employeeId == id);
+  filterEvaluate() {
+    this.evaluateService.evaluateList$.subscribe((data) => { this.evaluateList = data });
+    if (this.filterEvaluateName != null) {
+      this.evaluateList = this.evaluateList.filter(i => i.employeeId == this.filterEvaluateName);
     }
+    if (this.filterEvaluateMonth != null) {
+      this.evaluateList = this.evaluateList.filter(i => new Date(i.dateEvaluate).getMonth() == this.filterEvaluateMonth);
+    }
+    if (this.filterEvaluateYear != null) {
+      this.evaluateList = this.evaluateList.filter(i =>
+        new Date(new Date(i.dateEvaluate).getDate() + '/' + new Date(i.dateEvaluate).getMonth() + '/' + new Date(i.dateEvaluate).getFullYear()).getFullYear() == this.filterEvaluateYear);
+      this.yearList = [];
+      for (let i = -10; i <= 10; i++) {
+        this.yearList = [...this.yearList, this.filterEvaluateYear + i];
+      };
+    }
+  }
+
+  searchName(id: string) {
+    this.filterEvaluateName = id;
+    this.filterEvaluate();
   }
 
   searchMonth(month: number) {
-    this.evaluateService.evaluateList$.subscribe((data) => {
-      this.evaluateList = data;
-    });
-    if (month != null) {
-      this.evaluateList = this.evaluateList.filter(i => new Date(i.dateEvaluate).getMonth() == month);
-    }
+    this.filterEvaluateMonth = month;
+    this.filterEvaluate();
   }
 
   searchYear(year: number) {
-    this.evaluateService.evaluateList$.subscribe((data) => {
-      this.evaluateList = data;
-    });
-    if (year != null) {
-      this.evaluateList = this.evaluateList.filter(i =>
-        new Date(new Date(i.dateEvaluate).getDate() + '/' + new Date(i.dateEvaluate).getMonth() + '/' + new Date(i.dateEvaluate).getFullYear()).getFullYear() == year);
-      this.yearList = [];
-      for (let i = -10; i <= 10; i++) {
-        this.yearList = [...this.yearList, year + i];
-      };
-    }
+    this.filterEvaluateYear = year;
+    this.filterEvaluate();
   }
 }

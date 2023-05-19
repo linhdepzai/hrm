@@ -10,12 +10,10 @@ namespace HRM.Entities
         public Guid SenderId { get; set; }
         [Required, StringLength(40)]
         public string SenderUserName { get; set; }
-        public Employee Sender { get; set; }
         [Required, ForeignKey("Employee")]
         public Guid RecipientId { get; set; }
         [Required, StringLength(40)]
         public string RecipientUserName { get; set; }
-        public Employee Recipient { get; set; }
         public string Content { get; set; }
         public DateTime? DateRead { get; set; }
         public DateTime MessageSent { get; set; } = DateTime.Now;
