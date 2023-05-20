@@ -36,3 +36,14 @@ app-tag {
     right: 35px;
     position: absolute;
 }
+
+.circle {
+    animation: fa-blink 1.5s linear infinite;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgb(1,189,42);
+    position: absolute;
+    top: 57.5px;
+    left: 57.5px;
+}

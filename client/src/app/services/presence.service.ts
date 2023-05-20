@@ -33,7 +33,7 @@ export class PresenceService {
 
     this.hubConnection.on('UserIsOnline', username => {
       this.onlineUsers.pipe(take(1)).subscribe(usernames => {
-        this.onlineUserSource.next([...usernames, username])
+        this.onlineUserSource.next([...usernames, username]);
       })
     })
 
@@ -81,6 +81,6 @@ export class PresenceService {
 
   async readNotification(payload: any) {
     return this.hubConnection.invoke('ReadNotification', payload)
-      .catch (error => console.log(error));
+      .catch(error => console.log(error));
   }
 }

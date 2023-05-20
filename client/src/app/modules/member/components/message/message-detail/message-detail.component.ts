@@ -17,16 +17,16 @@ export class MessageDetailComponent implements OnInit {
   recipientName: string = '';
 
   constructor(
-    private messageService: MessageService,
+    protected messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     window.scrollTo(0, document.body.scrollHeight);
-    this.messageService.messageSource.subscribe((data) => {
-      this.messageThreadSource = data;
-      this.recipientName = this.recipient.name;
-    });
+    // this.messageService.messageSource.subscribe((data) => {
+    //   this.messageThreadSource = data;
+    //   this.recipientName = this.recipient.name;
+    // });
   }
 
   onChat(ev: any) {
@@ -38,8 +38,8 @@ export class MessageDetailComponent implements OnInit {
       };
       this.messageService
         .sendMessage(payload)
-        .subscribe((response) => {
-          this.messageService.messageSource.next([...this.messageService.messageSource.value, response.data]);
+        .then(() => {
+          // this.messageService.messageSource.next([...this.messageService.messageSource.value, response.data]);
           (<HTMLInputElement>document.getElementById('chat')).value = '';
         });
     }

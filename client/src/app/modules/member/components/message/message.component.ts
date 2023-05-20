@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { Employee, Message } from 'src/app/interfaces/interfaces';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { MessageService } from 'src/app/services/message.service';
+import { PresenceService } from 'src/app/services/presence.service';
 
 @Component({
   selector: 'app-message',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.css']
 })
-export class MessageComponent implements OnInit {
+export class MessageComponent implements OnInit, OnDestroy {
   employeeList = new Observable<Employee[]>();
   messageList: Message[] = [];
   user!: LoginResponse;
@@ -20,7 +21,12 @@ export class MessageComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private messageService: MessageService,
+    public presence: PresenceService
   ) { }
+  
+  ngOnDestroy(): void {
+    this.messageService.stopHubConnection();
+  }
 
   ngOnInit(): void {
     this.isVisibleCurrentMessage = false;
@@ -34,7 +40,7 @@ export class MessageComponent implements OnInit {
 
   getTheLastMessageContent(id: string) {
     let content = this.messageList.find(i => i.senderId == id || i.recipientId == id)?.content;
-    if (content == undefined) content = "Let's message each other!";
+    if (content == undefined) content = "No messages yet... say hi by using the message box below";
     return content;
   }
 
@@ -62,8 +68,13 @@ export class MessageComponent implements OnInit {
   }
 
   openMessage(user: Employee) {
-    this.messageService.getMessageThread(user.id!);
+    this.messageService.createHubConnection(this.user, user.id!);
     this.recipient = { id: user.id!, name: user.fullName, photoUrl: user.avatar };
     this.isVisibleCurrentMessage = true;
+  }
+
+  closeMessage(){
+    this.isVisibleCurrentMessage = false;
+    this.messageService.stopHubConnection();
   }
 }

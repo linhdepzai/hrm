@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, of } from 'rxjs';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Login } from 'src/app/interfaces/interfaces';
 import { ApiLoginService } from './api-login.service';
+import { PresenceService } from 'src/app/services/presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class AuthenticationService {
   constructor(
     private notification: NzNotificationService,
     private router: Router,
-    private apiLoginService: ApiLoginService
+    private apiLoginService: ApiLoginService,
+    private presence: PresenceService
   ) {
     if (sessionStorage.getItem('user') || localStorage.getItem('user')) {
       this.isLogin.next(true);
@@ -38,6 +40,7 @@ export class AuthenticationService {
           } else {
             sessionStorage.setItem('user', JSON.stringify(response.data));
           };
+          this.presence.createHubConnection(response.data);
           this.notification.success(`Hello ${response.data.fullName}!`, '');
           this.router.navigate(['member/home']);
           this.isLogin.next(true);
@@ -50,6 +53,7 @@ export class AuthenticationService {
     sessionStorage.removeItem('user');
     localStorage.removeItem('user');
     this.router.navigate(['login']);
+    this.presence.stopHubConnection();
     this.isLogin.next(false);
   }
 }

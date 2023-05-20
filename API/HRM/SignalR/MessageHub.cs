@@ -5,6 +5,8 @@ using HRM.Interfaces;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 using System;
+using HRM.Repository;
+using System.Linq;
 
 namespace HRM.SignalR
 {
@@ -24,12 +26,13 @@ namespace HRM.SignalR
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
-            var otherUser = httpContext.Request.Query["user"].ToString().Replace('-', ' ');
-            //var id = httpContext.Request.Query["id"].ToString();
-            var groupName = GetGroupName(Context.User.Identity.Name, otherUser);
+            var currentUserId = httpContext.Request.Query["currentUserId"].ToString();
+            var recipientUserId = httpContext.Request.Query["recipientUserId"].ToString();
+
+            var groupName = GetGroupName(Context.User.Identity.Name, _dataContext.Employee.Where(i => i.Id == new Guid(recipientUserId)).First().FullName);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            //var messages = await _messageRepository.GetMessageThread(Guid.Parse(id));
-            //await Clients.Group(groupName).SendAsync("ReceiveMessageThread", messages);
+            var messages = await _messageRepository.GetMessageThread(new Guid(currentUserId), new Guid(recipientUserId));
+            await Clients.Group(groupName).SendAsync("ReceiveMessageThread", messages);
         }
 
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -53,8 +56,12 @@ namespace HRM.SignalR
                 RecipientUserName = recipient.FullName,
                 Content = createMessageDto.Content,
             };
-            await _dataContext.Message.AddAsync(message);
-            await _dataContext.SaveChangesAsync();
+            _messageRepository.AddMessage(message);
+            if (await _messageRepository.SaveAllAsync())
+            {
+                var group = GetGroupName(sender.FullName, recipient.FullName);
+                await Clients.Group(group).SendAsync("NewMessage", message);
+            }
         }
 
 

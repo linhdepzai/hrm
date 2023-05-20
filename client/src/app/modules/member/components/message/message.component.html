@@ -5,6 +5,7 @@
             <div *ngIf="item.id != user.id" class="card" nz-row [nzGutter]="24">
                 <div style="width: 100px;">
                     <nz-avatar [nzSize]="64" nzIcon="user" [nzSrc]="item.avatar"></nz-avatar>
+                    <div [class.circle]="(presence.onlineUsers | async)!.includes(item.fullName)"></div>
                 </div>
                 <div>
                     <div class="fw-bold">
@@ -14,7 +15,8 @@
                         <span [ngClass]="getTotalUnSeen(item.id!) != 0 ? 'fw-bold' : ''">
                             {{ getTheLastMessageContent(item.id!) }}
                         </span>
-                        <app-tag *ngIf="getTotalUnSeen(item.id!) != 0" [label]="getTotalUnSeen(item.id!).toString()" [color]="'red'"></app-tag>
+                        <app-tag *ngIf="getTotalUnSeen(item.id!) != 0" [label]="getTotalUnSeen(item.id!).toString()"
+                            [color]="'red'"></app-tag>
                     </div>
                     <div>
                         {{ getTheLastMessageTime(item.id!) }}
@@ -27,8 +29,7 @@
 <ng-template #messageDetail>
     <div class="title">
         <span>{{ recipient.name }}</span>
-        <i class="fa-solid fa-xmark" (click)="isVisibleCurrentMessage = false"></i>
+        <i class="fa-solid fa-xmark" (click)="closeMessage()"></i>
     </div>
     <app-message-detail [recipient]="recipient"></app-message-detail>
 </ng-template>
-
