@@ -14,6 +14,9 @@ import { ModalRequestOffComponent } from './components/request-off/modal-request
 import { ModalListCheckinComponent } from './components/checkin/modal-list-checkin/modal-list-checkin.component';
 import { WebcamModule } from 'ngx-webcam';
 import { TagComponent } from 'src/app/shared/components/tag/tag.component';
+import { AvatarComponent } from './components/avatar/avatar.component';
+import { MessageComponent } from './components/message/message.component';
+import { MessageDetailComponent } from './components/message/message-detail/message-detail.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { TagComponent } from 'src/app/shared/components/tag/tag.component';
     ModalRequestOffComponent,
     ModalListCheckinComponent,
     ModalChangePasswordComponent,
+    MessageComponent,
+    MessageDetailComponent,
+    AvatarComponent,
   ],
   imports: [
     CommonModule,
@@ -36,6 +42,9 @@ import { TagComponent } from 'src/app/shared/components/tag/tag.component';
   exports: [
     MemberRoutingModule,
     ModalChangePasswordComponent,
+    AvatarComponent,
+    MessageComponent,
+    MessageDetailComponent,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

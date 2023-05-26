@@ -21,7 +21,7 @@
 <div nz-row [nzGutter]="24" class="information">
     <div nz-col [nzSpan]="8" class="center">
         <div class="background-avt">
-            <nz-avatar nzIcon="user" class="avt-user"></nz-avatar>
+            <nz-avatar nzIcon="user" class="avt-user" [nzSrc]="user.avatar"></nz-avatar>
             <div class="tag">
                 <i class="fa-solid sex" [ngClass]="user.sex ? 'fa-mars' : 'fa-venus'"></i>
                 <app-tag [label]="level[user.level]" size></app-tag>

@@ -7,6 +7,7 @@ export interface ApiResponse {
 }
 export interface LoginResponse {
     id: string;
+    avatar: string,
     fullName: string;
     sex: boolean;
     email: string,

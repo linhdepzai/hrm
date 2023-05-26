@@ -32,11 +32,11 @@ namespace HRM.SignalR
                 await Clients.Others.SendAsync("UserIsOnline", Context.User.Identity.Name);
             }
 
-            var notifies = await _dataContext.Notification.Where(n => n.EmployeeId == Guid.Parse(userId)).OrderByDescending(n => n.CreateDate).ToListAsync();
+            /*var notifies = await _dataContext.Notification.Where(n => n.EmployeeId == Guid.Parse(userId)).OrderByDescending(n => n.CreateDate).ToListAsync();
             await Clients.Caller.SendAsync("Notification", notifies);
 
             var count = await _dataContext.Notification.Where(n => n.EmployeeId == Guid.Parse(userId) && n.IsRead == false).CountAsync();
-            await Clients.Caller.SendAsync("UnreadNotificationNumber", count);
+            await Clients.Caller.SendAsync("UnreadNotificationNumber", count);*/
 
             var currentUsers = await _tracker.GetOnlineUsers();
             await Clients.Caller.SendAsync("GetOnlineUsers", currentUsers);
@@ -54,7 +54,7 @@ namespace HRM.SignalR
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task CreateTask(CreateOrEditTaskDto input)
+        /*public async Task CreateTask(CreateOrEditTaskDto input)
         {
             var task = await _dataContext.Tasks.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.ProjectId
                 && e.TaskName.ToLower() == input.TaskName.ToLower());
@@ -109,9 +109,9 @@ namespace HRM.SignalR
                     await Clients.Clients(connections).SendAsync("UnreadNotificationNumber", count);
                 }
             }
-        }
+        }*/
 
-        public async Task ReadNotification(UnreadNotifiesDto input)
+        /*public async Task ReadNotification(UnreadNotifiesDto input)
         {
             var notify = await _dataContext.Notification.FindAsync(input.Id);
             var user = await _dataContext.Employee.FindAsync(input.EmployeeId);
@@ -127,7 +127,7 @@ namespace HRM.SignalR
                 var count = await _dataContext.Notification.Where(n => n.EmployeeId == input.EmployeeId && n.IsRead == false).CountAsync();
                 await Clients.Clients(connections).SendAsync("UnreadNotificationNumber", count);
             }
-        }
+        }*/
 
         private string GetGroupName(string caller, string other)
         {

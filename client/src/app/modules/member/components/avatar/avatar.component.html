@@ -1,0 +1,36 @@
+<nz-modal [nzVisible]="isVisible" [nzTitle]="title" [nzContent]="content" [nzFooter]="footer" (nzOnCancel)="handleCancel()">
+</nz-modal>
+<ng-template #title>Avatar</ng-template>
+<ng-template #content>
+    <nz-upload
+        nzListType="picture-card"
+        [(nzFileList)]="fileList"
+        [nzMultiple]="false"
+        [nzPreview]="handlePreview"
+        nzType="drag"
+        [nzShowUploadList]="false"
+        [nzBeforeUpload]="beforeUpload">
+        <ng-container class="ant-upload-text" *ngIf="fileList.length > 0;else drag">
+            <img [src]="fileList[fileList.length - 1].thumbUrl" alt="Image Error">
+        </ng-container>
+        <ng-template #drag>
+            <p class="ant-upload-drag-icon">
+                <span nz-icon nzType="inbox"></span>
+            </p>
+            <p class="ant-upload-text">Click or drag file to this area to upload</p>
+            <p class="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+            </p>
+        </ng-template>
+    </nz-upload>
+</ng-template>
+<ng-template #footer>
+    <button nz-button nzDanger nzGhost nzType="primary" (click)="handleCancel()">
+        <i class="fa-solid fa-xmark mr-5"></i>
+        <span>Cancel</span>
+    </button>
+    <button nz-button nzType="primary" [disabled]="fileList.length == 0" (click)="handleSubmit()">
+        <i class="fa-solid fa-check mr-5"></i>
+        <span>Submit</span>
+    </button>
+</ng-template>

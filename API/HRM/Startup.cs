@@ -1,4 +1,5 @@
 using HRM.Data;
+using HRM.Helpers;
 using HRM.Interfaces;
 using HRM.Repository;
 using HRM.Services;
@@ -36,12 +37,14 @@ namespace HRM
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<PresenceTracker>();
+            services.Configure<CloudinarySettings>(_config.GetSection("CloudinarySettings"));
             services.AddRazorPages();
             services.AddControllers();
             services.AddCors();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddDbContext<DataContext>(options =>
             {

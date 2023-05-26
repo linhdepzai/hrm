@@ -27,6 +27,8 @@ import { CreateDepartmentModalComponent } from './components/users/create-or-edi
 import { ModalWorkingTimeComponent } from './components/working-time/modal-working-time/modal-working-time.component';
 import { EditEvaluateComponent } from './components/evaluate/edit-evaluate/edit-evaluate.component';
 import { EvaluateComponent } from './components/evaluate/evaluate.component';
+import { NotificationManageComponent } from './components/notification-manage/notification-manage.component';
+import { QuillModule } from 'ngx-quill';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -50,6 +52,7 @@ registerLocaleData(en);
         ModalSalaryComponent,
         SalaryForEmployeeComponent,
         ModalSalaryForEmployeeComponent,
+        NotificationManageComponent,
     ],
     exports: [
         ManageRoutingModule,
@@ -63,6 +66,7 @@ registerLocaleData(en);
         NgZorroSharedModule,
         ManageRoutingModule,
         TagComponent,
+        QuillModule.forRoot(),
     ]
 })
 export class ManageModule { }

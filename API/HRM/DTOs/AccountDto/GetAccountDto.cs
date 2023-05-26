@@ -6,6 +6,7 @@ namespace HRM.DTOs.AccountDto
     public class GetAccountDto
     {
         public Guid Id { get; set; }
+        public string Avatar { get; set; }
         public string FullName { get; set; }
         public bool Sex { get; set; }
         public string Email { get; set; }

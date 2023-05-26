@@ -11,10 +11,11 @@ export class SidebarComponent {
   @Output() close = new EventEmitter<boolean>();
   coverAvt: string = '';
   user!: LoginResponse;
+  isVisibleAvatar: boolean = false;
 
   constructor(private authenticationService: AuthenticationService){ 
-    this.coverAvt = 'https://static.wixstatic.com/media/5b44bf_317f722d308c4426a6ba01e3c61bf072~mv2_d_4206_2366_s_2.jpg/v1/fill/w_980,h_551,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/5b44bf_317f722d308c4426a6ba01e3c61bf072~mv2_d_4206_2366_s_2.jpg',
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.coverAvt = 'https://static.wixstatic.com/media/5b44bf_317f722d308c4426a6ba01e3c61bf072~mv2_d_4206_2366_s_2.jpg/v1/fill/w_980,h_551,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/5b44bf_317f722d308c4426a6ba01e3c61bf072~mv2_d_4206_2366_s_2.jpg';
   }
 
   logout(){

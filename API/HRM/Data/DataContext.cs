@@ -27,6 +27,8 @@ namespace HRM.Data
         public DbSet<Position> Position { get; set; }
         public DbSet<EmployeeSalary> EmployeeSalary { get; set; }
         public DbSet<Notification> Notification { get; set; }
+        public DbSet<NotificationEmployee> NotificationEmployee { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -1,0 +1,11 @@
+<div class="title">Notification</div>
+<form nz-form [formGroup]="notificationForm">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzFor="description">
+            <span>Description</span>
+        </nz-form-label>
+        <nz-form-control [nzSpan]="24">
+            <quill-editor formControlName="content" [modules]="editorOptions"></quill-editor>
+        </nz-form-control>
+    </nz-form-item>
+</form>

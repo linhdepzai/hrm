@@ -7,6 +7,7 @@ import { SalaryForEmployeeComponent } from './components/salary-for-employee/sal
 import { UsersComponent } from './components/users/users.component';
 import { WorkingTimeComponent } from './components/working-time/working-time.component';
 import { EvaluateComponent } from './components/evaluate/evaluate.component';
+import { NotificationManageComponent } from './components/notification-manage/notification-manage.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'punish', component: PayoffComponent },
   { path: 'salary-management', component: SalaryComponent },
   { path: 'salary-for-employee', component: SalaryForEmployeeComponent },
+  { path: 'notification', component: NotificationManageComponent },
 
   { path: '**', component: PageNotFoundComponent }
 ];

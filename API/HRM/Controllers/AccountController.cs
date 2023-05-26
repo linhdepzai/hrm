@@ -1,9 +1,13 @@
 ﻿using CoreApiResponse;
 using HRM.Data;
 using HRM.DTOs.AccountDto;
+using HRM.DTOs.PhotoDto;
 using HRM.Entities;
 using HRM.Enum;
 using HRM.Interfaces;
+using HRM.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -19,14 +23,17 @@ namespace HRM.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly ITokenService _tokenService;
+        private readonly IPhotoService _photoService;
 
         public AccountController(
             DataContext dataContext,
-            ITokenService tokenService
+            ITokenService tokenService,
+            IPhotoService photoService
             )
         {
             _dataContext = dataContext;
             _tokenService = tokenService;
+            _photoService = photoService;
         }
 
         [HttpPost("login")]
@@ -39,6 +46,7 @@ namespace HRM.Controllers
             var account = new GetAccountDto
             {
                 Id = user.Id,
+                Avatar = user.Avatar,
                 FullName = user.FullName,
                 Sex = user.Sex,
                 Email = user.Email,
@@ -160,6 +168,24 @@ namespace HRM.Controllers
         {
             var list = await _dataContext.TimeWorking.Where(i => i.EmployeeId == id).AsNoTracking().ToListAsync();
             return CustomResult(list);
+        }
+        [HttpPost("changeAvatar/{id}")]
+        public async Task<IActionResult> ChangeAvatar(IFormFile file, Guid id)
+        {
+            var employee = await _dataContext.Employee.FindAsync(id);
+            if (employee != null)
+            {
+                var result = await _photoService.AddPhotoAsync(file);
+
+                if (result.Error != null) return CustomResult(result.Error.Message, System.Net.HttpStatusCode.BadRequest);
+
+                employee.Avatar = result.SecureUrl.AbsoluteUri;
+                employee.PublicId = result.PublicId;
+                employee.LastModifierUserId = id;
+                _dataContext.Employee.Update(employee);
+                await _dataContext.SaveChangesAsync();
+            }
+            return CustomResult(employee);
         }
     }
 }

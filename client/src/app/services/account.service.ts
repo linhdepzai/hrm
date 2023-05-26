@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
 import { ApiResponse, TimeWorkingResponse } from 'src/app/interfaces/interfaceReponse';
 import { ChangePassword, Employee } from 'src/app/interfaces/interfaces';
@@ -40,8 +41,14 @@ export class AccountService {
   requestChangeInfor(payload: Employee): Observable<ApiResponse> {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/requestChangeInfor', payload)
       .pipe(catchError((err) => {
-        this.notification.error('Error!!!', err.error.message);
+        this.notification.error('Error!!!', err.errors.message);
         return of(err);
       }));
+  }
+
+  changeAvatar(file: File): Observable<ApiResponse> {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    const formData = new FormData().append('File', file, file.name);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'account/changeAvatar/' + user.id, formData);
   }
 }
