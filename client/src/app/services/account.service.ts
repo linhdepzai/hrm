@@ -48,7 +48,8 @@ export class AccountService {
 
   changeAvatar(file: File): Observable<ApiResponse> {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    const formData = new FormData().append('File', file, file.name);
+    const formData = new FormData();
+    formData.append('File', file, file.name);
     return this.httpClient.post<ApiResponse>(environment.baseUrl + 'account/changeAvatar/' + user.id, formData);
   }
 }

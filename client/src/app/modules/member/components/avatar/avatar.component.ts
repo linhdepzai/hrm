@@ -3,6 +3,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
+import { LoginResponse } from 'src/app/interfaces/interfaceReponse';
 import { AccountService } from 'src/app/services/account.service';
 const getBase64 = (file: File): Promise<string | ArrayBuffer | null> =>
   new Promise((resolve, reject) => {
@@ -22,8 +23,8 @@ export class AvatarComponent implements OnInit {
   @Output() cancel = new EventEmitter();
   previewImage: string | undefined = '';
   previewVisible = false;
-  uploadUrl: string = '';
   fileList: NzUploadFile[] = [];
+  user!: LoginResponse;
 
   constructor(
     private notification: NzNotificationService,
@@ -32,8 +33,7 @@ export class AvatarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.uploadUrl = `https://localhost:5001/api/account/changeAvatar/${user.id}`;
+    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
   }
 
   beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>

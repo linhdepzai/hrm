@@ -1,19 +1,15 @@
-<nz-modal [nzVisible]="isVisible" [nzTitle]="title" [nzContent]="content" [nzFooter]="footer" (nzOnCancel)="handleCancel()">
+<nz-modal [nzVisible]="isVisible" [nzTitle]="title" [nzContent]="content" [nzFooter]="footer"
+    (nzOnCancel)="handleCancel()">
 </nz-modal>
 <ng-template #title>Avatar</ng-template>
 <ng-template #content>
-    <nz-upload
-        nzListType="picture-card"
-        [(nzFileList)]="fileList"
-        [nzMultiple]="false"
-        [nzPreview]="handlePreview"
-        nzType="drag"
-        [nzShowUploadList]="false"
-        [nzBeforeUpload]="beforeUpload">
+    <nz-upload nzListType="picture-card" [(nzFileList)]="fileList" [nzMultiple]="false" [nzPreview]="handlePreview"
+        nzType="drag" [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload">
         <ng-container class="ant-upload-text" *ngIf="fileList.length > 0;else drag">
             <img [src]="fileList[fileList.length - 1].thumbUrl" alt="Image Error">
         </ng-container>
         <ng-template #drag>
+            <img class="background" [src]="user.avatar">
             <p class="ant-upload-drag-icon">
                 <span nz-icon nzType="inbox"></span>
             </p>

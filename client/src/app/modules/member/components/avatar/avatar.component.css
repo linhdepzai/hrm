@@ -1,1 +1,12 @@
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.background {
+    position: absolute;
+    top: -1px;
+    height: 100%;
+    right: 0;
+    left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.2;
+}
