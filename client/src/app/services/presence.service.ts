@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from './../../environments/environment';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { BehaviorSubject, take } from 'rxjs';
-import { Notification } from '../interfaces/interfaces';
-import { LoginResponse } from '../interfaces/interfaceReponse';
+import { LoginResponse, Notification } from '../interfaces/interfaceReponse';
 
 @Injectable({
   providedIn: 'root'

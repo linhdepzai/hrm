@@ -1,0 +1,22 @@
+<img *ngIf="noResult" width="250px" src="../../../../../assets/no-noti.jpg" alt="">
+<ul nz-menu>
+    <li 
+        nz-menu-item 
+        *ngFor="let item of notificationList | async" 
+        nz-row 
+        [nzGutter]="24"
+        (click)="readNotification(item.id)">
+        <div nz-col [nzSpan]="7" style="text-align: center;">
+            <img height="80px" [src]="item.thumbnail" alt="Thumbnail">
+        </div>
+        <div nz-col [nzSpan]="17">
+            <div 
+                nz-typography 
+                nzEllipsis 
+                [nzEllipsisRows]="2" 
+                [ngClass]="item.isRead ? '' : 'fw-bold'" 
+                [nzContent]="item.title | uppercase"></div>
+            <div style="float: right;">{{ item.createDate| date: 'dd/MM/yyyy' }} by {{ item.createUserName }}</div>
+        </div>
+    </li>
+</ul>

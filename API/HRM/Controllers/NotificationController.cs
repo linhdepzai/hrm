@@ -27,21 +27,46 @@ namespace HRM.Controllers
             var notificationList = await (from n in _dataContext.Notification
                                           join e in _dataContext.NotificationEmployee
                                           on n.Id equals e.NotificationId
-                                          where e.EmployeeId == id
+                                          where e.EmployeeId == id && e.IsDeleted == false
                                           select new
                                           {
-                                              Id = e.Id,
+                                              Id = n.Id,
                                               Thumbnail = n.Thumbnail,
                                               Title = n.Title,
                                               CreateDate = n.CreateDate,
                                               IsRead = e.IsRead,
+                                              CreateUserId = n.CreatorUserId,
+                                              CreateUserName = _dataContext.Employee.FirstOrDefault(i => i.Id == n.CreatorUserId).FullName,
+                                              CreateUserPhoto = _dataContext.Employee.FirstOrDefault(i => i.Id == n.CreatorUserId).Avatar,
                                           }).AsNoTracking().ToListAsync();
             return CustomResult(notificationList);
+        }
+        [HttpGet("getANotification/{id}")]
+        public async Task<IActionResult> GetANotification(Guid id)
+        {
+            var employeeId = await (from e in _dataContext.NotificationEmployee
+                                    where e.NotificationId == id && e.IsDeleted == false
+                                    select new
+                                    {
+                                        EmployeeId = e.EmployeeId,
+                                    }).AsNoTracking().ToListAsync();
+            var result = await (from n in _dataContext.Notification
+                         where n.Id == id
+                         select new
+                         {
+                             Id = n.Id,
+                             Thumbnail = n.Thumbnail,
+                             Title = n.Title,
+                             Content = n.Content,
+                             CreateDate = n.CreateDate,
+                             Employee = employeeId,
+                         }).AsNoTracking().ToListAsync();
+            return CustomResult(result);
         }
         [HttpGet("readNotification/{employeeId}")]
         public async Task<IActionResult> ReadNotification(Guid employeeId, Guid id)
         {
-            var notification = await _dataContext.NotificationEmployee.FirstOrDefaultAsync(e => e.NotificationId == id && e.EmployeeId == employeeId);
+            var notification = await _dataContext.NotificationEmployee.FirstOrDefaultAsync(e => e.NotificationId == id && e.EmployeeId == employeeId && e.IsDeleted == false);
             if (notification != null)
             {
                 notification.IsRead = true;
@@ -82,7 +107,7 @@ namespace HRM.Controllers
                 Thumbnail = input.Thumbnail,
                 Title = input.Title,
                 Content = input.Content,
-                CreateDate = input.CreateDate,
+                CreateDate = DateTime.Now,
                 CreatorUserId = input.ActionId,
             };
             await _dataContext.AddAsync(notification);
@@ -117,11 +142,10 @@ namespace HRM.Controllers
                 notification.Thumbnail = input.Thumbnail;
                 notification.Title = input.Title;
                 notification.Content = input.Content;
-                notification.CreateDate = input.CreateDate;
                 notification.CreatorUserId = input.ActionId;
                 _dataContext.Update(notification);
                 var employee = await (from n in _dataContext.NotificationEmployee
-                                      where n.NotificationId == input.Id
+                                      where n.NotificationId == input.Id && n.IsDeleted == false
                                       select new
                                       {
                                           EmployeeId = n.EmployeeId,
@@ -134,7 +158,7 @@ namespace HRM.Controllers
                         var newItem = new NotificationEmployee
                         {
                             Id = new Guid(),
-                            NotificationId = input.Id,
+                            NotificationId = (Guid)input.Id,
                             EmployeeId = i.EmployeeId,
                             IsRead = false,
                         };

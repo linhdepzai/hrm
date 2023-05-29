@@ -1,0 +1,6 @@
+<img [src]="notification.thumbnail" alt="Thumbnail">
+<h2 class="fw-bold">{{ notification.title | uppercase }}</h2>
+<div>{{ notification.createDate | date: 'dd/MM/yyyy' }}</div>
+<form nz-form [formGroup]="form">
+    <quill-editor [readOnly]="true" formControlName="content"></quill-editor>
+</form>

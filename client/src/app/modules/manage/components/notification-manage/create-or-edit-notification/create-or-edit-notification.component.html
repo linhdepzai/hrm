@@ -1,0 +1,49 @@
+<div class="title">
+    <span>Notification</span>
+    <i class="fa-solid fa-xmark" style="float: right;" routerLink="/manage/notification"></i>
+</div>
+<nz-upload class="avatar-uploader" nzName="avatar" nzListType="picture-card" [nzShowUploadList]="false"
+    [nzBeforeUpload]="beforeUpload" [nzMultiple]="false" [(nzFileList)]="fileList" nzType="drag">
+    <ng-container *ngIf="fileList.length == 0; else image">
+        <img class="background" [src]="notificationForm.value.thumbnail">
+        <p class="ant-upload-drag-icon">
+            <span nz-icon nzType="inbox"></span>
+        </p>
+        <p class="ant-upload-text">Click or drag file to this area to upload</p>
+        <p class="ant-upload-hint">
+            Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files
+        </p>
+    </ng-container>
+    <ng-template #image>
+        <img [src]="fileList[fileList.length - 1].thumbUrl" style="max-height: 200px;" />
+    </ng-template>
+</nz-upload>
+<div style="margin-bottom: 24px;" nz-row [nzGutter]="0">
+    <span nz-col [nzSpan]="2">Users:</span>
+    <nz-select nz-col [nzSpan]="22" nzMode="multiple" nzPlaceHolder="Select users" nzAllowClear nzShowSearch
+        [ngModel]="selectEmployee" (ngModelChange)="onSearch($event)">
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
+    </nz-select>
+</div>
+<form nz-form [formGroup]="notificationForm">
+    <nz-form-item>
+        <nz-form-label [nzSpan]="2" nzFor="title">
+            <span>Title</span>
+        </nz-form-label>
+        <nz-form-control [nzSpan]="22" nzErrorTip="The input is not valid title!">
+            <input nz-input ngModel="" formControlName="title" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-label [nzSpan]="24" nzFor="content">
+            <span>Description</span>
+        </nz-form-label>
+        <nz-form-control [nzSpan]="24"  nzErrorTip="The input is not valid content!">
+            <quill-editor formControlName="content" [modules]="editorOptions"></quill-editor>
+        </nz-form-control>
+    </nz-form-item>
+</form>
+<button nz-button nzType="primary" (click)="handleSubmit()">
+    <i class="fa-solid fa-check mr-5"></i>
+    <span>Submit</span>
+</button>

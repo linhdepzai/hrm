@@ -130,3 +130,15 @@ export interface SalaryForEmployee {
     bounty: number,
     actualSalary: number
 }
+
+export interface Notification {
+    id: string,
+    thumbnail: string,
+    title: string,
+    content: string,
+    createDate: Date,
+    isRead: boolean,
+    createUserId: string,
+    createUserName: string,
+    createUserPhoto: string,
+}

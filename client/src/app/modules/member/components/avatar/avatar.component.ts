@@ -67,6 +67,8 @@ export class AvatarComponent implements OnInit {
     this.accountService.changeAvatar(file.originFileObj as File)
       .subscribe((response) => {
         if (response.statusCode == 200) {
+          this.user.avatar = response.data.avatar;
+          localStorage.setItem('user', JSON.stringify(this.user));
           this.notification.success('Successfully!', '');
           this.cancel.emit();
         }

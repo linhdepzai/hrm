@@ -82,15 +82,6 @@ export interface WorkingTimeRequest {
     applyDate: Date,
 }
 
-export interface Notification {
-    id: string;
-    content: string;
-    employeeId: string;
-    createDate: Date;
-    isRead: boolean;
-    anyId?: string;
-}
-
 export interface Message {
     id: string;
     senderId: string;
@@ -103,4 +94,17 @@ export interface Message {
     dateRead?: Date;
     messageSent: Date;
     totalUnSeen: number,
-  }
+}
+
+export interface NotificationPayload {
+    id: string,
+    actionId: string,
+    thumbnail: string,
+    title: string,
+    content: string,
+    employee: EmployeeId[],
+}
+
+export interface EmployeeId {
+    employeeId: string
+}

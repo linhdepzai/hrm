@@ -1,10 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 .background {
-    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-image: url(../../../../../assets/HRMBackground.png);
+    background-repeat: no-repeat, no-repeat;
+    background-attachment: fixed, fixed;
+    background-size: 368px, 368px;
+    background-position: left bottom, right bottom;
+    height: 100vh;
+    
+    /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
-    height: 100vh;
+    height: 100vh; */
 }
 
 .content {

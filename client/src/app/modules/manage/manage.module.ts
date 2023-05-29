@@ -29,6 +29,7 @@ import { EditEvaluateComponent } from './components/evaluate/edit-evaluate/edit-
 import { EvaluateComponent } from './components/evaluate/evaluate.component';
 import { NotificationManageComponent } from './components/notification-manage/notification-manage.component';
 import { QuillModule } from 'ngx-quill';
+import { CreateOrEditNotificationComponent } from './components/notification-manage/create-or-edit-notification/create-or-edit-notification.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ registerLocaleData(en);
         SalaryForEmployeeComponent,
         ModalSalaryForEmployeeComponent,
         NotificationManageComponent,
+        CreateOrEditNotificationComponent,
     ],
     exports: [
         ManageRoutingModule,

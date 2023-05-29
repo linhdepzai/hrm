@@ -1,0 +1,14 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+ul {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+li {
+    display: flex !important;
+    align-items: center;
+    height: 100px !important;
+    width: 500px;
+}

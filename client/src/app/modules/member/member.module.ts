@@ -17,6 +17,9 @@ import { TagComponent } from 'src/app/shared/components/tag/tag.component';
 import { AvatarComponent } from './components/avatar/avatar.component';
 import { MessageComponent } from './components/message/message.component';
 import { MessageDetailComponent } from './components/message/message-detail/message-detail.component';
+import { NotificationComponent } from './components/notification/notification.component';
+import { NotificationDetailComponent } from './components/notification/notification-detail/notification-detail.component';
+import { QuillModule } from 'ngx-quill';
 
 @NgModule({
   declarations: [
@@ -32,11 +35,14 @@ import { MessageDetailComponent } from './components/message/message-detail/mess
     MessageComponent,
     MessageDetailComponent,
     AvatarComponent,
+    NotificationComponent,
+    NotificationDetailComponent,
   ],
   imports: [
     CommonModule,
     NgZorroSharedModule,
     WebcamModule,
+    QuillModule.forRoot(),
     TagComponent,
   ],
   exports: [
@@ -45,6 +51,7 @@ import { MessageDetailComponent } from './components/message/message-detail/mess
     AvatarComponent,
     MessageComponent,
     MessageDetailComponent,
+    NotificationComponent,
   ],
   providers: [
     { provide: NZ_I18N, useValue: en_US },

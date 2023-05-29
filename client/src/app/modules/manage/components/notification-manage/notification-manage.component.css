@@ -1,1 +1,21 @@
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+nz-select {
+    width: 100%;
+}
+
+.gridStyle {
+    width: calc(100% / 4);
+}
+
+::ng-deep .ant-card-cover {
+    height: 275px;
+}
+
+::ng-deep .cdk-drag-preview {
+    display: table;
+}
+
+::ng-deep .cdk-drag-placeholder {
+    opacity: 0;
+}

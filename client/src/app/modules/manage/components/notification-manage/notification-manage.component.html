@@ -1,11 +1,29 @@
 <div class="title">Notification</div>
-<form nz-form [formGroup]="notificationForm">
-    <nz-form-item>
-        <nz-form-label [nzSpan]="24" nzFor="description">
-            <span>Description</span>
-        </nz-form-label>
-        <nz-form-control [nzSpan]="24">
-            <quill-editor formControlName="content" [modules]="editorOptions"></quill-editor>
-        </nz-form-control>
-    </nz-form-item>
-</form>
+<div style="margin-bottom: 15px;">
+    <button nz-button nzType="primary" (click)="handleCreate()" class="mr-per">
+        <i class="fa-solid fa-user-plus mr-5"></i>
+        <span>Create</span>
+    </button>
+</div>
+<nz-card cdkDropList (cdkDropListDropped)="drop($event)">
+    <nz-card *ngFor="let item of notificationList | async" class="gridStyle" [nzCover]="coverTemplate"
+        [nzActions]="[actionSetting, actionEdit, actionEllipsis]" nz-card-grid cdkDrag>
+        <nz-card-meta [nzTitle]="item.title | uppercase" [nzDescription]="item.createDate | date: 'dd/MM/yyyy'"
+            [nzAvatar]="avatarTemplate"></nz-card-meta>
+        <ng-template #avatarTemplate>
+            <nz-avatar [nzSrc]="item.createUserPhoto"></nz-avatar>
+        </ng-template>
+        <ng-template #coverTemplate>
+            <img alt="example" [src]="item.thumbnail" />
+        </ng-template>
+        <ng-template #actionSetting>
+            <span nz-icon nzType="eye" (click)="handleView(item.id)"></span>
+        </ng-template>
+        <ng-template #actionEdit>
+            <span nz-icon nzType="edit" [routerLink]="[item.id]"></span>
+        </ng-template>
+        <ng-template #actionEllipsis>
+            <span nz-icon nzType="delete" (click)="handleDelete(item.id)"></span>
+        </ng-template>
+    </nz-card>
+</nz-card>

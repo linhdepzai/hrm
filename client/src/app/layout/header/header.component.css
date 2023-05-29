@@ -46,6 +46,12 @@ a:hover {
     color: #fff;
 }
 
+app-tag {
+    position: absolute;
+    font-size: 10px;
+    right: 117px;
+}
+
 @media (max-width: 1000px) {
 
     .btn-menu,

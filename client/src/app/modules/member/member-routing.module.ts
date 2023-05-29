@@ -8,6 +8,7 @@ import { RequestOffComponent } from './components/request-off/request-off.compon
 import { MyWorkingTimeComponent } from './components/my-working-time/my-working-time.component';
 import { ProjectComponent } from '../manage/components/project/project.component';
 import { TaskComponent } from '../manage/components/task/task.component';
+import { NotificationDetailComponent } from './components/notification/notification-detail/notification-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'my-working-time', component: MyWorkingTimeComponent },
   { path: 'project', component: ProjectComponent },
   { path: 'task', component: TaskComponent },
+  { path: 'notification-detail/:id', component: NotificationDetailComponent },
 ];
 
 @NgModule({
