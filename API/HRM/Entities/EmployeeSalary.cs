@@ -14,5 +14,6 @@ namespace HRM.Entities
         public int Punish { get; set; }
         public int Bounty { get; set; }
         public int ActualSalary { get; set; }
+        public int IsConfirm { get; set; }
     }
 }

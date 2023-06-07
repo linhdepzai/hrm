@@ -40,7 +40,7 @@ export class EmployeeService {
       }));
   }
 
-  deleteEmployee(id: any): Observable<ApiResponse> {
+  deleteEmployee(id: string): Observable<ApiResponse> {
     return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'employee/delete?id=' + id)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);

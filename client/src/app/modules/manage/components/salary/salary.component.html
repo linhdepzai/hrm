@@ -32,8 +32,8 @@
             <td>{{ data.salaryCode }}</td>
             <td nzAlign="center">{{ getDepartmentName(data.position) }}</td>
             <td nzAlign="center">{{ level[data.level] }}</td>
-            <td nzAlign="center">{{ formatVND(data.money) }}</td>
-            <td nzAlign="center">{{ formatVND(data.welfare) }}</td>
+            <td nzAlign="center">{{ data.money | vnd }}</td>
+            <td nzAlign="center">{{ data.welfare | vnd }}</td>
         </tr>
     </tbody>
 </nz-table>

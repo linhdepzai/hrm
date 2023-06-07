@@ -6,6 +6,7 @@ using HRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,9 +29,9 @@ namespace HRM.Controllers
             return CustomResult(list);
         }
         [HttpGet("getAllSalaryForEmployee")]
-        public async Task<IActionResult> GetAllSalaryForEmployee()
+        public async Task<IActionResult> GetAllSalaryForEmployee(int month, int year)
         {
-            var userList = await _dataContext.EmployeeSalary.AsNoTracking().ToListAsync();
+            var userList = await _dataContext.EmployeeSalary.Where(i => i.Date.Month - 1 == month && i.Date.Year == year).AsNoTracking().ToListAsync();
             return CustomResult(userList);
         }
         [HttpPost("create")]
@@ -66,6 +67,56 @@ namespace HRM.Controllers
             }
             _dataContext.Update(salary);
             await _dataContext.SaveChangesAsync();
+            return CustomResult(salary);
+        }
+        [HttpPost("sendNotificationSalary")]
+        public async Task<IActionResult> SendNotificationSalary(SendNotificationSalaryDto input)
+        {
+            var notification = new Notification
+            {
+                Id = new Guid(),
+                Thumbnail = "https://pyjamahr.com/wp-content/uploads/2022/03/WhatsApp-Image-2022-03-03-at-12.39.41.jpeg",
+                Title = "Notice of salary statistics for the month of " + CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(input.Month),
+                Content = "",
+                Type = "Salary",
+                CreateDate = DateTime.Now,
+                CreatorUserId = input.ActionId,
+            };
+            await _dataContext.Notification.AddAsync(notification);
+            foreach (var i in input.Employee)
+            {
+                var employee = new NotificationEmployee
+                {
+                    Id = new Guid(),
+                    NotificationId = notification.Id,
+                    EmployeeId = i.EmployeeId,
+                    IsRead = false,
+                    CreatorUserId = input.ActionId,
+                };
+                await _dataContext.AddAsync(employee);
+            }
+            await _dataContext.SaveChangesAsync();
+            var result = new
+            {
+                Id = notification.Id,
+                Thumbnail = notification.Thumbnail,
+                Title = notification.Title,
+                Content = notification.Content,
+                CreateDate = notification.CreateDate,
+            };
+            return CustomResult(result);
+        }
+        [HttpPut("confirmSalary/{id}")]
+        public async Task<IActionResult> ConfirmSalary(Guid id, Guid salaryId, int confirm)
+        {
+            var salary = await _dataContext.EmployeeSalary.FindAsync(salaryId);
+            if (salary != null)
+            {
+                salary.IsConfirm = confirm;
+                salary.LastModifierUserId = id;
+                _dataContext.EmployeeSalary.Update(salary);
+                await _dataContext.SaveChangesAsync();
+            }
             return CustomResult(salary);
         }
         public static string Random(CreateSalaryDto input)

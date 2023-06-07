@@ -1,6 +1,6 @@
 <div class="title">Notification</div>
 <div style="margin-bottom: 15px;">
-    <button nz-button nzType="primary" (click)="handleCreate()" class="mr-per">
+    <button nz-button nzType="primary" routerLink="/manage/notification/create" class="mr-per">
         <i class="fa-solid fa-user-plus mr-5"></i>
         <span>Create</span>
     </button>
@@ -17,7 +17,7 @@
             <img alt="example" [src]="item.thumbnail" />
         </ng-template>
         <ng-template #actionSetting>
-            <span nz-icon nzType="eye" (click)="handleView(item.id)"></span>
+            <span nz-icon nzType="eye" routerLink="/member/notification-detail/{{item.id}}"></span>
         </ng-template>
         <ng-template #actionEdit>
             <span nz-icon nzType="edit" [routerLink]="[item.id]"></span>

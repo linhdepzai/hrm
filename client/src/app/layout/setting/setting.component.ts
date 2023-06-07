@@ -15,7 +15,7 @@ export class SettingComponent {
     });
   }
 
-  changeTheme(color: any) {
+  changeTheme(color: string) {
     this.dataService.themeColor.next(color);
   }
 }

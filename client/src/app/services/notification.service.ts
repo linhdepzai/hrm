@@ -27,7 +27,10 @@ export class NotificationService {
         return of(err);
       }))
       .subscribe((response) => {
-        this.notificationList$.next(response.data);
+        const result = (response.data as Notification[]).sort((a,b) => {
+          return new Date(b.createDate).getTime() - new Date(a.createDate).getTime();
+        });
+        this.notificationList$.next(result);
       });
   }
 

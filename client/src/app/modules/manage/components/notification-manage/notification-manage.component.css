@@ -8,8 +8,13 @@ nz-select {
     width: calc(100% / 4);
 }
 
+img {
+    height: 121.688px;
+    width: 240.350px;
+}
+
 ::ng-deep .ant-card-cover {
-    height: 275px;
+    height: 150px;
 }
 
 ::ng-deep .cdk-drag-preview {

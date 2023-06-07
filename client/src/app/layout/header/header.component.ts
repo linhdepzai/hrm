@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'src/app/interfaces/interfaces';
+import { MessageService } from 'src/app/services/message.service';
 import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
@@ -13,14 +15,22 @@ export class HeaderComponent implements OnInit {
   isVisibleModalChangePassword = false;
   isVisibleModalChangeAvatar = false;
   totalUnreadNoti: number = 0;
+  totalUnSeen: number = 0;
 
   constructor(
     private notificationService: NotificationService,
+    private messageService: MessageService,
   ){}
 
   ngOnInit(): void {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.notificationService.getAllNotification();
-    this.totalUnreadNoti = this.notificationService.notificationList$.value.filter(i => i.isRead == false).length;
+    this.notificationService.notificationList$.subscribe((data) => {
+      this.totalUnreadNoti = data.filter(i => i.isRead == false).length;
+    });
+    this.messageService.getMessages().subscribe((response) => {
+      (response.data as Message[]).forEach((item) => { this.totalUnSeen += item.totalUnSeen });
+    });
   }
 
   openSidebar(): void {

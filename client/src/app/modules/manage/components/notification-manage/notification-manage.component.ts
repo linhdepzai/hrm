@@ -33,13 +33,4 @@ export class NotificationManageComponent implements OnInit {
   handleDelete(id: string) {
     console.log(id);
   }
-
-  handleView(id: string) {
-    console.log(id);
-  }
-
-  handleCreate() {
-    this.router.navigate(['manage/notification/create']);
-
-  }
 }

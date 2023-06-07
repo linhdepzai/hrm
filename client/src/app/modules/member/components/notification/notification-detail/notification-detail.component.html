@@ -1,6 +1,61 @@
-<img [src]="notification.thumbnail" alt="Thumbnail">
+<div style="text-align: center;">
+    <img height="300" [src]="notification.thumbnail" alt="Thumbnail">
+</div>
 <h2 class="fw-bold">{{ notification.title | uppercase }}</h2>
 <div>{{ notification.createDate | date: 'dd/MM/yyyy' }}</div>
-<form nz-form [formGroup]="form">
+<form nz-form [formGroup]="form" *ngIf="notification.salary == null; else salary">
     <quill-editor [readOnly]="true" formControlName="content"></quill-editor>
 </form>
+<ng-template #salary>
+    <div>
+        <span>Employee: </span>
+        <span>{{ notification.salary!.employee }}</span>
+    </div>
+    <div>
+        <span>Position: </span>
+        <span>{{ getPositionName(notification.salary!.position) }}</span>
+    </div>
+    <div>
+        <span>Level: </span>
+        <span>{{ level[notification.salary!.level] }}</span>
+    </div>
+    <div>
+        <span>Salary Code: </span>
+        <span>{{ notification.salary!.salaryCode }}</span>
+    </div>
+    <div>
+        <span>Salary: </span>
+        <span>{{ notification.salary!.salary | vnd }}</span>
+    </div>
+    <div>
+        <span>Welfare: </span>
+        <span>{{ notification.salary!.welfare | vnd }}</span>
+    </div>
+    <div>
+        <span>Workdays: </span>
+        <span>{{ notification.salary!.workdays }}</span>
+    </div>
+    <div>
+        <span>Punish: </span>
+        <span>{{ notification.salary!.punish | vnd }}</span>
+    </div>
+    <div>
+        <span>Bonus: </span>
+        <span>{{ notification.salary!.bounty | vnd }}</span>
+    </div>
+    <div>
+        <span>Total: </span>
+        <span>{{ notification.salary!.actualSalary | vnd }}</span>
+    </div>
+    <div>{{ notification.salary!.date | date: 'dd/MM/yyyy' }}</div>
+    <div style="text-align: right;">
+        <button nz-button nzDanger nzType="primary" (click)="confirmSalary(notification.salary!.id, 1)">
+            <i class="fa-solid fa-xmark mr-5"></i>
+            <span>Complain</span>
+        </button>
+        <button nz-button nzType="primary" (click)="confirmSalary(notification.salary!.id, 2)">
+            <i class="fa-solid fa-check mr-5"></i>
+            <span>Confirm</span>
+        </button>
+    </div>
+</ng-template>

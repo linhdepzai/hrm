@@ -6,7 +6,9 @@
     <i class="fa-solid fa-bars fa-2x" style="margin-top: -3px;"></i>
 </button>
 <span class="config-option">
-    <i class="fa-solid fa-comment-dots fa-2x" (click)="openMessage()"></i>
+    <i class="fa-solid fa-comment-dots fa-2x" (click)="openMessage()">
+        <app-tag class="totalUnSeen" *ngIf="totalUnSeen > 0" [label]="totalUnSeen.toString()" [color]="'red'"></app-tag>
+    </i>
     <i class="fa-solid fa-bell fa-2x" 
         nzPopoverTrigger="click" 
         nz-button 
@@ -14,7 +16,7 @@
         nzPopoverTitle="Notification" 
         [nzPopoverContent]="notificationpopover" 
         [nzPopoverPlacement]="'bottomRight'">
-        <app-tag *ngIf="totalUnreadNoti > 0" [label]="totalUnreadNoti.toString()" [color]="'red'"></app-tag>
+        <app-tag class="totalUnreadNoti" *ngIf="totalUnreadNoti > 0" [label]="totalUnreadNoti.toString()" [color]="'red'"></app-tag>
     </i>
     <ng-template #notificationpopover>
         <app-notification></app-notification>

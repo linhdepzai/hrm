@@ -41,10 +41,6 @@ export class SalaryComponent implements OnInit {
     this.salaryList = [...this.salaryList];
   }
 
-  formatVND(price: number) {
-    return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'VND' }).format(price)
-  }
-
   getDepartmentName(id: number) {
     return this.dataService.positionList.value.find(i => i.id == id)?.name;
   }

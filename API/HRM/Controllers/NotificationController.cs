@@ -72,7 +72,27 @@ namespace HRM.Controllers
                 notification.IsRead = true;
                 _dataContext.NotificationEmployee.Update(notification);
                 await _dataContext.SaveChangesAsync();
-            }
+            };
+            var month = _dataContext.Notification.FirstOrDefault(i => i.Id == id).CreateDate.Month;
+            var salary = (from es in _dataContext.EmployeeSalary
+                         join s in _dataContext.Salary on es.Salary equals s.Id
+                         join e in _dataContext.Employee on es.EmployeeId equals e.Id
+                         where es.EmployeeId == employeeId && es.Date.Month == month
+                         select new
+                         {
+                             Id = es.Id,
+                             Employee = e.FullName,
+                             Position = s.Position,
+                             Level = s.Level,
+                             SalaryCode = s.SalaryCode,
+                             Salary = s.Money,
+                             Welfare = s.Welfare,
+                             Workdays = es.TotalWorkdays,
+                             Punish = es.Punish,
+                             Bounty = es.Bounty,
+                             ActualSalary = es.ActualSalary,
+                             Date = es.Date,
+                         }).FirstOrDefault();
             var result = from n in _dataContext.Notification
                          where n.Id == id
                          select new
@@ -81,8 +101,10 @@ namespace HRM.Controllers
                              Thumbnail = n.Thumbnail,
                              Title = n.Title,
                              Content = n.Content,
+                             Type = n.Type,
                              CreateDate = n.CreateDate,
                              IsRead = notification.IsRead,
+                             Salary = n.Type == "Salary" ? salary : null
                          };
             return CustomResult(result);
         }
@@ -107,6 +129,7 @@ namespace HRM.Controllers
                 Thumbnail = input.Thumbnail,
                 Title = input.Title,
                 Content = input.Content,
+                Type = "General",
                 CreateDate = DateTime.Now,
                 CreatorUserId = input.ActionId,
             };

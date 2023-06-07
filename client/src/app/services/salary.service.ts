@@ -7,6 +7,7 @@ import { ApiResponse, Salary, SalaryForEmployee } from 'src/app/interfaces/inter
 import { environment } from 'src/environments/environment';
 import { Level } from '../enums/Enum';
 import { DataService } from './data.service';
+import { NotificationPayload, NotificationSalaryPayload, UpdateSalaryPayload } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class SalaryService {
       }))
       .subscribe((response) => {
         if (response.statusCode == 200) {
-          const data = (response.data as Salary[]).sort((a,b) => {
+          const data = (response.data as Salary[]).sort((a, b) => {
             return b.money - a.money;
           });
           this.salaryList$.next(data);
@@ -46,8 +47,8 @@ export class SalaryService {
       }));
   }
 
-  getAllSalaryForEmployee() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'salary/getAllSalaryForEmployee')
+  getAllSalaryForEmployee(month?: number, year?: number) {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `salary/getAllSalaryForEmployee?month=${month}&year=${year}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -59,8 +60,27 @@ export class SalaryService {
       });
   }
 
-  updateSalary(payload: any): Observable<ApiResponse> {
+  updateSalary(payload: UpdateSalaryPayload): Observable<ApiResponse> {
     return this.httpClient.put<ApiResponse>(environment.baseUrl + 'salary/update', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
+
+  sendNotificationSalary(payload: NotificationSalaryPayload): Observable<ApiResponse> {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    payload.actionId = user.id;
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'salary/sendNotificationSalary', payload)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
+
+  confirmSalary(id: string, confirm: number): Observable<ApiResponse> {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + `salary/confirmSalary/${user.id}?salaryId=${id}&confirm=${confirm}`, null)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

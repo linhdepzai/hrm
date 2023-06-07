@@ -1,12 +1,19 @@
 <div class="title">Salary</div>
 <div style="margin-bottom: 15px;">
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+    <button nz-button nzType="primary" (click)="sendRequest()" class="mr-per" [disabled]="setOfCheckedId.size === 0">
+        <i class="fa-solid fa-user-plus mr-5"></i>
+        <span>Send</span>
+    </button>
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null"
+        (ngModelChange)="searchName($event)" style="width: 20%;">
         <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
     </nz-select>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search level..." [ngModel]="null" (ngModelChange)="filterMonth($event)" style="width: 20%;">
+    <nz-select nzShowSearch nzPlaceHolder="Search level..." [ngModel]="filterSalaryMonth"
+        (ngModelChange)="filterMonth($event)" style="width: 20%;">
         <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of monthList"></nz-option>
     </nz-select>
-    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search position..." [ngModel]="null" (ngModelChange)="filterYear($event)" style="width: 20%;">
+    <nz-select nzShowSearch nzPlaceHolder="Search position..." [ngModel]="filterSalaryYear"
+        (ngModelChange)="filterYear($event)" style="width: 20%;">
         <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of yearList"></nz-option>
     </nz-select>
 </div>
@@ -16,6 +23,7 @@
     </ng-template>
     <thead>
         <tr>
+            <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)" nzWidth="50px"></th>
             <th nzAlign="center">Employee</th>
             <th nzAlign="center">Date</th>
             <th nzAlign="center">Salary</th>
@@ -26,11 +34,13 @@
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table.data" cdkDrag>
+            <td [nzChecked]="setOfCheckedId.has(data.id)" [nzDisabled]="isDisable"
+                (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
             <td>{{ getEmployeeName(data.employeeId) }}</td>
             <td nzAlign="center">{{ data.date | date: 'dd/MM/yyyy' }}</td>
             <td nzAlign="center">{{ getSalaryName(data.salary) }}</td>
             <td nzAlign="center">{{ data.totalWorkdays }}</td>
-            <td nzAlign="center">{{ formatVND(data.actualSalary) }}</td>
+            <td nzAlign="center">{{ data.actualSalary | vnd }}</td>
             <td nzAlign="center">
                 <button nz-button nzType="primary" (click)="openModal(data)">
                     <i class="fa-solid fa-pen-to-square"></i>
@@ -39,4 +49,5 @@
         </tr>
     </tbody>
 </nz-table>
-<app-modal-salary-for-employee [visible]="visibleModal" [data]="data" (cancel)="visibleModal = false"></app-modal-salary-for-employee>
+<app-modal-salary-for-employee [visible]="visibleModal" [data]="data"
+    (cancel)="visibleModal = false"></app-modal-salary-for-employee>

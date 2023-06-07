@@ -67,9 +67,12 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzAnchorModule } from 'ng-zorro-antd/anchor';
 import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 import { DragDropModule } from '@angular/cdk/drag-drop'
+import { VndPipe } from 'src/app/shared/pipes/vnd.pipe';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    VndPipe,
+  ],
   imports:[
     CommonModule,
   ],
@@ -142,6 +145,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop'
     NzAnchorModule,
     NzBackTopModule,
     DragDropModule,
+    VndPipe,
   ]
 })
 export class NgZorroSharedModule { }

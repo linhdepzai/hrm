@@ -5,6 +5,9 @@ import { Notification } from 'src/app/interfaces/interfaceReponse';
 import Quill from 'quill';
 import { ImageHandler } from 'ngx-quill-upload';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { DataService } from 'src/app/services/data.service';
+import { Level } from 'src/app/enums/Enum';
+import { SalaryService } from 'src/app/services/salary.service';
 Quill.register('modules/imageHandler', ImageHandler);
 
 @Component({
@@ -15,9 +18,12 @@ Quill.register('modules/imageHandler', ImageHandler);
 export class NotificationDetailComponent implements OnInit {
   notification!: Notification;
   form!: FormGroup;
+  level = Level;
 
   constructor(
     private notificationService: NotificationService,
+    private salaryService: SalaryService,
+    private dataService: DataService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
   ) { }
@@ -33,4 +39,14 @@ export class NotificationDetailComponent implements OnInit {
     });
   }
 
+  getPositionName(id: number) {
+    return this.dataService.positionList.value.find(i => i.id == id)?.name;
+  }
+
+  confirmSalary(id: string, action: number){
+    this.salaryService.confirmSalary(id, action)
+      .subscribe((response) => {
+
+      })
+  }
 }

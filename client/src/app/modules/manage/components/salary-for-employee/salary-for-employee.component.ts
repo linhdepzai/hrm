@@ -4,7 +4,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SalaryService } from 'src/app/services/salary.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { Observable } from 'rxjs';
-import { Employee } from 'src/app/interfaces/interfaces';
+import { Employee, NotificationSalaryPayload } from 'src/app/interfaces/interfaces';
 
 @Component({
   selector: 'app-salary-for-employee',
@@ -19,8 +19,12 @@ export class SalaryForEmployeeComponent implements OnInit {
   monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   yearList: number[] = [];
   filterSalaryEmployee!: string | null;
-  filterSalaryMonth!: number | null;
-  filterSalaryYear!: number | null;
+  filterSalaryMonth: number = new Date().getMonth();
+  filterSalaryYear: number = new Date().getFullYear();
+  checked = false;
+  indeterminate = false;
+  setOfCheckedId = new Set<string>();
+  isDisable: boolean = false;
 
   constructor(
     private salaryService: SalaryService,
@@ -28,7 +32,7 @@ export class SalaryForEmployeeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.salaryService.getAllSalaryForEmployee();
+    this.salaryService.getAllSalaryForEmployee(new Date().getMonth(), new Date().getFullYear());
     this.salaryService.getAllSalary();
     this.employeeService.getAllEmployee();
     this.employeeList = this.employeeService.employeeList$;
@@ -55,8 +59,45 @@ export class SalaryForEmployeeComponent implements OnInit {
     return this.employeeService.employeeList$.value.find(i => i.id == id)?.fullName;
   }
 
-  formatVND(price: number) {
-    return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'VND' }).format(price)
+  updateCheckedSet(id: string, checked: boolean): void {
+    if (checked) {
+      this.setOfCheckedId.add(id);
+    } else {
+      this.setOfCheckedId.delete(id);
+    }
+  }
+
+  refreshCheckedStatus(): void {
+    this.checked = this.salaryForEmployeeList.every(({ id }) => this.setOfCheckedId.has(id));
+    this.indeterminate = this.salaryForEmployeeList.some(({ id }) => this.setOfCheckedId.has(id)) && !this.checked;
+  }
+
+  onItemChecked(id: string, checked: boolean): void {
+    this.updateCheckedSet(id, checked);
+    this.refreshCheckedStatus();
+  }
+
+  onAllChecked(checked: boolean): void {
+    this.salaryForEmployeeList
+      .forEach(({ id }) => this.updateCheckedSet(id, checked));
+    this.refreshCheckedStatus();
+  }
+
+  sendRequest(): void {
+    const requestData = this.salaryForEmployeeList.filter(data => this.setOfCheckedId.has(data.id));
+    const response = {
+      actionId: '',
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
+      employee: requestData,
+    };
+    this.salaryService.sendNotificationSalary(response)
+      .subscribe((res) => {
+        if (res.statusCode == 200) {
+          this.setOfCheckedId.clear();
+          this.refreshCheckedStatus();
+        }
+      });
   }
 
   openModal(data: SalaryForEmployee) {
@@ -64,38 +105,33 @@ export class SalaryForEmployeeComponent implements OnInit {
     this.visibleModal = true;
   }
 
-  filterSalary() {
+  searchName(id: string) {
+    this.filterSalaryEmployee = id;
     this.salaryService.salaryForEmployeeList$.subscribe((data) => {
       this.salaryForEmployeeList = data;
     });
     if (this.filterSalaryEmployee != null) {
       this.salaryForEmployeeList = this.salaryForEmployeeList.filter(i => i.employeeId == this.filterSalaryEmployee);
     }
-    if (this.filterSalaryMonth != null) {
-      this.salaryForEmployeeList = this.salaryForEmployeeList.filter(i => new Date(i.date).getMonth() == this.filterSalaryMonth);
-    }
-    if (this.filterSalaryYear != null) {
-      this.salaryForEmployeeList = this.salaryForEmployeeList.filter(i =>
-        new Date(new Date(i.date).getDate() + '/' + new Date(i.date).getMonth() + '/' + new Date(i.date).getFullYear()).getFullYear() == this.filterSalaryYear);
-      this.yearList = [];
-      for (let i = -10; i <= 10; i++) {
-        this.yearList = [...this.yearList, this.filterSalaryYear + i];
-      };
-    }
-  }
-
-  searchName(id: string) {
-    this.filterSalaryEmployee = id;
-    this.filterSalary();
   }
 
   filterMonth(month: number) {
-    this.filterSalaryMonth = month;
-    this.filterSalary();
+    this.filterSalaryMonth = month ? month : new Date().getMonth();
+    this.salaryService.getAllSalaryForEmployee(this.filterSalaryMonth ? this.filterSalaryMonth : 0, this.filterSalaryYear ? this.filterSalaryYear : 0);
+    if (new Date().getMonth() == this.filterSalaryMonth && new Date().getFullYear() == this.filterSalaryYear) {
+      this.isDisable = false;
+    } else {
+      this.isDisable = true;
+    }
   }
 
   filterYear(year: number) {
-    this.filterSalaryYear = year;
-    this.filterSalary();
+    this.filterSalaryYear = year ? year : new Date().getFullYear();
+    this.salaryService.getAllSalaryForEmployee(this.filterSalaryMonth ? this.filterSalaryMonth : 0, this.filterSalaryYear ? this.filterSalaryYear : 0);
+    if (new Date().getMonth() == this.filterSalaryMonth && new Date().getFullYear() == this.filterSalaryYear) {
+      this.isDisable = false;
+    } else {
+      this.isDisable = true;
+    }
   }
 }

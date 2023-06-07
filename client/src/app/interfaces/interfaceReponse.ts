@@ -136,9 +136,11 @@ export interface Notification {
     thumbnail: string,
     title: string,
     content: string,
+    type: string,
     createDate: Date,
     isRead: boolean,
     createUserId: string,
     createUserName: string,
     createUserPhoto: string,
+    salary: any | null;
 }

@@ -25,7 +25,7 @@
         <tr *ngFor="let data of table.data" cdkDrag>
             <td>{{ getUserName(data.employeeId) }}</td>
             <td>{{ data.reason }}</td>
-            <td nzAlign="center">{{ data.amount }}</td>
+            <td nzAlign="center">{{ data.amount | vnd }}</td>
             <td nzAlign="center">{{ data.date | date: 'dd/MM/yyyy' }}</td>
             <td nzAlign="center">
                 <button nz-button nzType="primary" class="mr-5" (click)="openModal(data, 'update')">
