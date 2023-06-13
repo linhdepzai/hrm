@@ -1,1 +1,35 @@
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.percent {
+    right: 30px;
+    position: absolute;
+}
+
+.data-card {
+    margin: 10px 30px;
+    display: flex;
+    align-items: center;
+}
+
+.data {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.card {
+    margin: 6px 0;
+}
+
+.icon {
+    border: 1px solid #000;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    margin-top: 5px;
+}
+
+.line {
+    line-height: 50px;
+    padding: 5px;
+}

@@ -19,6 +19,7 @@
     "@angular/platform-browser-dynamic": "^15.1.0",
     "@angular/router": "^15.1.0",
     "@microsoft/signalr": "^7.0.5",
+    "chart.js": "^4.3.0",
     "ng-zorro-antd": "^15.0.3",
     "ngx-quill": "^20.0.1",
     "ngx-quill-upload": "^2.0.0",

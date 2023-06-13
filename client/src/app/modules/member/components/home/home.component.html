@@ -1,1 +1,93 @@
-<p>home works!</p>
+<h2 nz-typography nzEllipsis>Strategic HRM Dashboard to Monitor Progress</h2>
+<div class="fs" nz-typography nzEllipsis>This slide outlines strategic human resource management dashboard to monitor progress. tt involves details such as number of employees, leaves, daily project work etc.</div>
+<div nz-row [nzGutter]="12" style="margin-bottom: 15px;">
+    <div nz-col [nzSpan]="6">
+        <div class="card">
+            <div class="center fw-bold">Employees</div>
+            <div class="data-card">
+                <span class="data">{{ statistical.totalEmployee.total }}</span>
+                <span class="percent">
+                    <i class="fa-solid mr-5" [ngClass]="statistical.totalEmployee.percent > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"></i>
+                    <span>{{ getPercent(statistical.totalEmployee.percent) }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div nz-col [nzSpan]="6">
+        <div class="card">
+            <div class="center fw-bold">Leaves</div>
+            <div class="data-card">
+                <span class="data">{{ statistical.totalLeave.total }}</span>
+            <span class="percent">
+                <i class="fa-solid mr-5" [ngClass]="statistical.totalLeave.percent > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"></i>
+                <span>{{ getPercent(statistical.totalLeave.percent) }}</span>
+            </span>
+            </div>
+        </div>
+    </div>
+    <div nz-col [nzSpan]="6">
+        <div class="card">
+            <div class="center fw-bold">New Employees</div>
+            <div class="data-card">
+                <span class="data">{{ statistical.totalNewEmployee.total }}</span>
+                <span class="percent">
+                    <i class="fa-solid mr-5" [ngClass]="statistical.totalNewEmployee.percent > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"></i>
+                    <span>{{ getPercent(statistical.totalNewEmployee.percent) }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div nz-col [nzSpan]="6">
+        <div class="card">
+            <div class="center fw-bold">Employees Up Level</div>
+            <div class="data-card">
+                <span class="data">{{ statistical.totalEmployeeUpLevel.total }}</span>
+                <span class="percent">
+                    <i class="fa-solid mr-5" [ngClass]="statistical.totalEmployeeUpLevel.percent > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"></i>
+                    <span>{{ getPercent(statistical.totalEmployeeUpLevel.percent) }}</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div nz-row [nzGutter]="12">
+    <div nz-col [nzSpan]="5">
+        <div class="card center">
+            <div class="fw-bold">Punish & Bounty</div>
+            <div style="padding-bottom: 2rem;">
+                <canvas id="payoffChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div nz-col [nzSpan]="11">
+        <div class="card">
+            <div class="center fw-bold">Statistic Punish & Bounty For Year</div>
+            <canvas id="payoffYearChart"></canvas>
+        </div>
+    </div>
+    <div nz-col [nzSpan]="8">
+        <div class="card">
+            <div class="center fw-bold">Requests</div>
+            <div nz-row [nzGutter]="24" style="margin-top: 9px;">
+                <span nz-col [nzSpan]="8" class="center"><i class="fa-regular fa-id-card icon"></i></span>
+                <span nz-col [nzSpan]="10" class="line" nz-typography nzEllipsis>Profile Update</span>
+                <span nz-col [nzSpan]="6" class="center line">{{ statistical.totalRequestUpdateProfile }}</span>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <span nz-col [nzSpan]="8" class="center"><i class="fa-solid fa-user-clock icon"></i></span>
+                <span nz-col [nzSpan]="10" class="line" nz-typography nzEllipsis>Change Working Time</span>
+                <span nz-col [nzSpan]="6" class="center line">{{ statistical.totalRequestChangeWorkingTime }}</span>
+            </div>
+            <div nz-row [nzGutter]="24">
+                <span nz-col [nzSpan]="8" class="center"><i class="fa-regular fa-calendar-xmark icon"></i></span>
+                <span nz-col [nzSpan]="10" class="line" nz-typography nzEllipsis>Request Off</span>
+                <span nz-col [nzSpan]="6" class="center line">{{ statistical.totalRequestOff }}</span>
+            </div>
+            <div nz-row [nzGutter]="24" style="margin-bottom: 9px;">
+                <span nz-col [nzSpan]="8" class="center"><i class="fa-solid fa-house-flood-water icon"></i></span>
+                <span nz-col [nzSpan]="10" class="line" nz-typography nzEllipsis>Late/Leave Early</span>
+                <span nz-col [nzSpan]="6" class="center line">{{ statistical.totalRequestLateOrLeaveEarly }}</span>
+            </div>
+        </div>
+    </div>
+</div>

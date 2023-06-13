@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
 import { Bank, Level, OptionOnLeave, Priority, ProjectType, StatusTask } from '../enums/Enum';
 import { ApiResponse, Position } from '../interfaces/interfaceReponse';
 import { HttpClient } from '@angular/common/http';
@@ -30,6 +30,21 @@ export class DataService {
     this.dataList();
   }
 
+  getStatistical(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'statistical/totalEmployee')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
+  getStatisticPayOffForMonth(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'statistical/payoffForMonth')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
 
   getAllPosition() {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'position/getAll')
@@ -41,7 +56,7 @@ export class DataService {
         if (response.statusCode == 200) {
           this.positionList.next(response.data);
         };
-      });;
+      });
   }
 
   dataList() {
