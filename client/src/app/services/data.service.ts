@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
 import { Bank, Level, OptionOnLeave, Priority, ProjectType, StatusTask } from '../enums/Enum';
-import { ApiResponse, Position } from '../interfaces/interfaceReponse';
+import { ApiResponse } from '../interfaces/interfaceReponse';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -12,7 +12,6 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class DataService {
   themeColor: BehaviorSubject<string> = new BehaviorSubject<string>('#a08c0e');
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
-  public positionList = new BehaviorSubject<Position[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
   public iconList = new BehaviorSubject<string[]>([]);
   public requestOffList = new BehaviorSubject<{ value: OptionOnLeave, label: string }[]>([]);
@@ -26,7 +25,6 @@ export class DataService {
   ) {
     const themeColor = JSON.parse(localStorage.getItem('themeColor') || sessionStorage.getItem('themeColor') || '[]');
     this.themeColor.next(themeColor.length == 0 ? '#a08c0e' : themeColor);
-    this.getAllPosition();
     this.dataList();
   }
 
@@ -44,19 +42,6 @@ export class DataService {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
       }));
-  }
-
-  getAllPosition() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'position/getAll')
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
-      .subscribe((response) => {
-        if (response.statusCode == 200) {
-          this.positionList.next(response.data);
-        };
-      });
   }
 
   dataList() {

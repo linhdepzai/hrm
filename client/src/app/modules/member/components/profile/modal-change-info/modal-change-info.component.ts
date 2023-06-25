@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Bank, Level } from 'src/app/enums/Enum';
-import { DepartmentResponse, LoginResponse } from 'src/app/interfaces/interfaceReponse';
+import { DepartmentResponse, LoginResponse, Position } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { DepartmentService } from 'src/app/services/department.service';
 import { AccountService } from 'src/app/services/account.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-modal-change-info',
@@ -19,7 +20,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   infoForm!: FormGroup;
   levelList = new Observable<{ value: Level; label: string }[]>();
-  positionList = new Observable<{ id: number; name: string, color: string }[]>();
+  positionList = new Observable<Position[]>();
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<DepartmentResponse[]>();
 
@@ -27,6 +28,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
     private departmentService: DepartmentService,
     private accountService: AccountService,
     private notification: NzNotificationService,
+    private positionService: PositionService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
@@ -34,7 +36,7 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
-    this.positionList = this.dataService.positionList;
+    this.positionList = this.positionService.positionList$;
     this.bankList = this.dataService.bankList;
   }
 

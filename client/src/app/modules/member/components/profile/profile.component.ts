@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Level } from 'src/app/enums/Enum';
 import { DepartmentResponse, LoginResponse, Position } from 'src/app/interfaces/interfaceReponse';
-import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from 'src/app/services/department.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-profile',
@@ -17,9 +17,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private departmentService: DepartmentService,
-    protected dataService: DataService,
-  ) {
-  }
+    private positionService: PositionService,
+    ) { }
 
   ngOnInit(): void {
     this.departmentService.getAllDepartment();
@@ -43,6 +42,6 @@ export class ProfileComponent implements OnInit {
   }
 
   getPosition(id: number): Position {
-    return this.dataService.positionList.value.find(i => i.id == id)!;
+    return this.positionService.positionList$.value.find(i => i.id == id)!;
   }
 }

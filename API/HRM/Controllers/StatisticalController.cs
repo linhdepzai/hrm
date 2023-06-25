@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OpenApi.Any;
 using HRM.DTOs.StatisticalDto;
 using System.Numerics;
+using HRM.Entities;
 
 namespace HRM.Controllers
 {
@@ -44,7 +45,7 @@ namespace HRM.Controllers
                 totalEmployee = new
                 {
                     total = _dataContext.Employee.Where(i => i.Status == Enum.Status.Approved && i.LeaveDate == null).AsNoTracking().ToList().Count,
-                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == Enum.Status.Approved && i.LeaveDate == null && ((DateTime)i.CreationTime).Month != DateTime.Now.Month).AsNoTracking().ToList().Count) / 
+                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == Enum.Status.Approved && i.LeaveDate == null && ((DateTime)i.CreationTime).Month != DateTime.Now.Month).AsNoTracking().ToList().Count) /
                         _dataContext.Employee.Where(i => i.Status == Enum.Status.Approved && i.LeaveDate == null).AsNoTracking().ToList().Count),
                 },
                 totalLeave = new
@@ -102,8 +103,18 @@ namespace HRM.Controllers
                 };
                 result.Add(item);
             }
-
             return CustomResult(result);
+        }
+        [HttpGet("getAllEmployeeUpLevel")]
+        public async Task<IActionResult> getAllEmployeeUpLevel()
+        {
+            var result = _dataContext.Evaluate.Where(i => i.NewLevel > i.OldLevel && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList();
+            var list = new List<Employee>();
+            foreach (var i in result)
+            {
+                list.Add(_dataContext.Employee.Find(i.EmployeeId));
+            }
+            return CustomResult(list);
         }
     }
 }

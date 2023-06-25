@@ -5,6 +5,7 @@ import { Level } from 'src/app/enums/Enum';
 import { DataService } from 'src/app/services/data.service';
 import { SalaryService } from 'src/app/services/salary.service';
 import { Observable } from 'rxjs';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-salary',
@@ -24,14 +25,15 @@ export class SalaryComponent implements OnInit {
   constructor(
     private salaryService: SalaryService,
     private dataService: DataService,
+    private positionService: PositionService,
   ) { }
 
   ngOnInit(): void {
-    this.dataService.getAllPosition();
+    this.positionService.getAllPosition();
     this.salaryService.getAllSalary();
     this.salaryService.salaryList$.subscribe((data) => { this.salaryList = data });
     this.levelList = this.dataService.levelList;
-    this.positionList = this.dataService.positionList;
+    this.positionList = this.positionService.positionList$;
   }
 
   drop(event: CdkDragDrop<string[], string[], any>): void {
@@ -42,7 +44,7 @@ export class SalaryComponent implements OnInit {
   }
 
   getDepartmentName(id: number) {
-    return this.dataService.positionList.value.find(i => i.id == id)?.name;
+    return this.positionService.positionList$.value.find(i => i.id == id)?.name;
   }
 
   filterSalary() {

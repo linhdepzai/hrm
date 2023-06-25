@@ -7,6 +7,7 @@ import { Position } from 'src/app/interfaces/interfaceReponse';
 import { CreateProject, Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { PositionService } from 'src/app/services/position.service';
 import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
@@ -27,14 +28,14 @@ export class TeamProjectComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private projectService: ProjectService,
-    private dataService: DataService,
+    private positionService: PositionService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
     this.employeeService.getAllEmployee();
-    this.positionList = this.dataService.positionList;
+    this.positionList = this.positionService.positionList$;
     this.memberForm = this.fb.group({
       members: this.fb.array([]),
     });
@@ -67,7 +68,7 @@ export class TeamProjectComponent implements OnInit {
   }
 
   getPositionName(id: number) {
-    return this.dataService.positionList.value.find(i => i.id == id)?.name;
+    return this.positionService.positionList$.value.find(i => i.id == id)?.name;
   }
 
   changeTypeMember(type: 1 | 2, user: Employee) {

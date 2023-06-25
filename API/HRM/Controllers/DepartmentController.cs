@@ -48,6 +48,7 @@ namespace HRM.Controllers
                 Id = new Guid(),
                 Name = input.Name,
                 Color = input.Color,
+                Boss = input.Boss,
             };
             await _dataContext.Department.AddAsync(department);
             await _dataContext.SaveChangesAsync();
@@ -60,6 +61,7 @@ namespace HRM.Controllers
             {
                 department.Name = input.Name;
                 department.Color = input.Color;
+                department.Boss = input.Boss;
             };
             _dataContext.Department.Update(department);
             await _dataContext.SaveChangesAsync();

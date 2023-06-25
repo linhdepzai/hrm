@@ -7,6 +7,7 @@ import { DataService } from 'src/app/services/data.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { DepartmentService } from 'src/app/services/department.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-users',
@@ -32,7 +33,8 @@ export class UsersComponent implements OnInit {
     private employeeService: EmployeeService,
     private departmentService: DepartmentService,
     private dataService: DataService,
-  ) { }
+    private positionService: PositionService,
+    ) { }
 
   ngOnInit(): void {
     this.departmentService.getAllDepartment();
@@ -41,7 +43,7 @@ export class UsersComponent implements OnInit {
     this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
-    this.positionList = this.dataService.positionList;
+    this.positionList = this.positionService.positionList$;
   }
 
   getDepartmentName(id: string) {
@@ -76,7 +78,7 @@ export class UsersComponent implements OnInit {
   }
 
   getPositionName(id: number) {
-    return this.dataService.positionList.value.find(i => i.id == id)?.name;
+    return this.positionService.positionList$.value.find(i => i.id == id)?.name;
   }
 
   filterUser() {

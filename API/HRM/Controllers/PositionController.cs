@@ -42,7 +42,7 @@ namespace HRM.Controllers
         private async Task<IActionResult> Create(CreateOrEditPostionDto input)
         {
             var newPosition = await _dataContext.Position.AsNoTracking().FirstOrDefaultAsync(e => e.Name.ToLower() == input.Name.ToLower());
-            if (newPosition != null) return CustomResult("DepartmentName is taken", HttpStatusCode.NotFound);
+            if (newPosition != null) return CustomResult("PositionName is taken", HttpStatusCode.NotFound);
             var position = new Position
             {
                 Id = new int(),

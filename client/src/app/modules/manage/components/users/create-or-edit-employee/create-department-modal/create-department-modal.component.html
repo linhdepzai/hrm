@@ -12,6 +12,15 @@
                 <input nz-input formControlName="name" id="name" />
             </nz-form-control>
         </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Boss</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <nz-select nzShowSearch nzPlaceHolder="Choose leader" [ngModel]="departmentForm.value.icon"
+                    formControlName="boss" id="boss">
+                    <nz-option nzCustomContent [nzValue]="item.id" [nzLabel]="item.fullName" *ngFor="let item of employeeList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
         <nz-form-item nz-row>
             <nz-form-label nz-col [nzSpan]="6" nzFor="name">Color</nz-form-label>
             <nz-form-control nz-col [nzSpan]="11">

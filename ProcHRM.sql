@@ -150,8 +150,8 @@ as
 		declare @Money int = (select [Money] from Salary where [Id] = @Salary);
 		declare @Welfare int = (select [Welfare] from Salary where [Id] = @Salary);
 		declare @ActualSalary int = @Money + @Welfare + @totalBounty - @totalPunish;
-		insert into EmployeeSalary ([Id], [Date], [totalWorkdays], [EmployeeId], [Salary], [Punish], [Bounty], [ActualSalary], [CreatorUserId], [CreationTime], [IsDeleted])
-			values (newid(), getdate(), @totalWorkday, @UserId, @Salary, @totalPunish, @totalBounty, @ActualSalary, '00000000-0000-0000-0000-000000000000', getdate(), 0);
+		insert into EmployeeSalary ([Id], [Date], [totalWorkdays], [EmployeeId], [Salary], [Punish], [Bounty], [ActualSalary], [CreatorUserId], [CreationTime], [IsDeleted], [IsConfirm])
+			values (newid(), getdate(), @totalWorkday, @UserId, @Salary, @totalPunish, @totalBounty, @ActualSalary, '00000000-0000-0000-0000-000000000000', getdate(), 0, 0);
 		set @i = @i + 1;
 	end
 go

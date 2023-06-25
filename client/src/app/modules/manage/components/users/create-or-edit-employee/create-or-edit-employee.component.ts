@@ -9,6 +9,7 @@ import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from 'src/app/services/department.service';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-create-or-edit-employee',
@@ -26,13 +27,15 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   positionList = new Observable<Position[]>();
   bankList = new Observable<Bank[]>();
   departmentList = new Observable<Department[]>();
-  isVisibleModal: boolean = false;
+  isVisiblePositionModal: boolean = false;
+  isVisibleDepartmentModal: boolean = false;
   isEdit: boolean = false;
 
   constructor(
     private departmentService: DepartmentService,
     private employeeService: EmployeeService,
     private dataService: DataService,
+    private positionService: PositionService,
     private notification: NzNotificationService,
     private fb: FormBuilder,
     private datepipe: DatePipe,
@@ -55,7 +58,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
-    this.positionList = this.dataService.positionList;
+    this.positionList = this.positionService.positionList$;
     this.bankList = this.dataService.bankList;
   }
 

@@ -6,6 +6,7 @@ import { Position } from 'src/app/interfaces/interfaceReponse';
 import { Level } from 'src/app/enums/Enum';
 import { DataService } from 'src/app/services/data.service';
 import { SalaryService } from 'src/app/services/salary.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Component({
   selector: 'app-modal-salary',
@@ -22,14 +23,15 @@ export class ModalSalaryComponent implements OnInit {
   constructor(
     private salaryService: SalaryService,
     private dataService: DataService,
+    private positionService: PositionService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
-    this.dataService.getAllPosition();
+    this.positionService.getAllPosition();
     this.levelList = this.dataService.levelList;
-    this.positionList = this.dataService.positionList;
+    this.positionList = this.positionService.positionList$;
     this.salaryForm = this.fb.group({
       actionId: [null, Validators.required],
       level: [null, Validators.required],

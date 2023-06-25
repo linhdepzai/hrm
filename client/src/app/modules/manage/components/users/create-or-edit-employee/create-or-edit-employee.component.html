@@ -57,12 +57,16 @@
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Position!">
+            <nz-form-control [nzSm]="11" nzErrorTip="The input is not valid Position!">
                 <nz-select [ngModel]="employeeForm.value.position" formControlName="position" id="position">
                     <nz-option [nzValue]="item.id" [nzLabel]="item.name"
                         *ngFor="let item of positionList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
+            <span nz-col [nzSpan]="1"></span>
+            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true">
+                <span nz-typography nzEllipsis style="color: #fff;">New Position</span>
+            </button>
         </nz-form-item>
         <nz-form-item nz-row>
             <nz-form-label nz-col [nzSpan]="6" nzRequired nzFor="name">Department</nz-form-label>
@@ -74,7 +78,7 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleModal = true">
+            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Department</span>
             </button>
         </nz-form-item>
@@ -185,5 +189,7 @@
             </button>
         </ng-template>
     </ng-template>
-    <app-create-department-modal [isVisibleModal]="isVisibleModal"
-        (cancel)="isVisibleModal = false"></app-create-department-modal>
+    <app-create-department-modal [isVisibleModal]="isVisibleDepartmentModal"
+        (cancel)="isVisibleDepartmentModal = false"></app-create-department-modal>
+    <app-create-position-modal [isVisibleModal]="isVisiblePositionModal"
+        (cancel)="isVisiblePositionModal = false"></app-create-position-modal>

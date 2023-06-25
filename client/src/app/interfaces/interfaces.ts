@@ -37,6 +37,7 @@ export interface Department {
     name: string,
     color: string,
     icon: string,
+    boss: string,
 }
 
 export interface CreateProject {

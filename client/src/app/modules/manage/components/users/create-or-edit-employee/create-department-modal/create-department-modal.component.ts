@@ -1,8 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { Observable } from 'rxjs';
+import { Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from 'src/app/services/department.service';
+import { EmployeeService } from 'src/app/services/employee.service';
 
 @Component({
   selector: 'app-create-department-modal',
@@ -14,16 +17,20 @@ export class CreateDepartmentModalComponent implements OnInit {
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   departmentForm!: FormGroup;
   iconList: string[] = [];
+  employeeList = new Observable<Employee[]>();
 
   constructor(
     private departmentService: DepartmentService,
     private dataService: DataService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
+    private employeeService: EmployeeService,
   ) { }
 
   ngOnInit(): void {
     this.initForm();
+    this.employeeService.getAllEmployee();
+    this.employeeList = this.employeeService.employeeList$;
     this.dataService.iconList.subscribe((data) => { this.iconList = data });
   }
 
@@ -32,7 +39,8 @@ export class CreateDepartmentModalComponent implements OnInit {
       id: [null],
       name: [null, Validators.required],
       color: ['#00ff00'],
-      icon: ['house']
+      icon: ['house'],
+      boss: [null, Validators.required],
     });
   }
 

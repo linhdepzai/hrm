@@ -98,7 +98,7 @@ export interface Evaluate {
 }
 
 export interface Position {
-    id: number,
+    id: number | null,
     name: string,
     color: string,
 }
