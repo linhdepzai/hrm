@@ -10,7 +10,7 @@
     </div>
 </div>
 <ul nz-menu nzMode="inline" class="sider-menu">
-    <li nz-menu-item routerLink="/member/home" [nzMatchRouter]="true">
+    <li *ngIf="isLeader || isAccoutant || isAdmin" nz-menu-item routerLink="/member/home" [nzMatchRouter]="true">
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Home Page</span>
     </li>
