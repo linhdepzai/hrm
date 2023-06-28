@@ -5,6 +5,7 @@ import { Employee } from 'src/app/interfaces/interfaces';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { PayoffService } from 'src/app/services/payoff.service';
 import { EmployeeService } from 'src/app/services/employee.service';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-payoff',
@@ -16,6 +17,7 @@ export class PayoffComponent implements OnInit {
   visibleModal: boolean = false;
   data: Payoff | undefined;
   employeeList: Employee[] = [];
+  confirmModal?: NzModalRef;
   mode: string = 'create';
   totalAmount: number = 0;
 
@@ -23,7 +25,8 @@ export class PayoffComponent implements OnInit {
     private payoffService: PayoffService,
     private employeeService: EmployeeService,
     private notification: NzNotificationService,
-  ) { }
+    private modal: NzModalService,
+    ) { }
 
   ngOnInit(): void {
     this.payoffService.getAllPayoff();
@@ -58,11 +61,23 @@ export class PayoffComponent implements OnInit {
     };
   }
 
-  deleteItem(id: string){
-    this.payoffService.deletePayoff(id).subscribe((response) => {
-      if(response.statusCode == 200) {
-        this.notification.success('Successfully!', '');
-      }
-    })
+  deleteItem(id: string) {
+    this.confirmModal = this.modal.confirm({
+      nzTitle: 'Do you Want to delete this movie?',
+      nzContent: 'When clicked the OK button, this movie will be deleted system-wide!!!',
+      nzOnOk: () =>
+        new Promise((resolve, reject) => {
+          this.payoffService.deletePayoff(id).subscribe((response) => {
+            if (response.message == 'Removed') {
+              const index = this.payoffService.payoffList$.value.findIndex((item) => item.id == id);
+              this.payoffService.payoffList$.value.splice(index, 1);
+              this.payoffService.payoffList$.next([...this.payoffService.payoffList$.value]);
+            } else {
+              this.notification.create('error', 'Failed!', '');
+            }
+          });
+          setTimeout(resolve, 1000);
+        }).catch(() => console.log('Oops errors!'))
+    });
   }
 }

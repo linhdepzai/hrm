@@ -39,7 +39,8 @@ export class PayoffService {
   }
 
   deletePayoff(id: string): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'payoff/delete?id=' + id)
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `payoff/delete/${user.id}?payoffId=${id}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

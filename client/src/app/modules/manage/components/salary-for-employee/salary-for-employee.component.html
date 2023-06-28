@@ -23,7 +23,7 @@
     </ng-template>
     <thead>
         <tr>
-            <th [nzChecked]="checked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)" nzWidth="50px"></th>
+            <th [nzChecked]="checked" [nzDisabled]="isDisable" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)" nzWidth="50px"></th>
             <th nzAlign="center">Employee</th>
             <th nzAlign="center">Date</th>
             <th nzAlign="center">Salary</th>

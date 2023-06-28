@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
+import { LoginResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { DatePipe } from '@angular/common';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
@@ -20,6 +20,7 @@ export class ModalTimesheetComponent implements OnChanges {
   @Input() date!: Date;
   onleaveList: OnLeaveResponse[] = [];
   status = Status;
+  user!: LoginResponse;
 
   constructor(
     private employeeService: EmployeeService,
@@ -30,6 +31,7 @@ export class ModalTimesheetComponent implements OnChanges {
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.onLeaveService.onLeaveList$.subscribe((data) => {
       this.onleaveList = data.filter(i => this.datepipe.transform(i.dateLeave, 'dd/MM/yyyy') == this.datepipe.transform(this.date, 'dd/MM/yyyy'));
     });

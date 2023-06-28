@@ -54,6 +54,7 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
       actionId: [null],
       employeeId: [null, Validators.required],
       amount: [null, Validators.required],
+      punish: [null, Validators.required],
       reason: [null, Validators.required],
       date: [null, Validators.required],
     });

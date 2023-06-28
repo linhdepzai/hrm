@@ -27,7 +27,7 @@ namespace HRM.Controllers
             var notificationList = await (from n in _dataContext.Notification
                                           join e in _dataContext.NotificationEmployee
                                           on n.Id equals e.NotificationId
-                                          where e.EmployeeId == id && e.IsDeleted == false
+                                          where e.EmployeeId == id && e.IsDeleted == false && n.IsDeleted == false
                                           select new
                                           {
                                               Id = n.Id,
@@ -218,6 +218,16 @@ namespace HRM.Controllers
                 Employee = input.Employee,
             };
             return CustomResult(result);
+        }
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id, Guid notificationId)
+        {
+            var notification = await _dataContext.Notification.FindAsync(notificationId);
+            notification.DeleteUserId = id;
+            _dataContext.Update(notification);
+            _dataContext.Notification.Remove(notification);
+            await _dataContext.SaveChangesAsync();
+            return CustomResult("Removed");
         }
     }
 }

@@ -66,4 +66,13 @@ export class NotificationService {
         return of(err);
       }))
   }
+
+  deleteNotification(id: string): Observable<ApiResponse> {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `notification/delete/${user.id}?notificationId=${id}`)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
 }

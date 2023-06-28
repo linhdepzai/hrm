@@ -57,7 +57,7 @@
                 <button nz-button nzType="primary" class="btn-action mr-5" (click)="openModal(data, statusMode == 'Pending' ? 'request' : 'update')">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
-                <button nz-button nzDanger nzType="primary" class="btn-action">
+                <button nz-button nzDanger nzType="primary" class="btn-action" (click)="deleteItem(data.id!)">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
             </td>

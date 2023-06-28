@@ -1,6 +1,7 @@
 ﻿using CoreApiResponse;
 using HRM.Data;
 using HRM.DTOs.EmployeeDto;
+using HRM.DTOs.NotificationDto;
 using HRM.DTOs.PayoffDto;
 using HRM.Entities;
 using HRM.Enum;
@@ -94,10 +95,13 @@ namespace HRM.Controllers
             await _dataContext.SaveChangesAsync();
             return CustomResult(payoff);
         }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id, Guid payoffId)
         {
-            _dataContext.Payoff.Remove(await _dataContext.Payoff.FindAsync(id));
+            var payoff = await _dataContext.Payoff.FindAsync(payoffId);
+            payoff.DeleteUserId = id;
+            _dataContext.Update(payoff);
+            _dataContext.Payoff.Remove(payoff);
             await _dataContext.SaveChangesAsync();
             return CustomResult("Removed");
         }

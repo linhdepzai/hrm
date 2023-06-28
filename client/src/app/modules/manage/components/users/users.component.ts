@@ -8,6 +8,8 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { DepartmentService } from 'src/app/services/department.service';
 import { PositionService } from 'src/app/services/position.service';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-users',
@@ -22,6 +24,7 @@ export class UsersComponent implements OnInit {
   positionList = new Observable<Position[]>();
   departmentList = new Observable<Department[]>();
   data: Employee | undefined;
+  confirmModal?: NzModalRef;
   modalMode: string = 'create';
   statusMode: string = 'Approve';
   filterUserName!: string | null;
@@ -34,7 +37,9 @@ export class UsersComponent implements OnInit {
     private departmentService: DepartmentService,
     private dataService: DataService,
     private positionService: PositionService,
-    ) { }
+    private modal: NzModalService,
+    private notification: NzNotificationService,
+  ) { }
 
   ngOnInit(): void {
     this.departmentService.getAllDepartment();
@@ -95,6 +100,26 @@ export class UsersComponent implements OnInit {
     if (this.filterUserDepartment != null) {
       this.employeeList = this.employeeList.filter(i => i.departmentId == this.filterUserDepartment);
     }
+  }
+
+  deleteItem(id: string) {
+    this.confirmModal = this.modal.confirm({
+      nzTitle: 'Do you Want to delete this movie?',
+      nzContent: 'When clicked the OK button, this movie will be deleted system-wide!!!',
+      nzOnOk: () =>
+        new Promise((resolve, reject) => {
+          this.employeeService.deleteEmployee(id).subscribe((response) => {
+            if (response.message == 'Removed') {
+              const index = this.employeeService.employeeListForLeader$.value.findIndex((item) => item.id == id);
+              this.employeeService.employeeListForLeader$.value.splice(index, 1);
+              this.employeeService.employeeListForLeader$.next([...this.employeeService.employeeListForLeader$.value]);
+            } else {
+              this.notification.create('error', 'Failed!', '');
+            }
+          });
+          setTimeout(null ? resolve : reject, 1000);
+        }).catch(() => console.log('Oops errors!'))
+    });
   }
 
   searchName(name: string) {

@@ -24,6 +24,15 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Punish</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid punish!">
+                <nz-radio-group class="filter" [ngModel]="payoffForm.value.punish" nzButtonStyle="solid" formControlName="punish" id="punish">
+                    <label nz-radio-button [nzValue]="false">Punish</label>
+                    <label nz-radio-button [nzValue]="true">Remunerate</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Amount</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid amount!">
                 <nz-space nzDirection="vertical" style="width: 100%">

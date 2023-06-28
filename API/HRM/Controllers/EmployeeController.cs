@@ -223,10 +223,14 @@ namespace HRM.Controllers
                 return CustomResult(employee);
             }
         }
-        [HttpDelete("delete")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> Delete(Guid id, Guid employeeId)
         {
-            _dataContext.Department.Remove(await _dataContext.Department.FindAsync(id));
+            var employee = await _dataContext.Employee.FindAsync(employeeId);
+            employee.LeaveDate = DateTime.Now;
+            employee.DeleteUserId = id;
+            _dataContext.Update(employee);
+            _dataContext.Employee.Remove(employee);
             await _dataContext.SaveChangesAsync();
             return CustomResult("Removed");
         }
