@@ -75,7 +75,8 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
   }
 
   submitForm() {
-    this.evaluateService.updateEvaluate(this.evaluateForm.value)
+    if (this.evaluateForm.valid) {
+      this.evaluateService.updateEvaluate(this.evaluateForm.value)
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', '');
@@ -86,6 +87,14 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
           this.cancel.emit();
         };
       });
+    } else {
+      Object.values(this.evaluateForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 
   close() {

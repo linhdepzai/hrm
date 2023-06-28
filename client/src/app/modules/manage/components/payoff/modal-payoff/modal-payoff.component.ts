@@ -53,8 +53,8 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
       id: [null],
       actionId: [null],
       employeeId: [null, Validators.required],
-      amount: [null, Validators.required],
-      punish: [null, Validators.required],
+      amount: [10000, Validators.required],
+      punish: [false, Validators.required],
       reason: [null, Validators.required],
       date: [null, Validators.required],
     });
@@ -77,7 +77,8 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
   submitForm() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.payoffForm.controls['actionId'].setValue(user.id);
-    this.payoffService.savePayoff(this.payoffForm.value)
+    if (this.payoffForm.valid) {
+      this.payoffService.savePayoff(this.payoffForm.value)
       .subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', '');
@@ -88,6 +89,14 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
           this.cancel.emit();
         };
       });
+    } else {
+      Object.values(this.payoffForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 
   close() {

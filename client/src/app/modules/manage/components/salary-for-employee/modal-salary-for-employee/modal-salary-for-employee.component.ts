@@ -25,7 +25,7 @@ export class ModalSalaryForEmployeeComponent implements OnInit {
     private employeeService: EmployeeService,
     private salaryService: SalaryService,
     private notification: NzNotificationService,
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.salaryList = this.salaryService.salaryList$;
@@ -53,7 +53,7 @@ export class ModalSalaryForEmployeeComponent implements OnInit {
       actualSalary: [null, Validators.required],
     });
   }
-  
+
   changeMode() {
     this.isEdit = !this.isEdit;
     this.title = (this.isEdit ? 'Edit: ' : 'View: ') + this.getUserName(this.data.employeeId);
@@ -71,17 +71,26 @@ export class ModalSalaryForEmployeeComponent implements OnInit {
   submitForm() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.salaryForm.controls['actionId'].setValue(user.id);
-    this.salaryService.updateSalary(this.salaryForm.value)
-      .subscribe((response) => {
-        if (response.statusCode == 200) {
-          this.notification.success('Successfully!', '');
-          this.salaryService.salaryForEmployeeList$.value.splice(
-            this.salaryService.salaryForEmployeeList$.value.findIndex((item) => item.id === response.data.id),
-            1, response.data);
-          this.salaryService.salaryForEmployeeList$.next([...this.salaryService.salaryForEmployeeList$.value]);
-          this.cancel.emit();
-        };
+    if (this.salaryForm.valid) {
+      this.salaryService.updateSalary(this.salaryForm.value)
+        .subscribe((response) => {
+          if (response.statusCode == 200) {
+            this.notification.success('Successfully!', '');
+            this.salaryService.salaryForEmployeeList$.value.splice(
+              this.salaryService.salaryForEmployeeList$.value.findIndex((item) => item.id === response.data.id),
+              1, response.data);
+            this.salaryService.salaryForEmployeeList$.next([...this.salaryService.salaryForEmployeeList$.value]);
+            this.cancel.emit();
+          };
+        });
+    } else {
+      Object.values(this.salaryForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
       });
+    }
   }
 
   handleCancel() {
