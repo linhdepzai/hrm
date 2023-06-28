@@ -21,8 +21,8 @@ export class ProfileComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.departmentService.getAllDepartment();
     this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.departmentService.getAllDepartment();
   }
 
   refresh() {

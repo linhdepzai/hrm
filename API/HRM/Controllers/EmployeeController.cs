@@ -9,6 +9,7 @@ using HRM.Enum;
 using HRM.DTOs.AccountDto;
 using System.Linq;
 using CoreApiResponse;
+using System.Collections.Generic;
 
 namespace HRM.Controllers
 {
@@ -23,21 +24,62 @@ namespace HRM.Controllers
             _dataContext = dataContext;
         }
         [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(Guid? id)
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync();
-            return CustomResult(userList);
-            /*var dp_params = new DynamicParameters();
-            // dp_params.Add("@projectId", projectId, DbType.Guid);
-            var userList = await System.Threading.Tasks.Task.FromResult(_dapper.GetAll<GetAllEmployeeDto>("GetAllEmployee", dp_params,
-                commandType: System.Data.CommandType.StoredProcedure));
-            return Ok(userList);*/
+            if (id != null)
+            {
+                var user = await _dataContext.Employee.FindAsync(id);
+                var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
+                if (user.Position == isAdmin.Id) return CustomResult(await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync());
+                var departments = await _dataContext.Department.Where(i => i.Boss == id).AsNoTracking().ToListAsync();
+                var list = new List<Employee>();
+                foreach (var department in departments)
+                {
+                    var data = await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false && i.DepartmentId == department.Id).AsNoTracking().ToListAsync();
+                    if (list.Any())
+                    {
+                        foreach (var i in data)
+                        {
+                            list.Add(i);
+                        }
+                    }
+                    else
+                    {
+                        list = data;
+                    }
+                }
+                return CustomResult(list);
+            }
+            else
+            {
+                var userList = await _dataContext.Employee.Where(i => i.Status == Status.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                return CustomResult(userList);
+            }
         }
-        [HttpGet("getAllRequestChangeInfo")]
-        public async Task<IActionResult> GetAllRequestChangeInfo()
+        [HttpGet("getAllRequestChangeInfo/{id}")]
+        public async Task<IActionResult> GetAllRequestChangeInfo(Guid id)
         {
-            var userList = await _dataContext.Employee.Where(i => i.Status == Status.Pending && i.IsDeleted == false).AsNoTracking().ToListAsync();
-            return CustomResult(userList);
+            var user = await _dataContext.Employee.FindAsync(id);
+            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
+            if (user.Position == isAdmin.Id) return CustomResult(await _dataContext.Employee.Where(i => i.Status == Status.Pending && i.IsDeleted == false).AsNoTracking().ToListAsync());
+            var departments = await _dataContext.Department.Where(i => i.Boss == id).AsNoTracking().ToListAsync();
+            var list = new List<Employee>();
+            foreach (var department in departments)
+            {
+                var data = await _dataContext.Employee.Where(i => i.Status == Status.Pending && i.IsDeleted == false && i.DepartmentId == department.Id).AsNoTracking().ToListAsync();
+                if (list.Any())
+                {
+                    foreach (var i in data)
+                    {
+                        list.Add(i);
+                    }
+                }
+                else
+                {
+                    list = data;
+                }
+            }
+            return CustomResult(list);
         }
         [HttpPost("save")]
         public async Task<IActionResult> CreateOrEdit(CreateOrEditEmployeeDto input)

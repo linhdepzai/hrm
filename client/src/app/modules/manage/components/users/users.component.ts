@@ -38,9 +38,9 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.departmentService.getAllDepartment();
-    this.employeeService.getAllEmployee();
+    this.employeeService.getAllEmployeeForLeader();
     this.employeeService.getAllRequestChangeInfo();
-    this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
+    this.employeeService.employeeListForLeader$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.positionService.positionList$;
@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
   changeFilter(mode: string) {
     this.statusMode = mode;
     if (mode == 'Approve') {
-      this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
+      this.employeeService.employeeListForLeader$.subscribe((data) => { this.employeeList = data });
     } else {
       this.employeeService.requestChangeInfoList$.subscribe((data) => { this.employeeList = data });
     }

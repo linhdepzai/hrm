@@ -43,6 +43,7 @@ namespace HRM.Controllers
             if (checkAccount == null) return CustomResult("Your email or password is incorrected!!!", System.Net.HttpStatusCode.BadRequest);
             var user = await _dataContext.Employee.AsNoTracking().FirstOrDefaultAsync(e => e.Email == input.Email && e.Status == Status.Approved);
             if (user == null) return CustomResult("Invalid username", System.Net.HttpStatusCode.BadRequest);
+            var department = await _dataContext.Department.FirstOrDefaultAsync(i => i.Boss == user.Id);
             var account = new GetAccountDto
             {
                 Id = user.Id,
@@ -67,6 +68,7 @@ namespace HRM.Controllers
                 IssuedBy = user.IssuedBy,
                 UserCode = user.UserCode,
                 Token = _tokenService.CreateToken(user),
+                IsLeader = department == null ? false : true,
             };
             return CustomResult(account);
         }

@@ -26,9 +26,20 @@ export class OnleaveService {
       }));
   }
 
+  getAllRequestOnLeave() {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAllRequest/' + user.id)
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.onLeaveList$.next(response.data);
+      });
+  }
+
   getAllOnLeave(employeeId: string) {
-    const id = employeeId.trim() != '' ? '?id=' + employeeId : '';
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll' + id)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll/' + employeeId)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

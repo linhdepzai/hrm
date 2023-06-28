@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using HRM.DTOs.OnLeaveDto;
 using CoreApiResponse;
+using System.Collections.Generic;
 
 namespace HRM.Controllers
 {
@@ -21,19 +22,41 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll(Guid? id)
+        [HttpGet("getAll/{id}")]
+        public async Task<IActionResult> GetAll(Guid id)
         {
-            if (id != null)
+            var list = await _dataContext.OnLeave.Where(i => i.EmployeeId == id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+            return CustomResult(list);
+        }
+        [HttpGet("getAllRequest/{id}")]
+        public async Task<IActionResult> GetAllRequest(Guid id)
+        {
+            var user = await _dataContext.Employee.FindAsync(id);
+            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
+            if (user.Position == isAdmin.Id) return CustomResult(await _dataContext.OnLeave.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
+            var list = new List<OnLeave>();
+            var isBoss = await _dataContext.Department.Where(i => i.Boss == user.Id).AsNoTracking().ToListAsync();
+            if (isBoss.Any())
             {
-                var list = await _dataContext.OnLeave.Where(i => i.EmployeeId == id && i.IsDeleted == false).AsNoTracking().ToListAsync();
-                return CustomResult(list);
+                foreach (var department in isBoss)
+                {
+                    var employees = await _dataContext.Employee.Where(i => i.DepartmentId == department.Id).AsNoTracking().ToListAsync();
+                    foreach (var employee in employees)
+                    {
+                        list = await _dataContext.OnLeave.Where(i => i.EmployeeId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                    }
+                }
             }
             else
             {
-                var list = await _dataContext.OnLeave.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
-                return CustomResult(list);
+                var department = await _dataContext.Department.FindAsync(user.DepartmentId);
+                var employees = await _dataContext.Employee.Where(i => i.DepartmentId == department.Id).AsNoTracking().ToListAsync();
+                foreach (var employee in employees)
+                {
+                    list = await _dataContext.OnLeave.Where(i => i.EmployeeId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                }
             }
+            return CustomResult(list);
         }
         [HttpPost("requestLeave")]
         public async Task<IActionResult> Create(CreateOrEditOnLeaveDto input)

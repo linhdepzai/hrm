@@ -19,8 +19,9 @@ export class EvaluateService {
     private notification: NzNotificationService,
   ) { }
 
-  getAllEvaluate() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'evaluate/Evaluate')
+  getAllEvaluate(month: number, year: number) {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `evaluate/Evaluate/${user.id}?month=${month}&year=${year}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

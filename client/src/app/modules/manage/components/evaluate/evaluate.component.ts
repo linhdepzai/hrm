@@ -21,8 +21,8 @@ export class EvaluateComponent implements OnInit {
   monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   yearList: number[] = [];
   filterEvaluateName!: string | null;
-  filterEvaluateMonth!: number | null;
-  filterEvaluateYear!: number | null;
+  filterEvaluateMonth = new Date().getMonth() + 1;
+  filterEvaluateYear = new Date().getFullYear();
 
   constructor(
     private evaluateService: EvaluateService,
@@ -32,7 +32,7 @@ export class EvaluateComponent implements OnInit {
   ngOnInit(): void {
     this.employeeService.getAllEmployee();
     this.employeeList = this.employeeService.employeeList$;
-    this.evaluateService.getAllEvaluate();
+    this.evaluateService.getAllEvaluate(this.filterEvaluateMonth, this.filterEvaluateYear);
     this.evaluateService.evaluateList$.subscribe((data) => {
       this.evaluateList = data;
     });
@@ -62,36 +62,23 @@ export class EvaluateComponent implements OnInit {
     this.visibleModal = true;
   }
 
-  filterEvaluate() {
-    this.evaluateService.evaluateList$.subscribe((data) => { this.evaluateList = data });
-    if (this.filterEvaluateName != null) {
-      this.evaluateList = this.evaluateList.filter(i => i.employeeId == this.filterEvaluateName);
-    }
-    if (this.filterEvaluateMonth != null) {
-      this.evaluateList = this.evaluateList.filter(i => new Date(i.dateEvaluate).getMonth() == this.filterEvaluateMonth);
-    }
-    if (this.filterEvaluateYear != null) {
-      this.evaluateList = this.evaluateList.filter(i =>
-        new Date(new Date(i.dateEvaluate).getDate() + '/' + new Date(i.dateEvaluate).getMonth() + '/' + new Date(i.dateEvaluate).getFullYear()).getFullYear() == this.filterEvaluateYear);
-      this.yearList = [];
-      for (let i = -10; i <= 10; i++) {
-        this.yearList = [...this.yearList, this.filterEvaluateYear + i];
-      };
-    }
+  filterList() {
+    this.evaluateService.getAllEvaluate(this.filterEvaluateMonth, this.filterEvaluateYear);
+    if (this.filterEvaluateName != null) this.evaluateList.filter(i => i.employeeId == this.filterEvaluateName);
   }
 
   searchName(id: string) {
     this.filterEvaluateName = id;
-    this.filterEvaluate();
+    this.filterList();
   }
 
   searchMonth(month: number) {
     this.filterEvaluateMonth = month;
-    this.filterEvaluate();
+    this.filterList();
   }
 
   searchYear(year: number) {
     this.filterEvaluateYear = year;
-    this.filterEvaluate();
+    this.filterList();
   }
 }

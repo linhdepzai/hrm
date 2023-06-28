@@ -3,9 +3,11 @@ using HRM.Data;
 using HRM.DTOs.EmployeeDto;
 using HRM.DTOs.PayoffDto;
 using HRM.Entities;
+using HRM.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,10 +23,33 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("getall/{id}")]
+        public async Task<IActionResult> GetAll(Guid id)
         {
-            var list = await _dataContext.Payoff.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
+            var user = await _dataContext.Employee.FindAsync(id);
+            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
+            var isAccoutant = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Accoutant");
+            if (user.Position == isAdmin.Id || user.Position == isAccoutant.Id) return CustomResult(await _dataContext.Payoff.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
+            var departments = await _dataContext.Department.Where(i => i.Boss == id).AsNoTracking().ToListAsync();
+            var list = new List<Payoff>();
+            foreach (var department in departments)
+            {
+                List<Payoff> data = await (from p in _dataContext.Payoff
+                                           join e in _dataContext.Employee on p.EmployeeId equals e.Id
+                                           where e.DepartmentId == department.Id && p.EmployeeId != id
+                                           select p).AsNoTracking().ToListAsync();
+                if (list.Any())
+                {
+                    foreach (var i in data)
+                    {
+                        list.Add(i);
+                    }
+                }
+                else
+                {
+                    list = data;
+                }
+            }
             return CustomResult(list);
         }
         [HttpPost("Save")]

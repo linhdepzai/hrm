@@ -34,6 +34,14 @@ export class NotificationService {
       });
   }
 
+  getAllNotificationForAccountant(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `notification/manage`)
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+  }
+
   getOnlyNotification(id: string) {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + `notification/getANotification/${id}`)
       .pipe(catchError((err) => {

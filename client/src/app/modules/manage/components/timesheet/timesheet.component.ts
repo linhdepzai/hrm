@@ -22,7 +22,7 @@ export class TimesheetComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.onleaveService.getAllOnLeave('');
+    this.onleaveService.getAllRequestOnLeave();
     this.employeeService.getAllEmployee();
     this.onleaveService.onLeaveList$.subscribe((data) => {
       this.onLeaveList = data;

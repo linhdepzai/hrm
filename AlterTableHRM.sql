@@ -1,5 +1,7 @@
+DBCC CHECKIDENT(Position, RESEED, 0)
 insert into Position([Name], [Color]) values 
 	('Admin', '#000000'),
+	('Accoutant', '#ff822d'),
 	('Dev', '#0099FF'),
 	('QA', '#FF66FF'),
 	('BA', '#009900'),

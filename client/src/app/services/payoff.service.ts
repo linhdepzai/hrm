@@ -19,7 +19,8 @@ export class PayoffService {
   ) { }
 
   getAllPayoff() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'payoff/getall')
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'payoff/getall/' + user.id)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

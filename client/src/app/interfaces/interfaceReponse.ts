@@ -28,13 +28,15 @@ export interface LoginResponse {
     issuedBy: string,
     userCode: string,
     token: string,
+    isLeader: boolean,
 }
 
 export interface DepartmentResponse {
     id: string,
     name: string,
     color: string,
-    icon: string
+    icon: string,
+    boss: string,
 }
 
 export interface OnLeaveResponse {

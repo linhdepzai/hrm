@@ -41,6 +41,11 @@ namespace HRM.Controllers
                                           }).AsNoTracking().ToListAsync();
             return CustomResult(notificationList);
         }
+        [HttpGet("manage")]
+        public async Task<IActionResult> Manage()
+        {
+            return CustomResult(await _dataContext.Notification.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
+        }
         [HttpGet("getANotification/{id}")]
         public async Task<IActionResult> GetANotification(Guid id)
         {
@@ -66,6 +71,10 @@ namespace HRM.Controllers
         [HttpGet("readNotification/{employeeId}")]
         public async Task<IActionResult> ReadNotification(Guid employeeId, Guid id)
         {
+            var user = await _dataContext.Employee.FindAsync(employeeId);
+            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
+            var isAccoutant = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Accoutant");
+            if (user.Position == isAdmin.Id || user.Position == isAccoutant.Id) return CustomResult(await _dataContext.Notification.Where(i => i.Id == id).AsNoTracking().ToListAsync());
             var notification = await _dataContext.NotificationEmployee.FirstOrDefaultAsync(e => e.NotificationId == id && e.EmployeeId == employeeId && e.IsDeleted == false);
             if (notification != null)
             {

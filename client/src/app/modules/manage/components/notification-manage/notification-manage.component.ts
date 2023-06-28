@@ -11,23 +11,27 @@ import { Router } from '@angular/router';
   styleUrls: ['./notification-manage.component.css']
 })
 export class NotificationManageComponent implements OnInit {
-  notificationList = new Observable<Notification[]>();
+  notificationList: Notification[] = [];
 
   constructor(
     private notificationService: NotificationService,
-    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.notificationService.getAllNotification();
-    this.notificationList = this.notificationService.notificationList$
+    this.notificationService.getAllNotificationForAccountant()
+    .subscribe((response) => {
+      const result = (response.data as Notification[]).sort((a,b) => {
+        return new Date(b.createDate).getTime() - new Date(a.createDate).getTime();
+      });
+      this.notificationList = result;
+    });
   }
 
   drop(event: CdkDragDrop<string[], string[], any>): void {
-    const item = this.notificationService.notificationList$.value[event.previousIndex];
-    this.notificationService.notificationList$.value.splice(event.previousIndex, 1);
-    this.notificationService.notificationList$.value.splice(event.currentIndex, 0, item);
-    this.notificationService.notificationList$.next([...this.notificationService.notificationList$.value]);
+    const item = this.notificationList[event.previousIndex];
+    this.notificationList.splice(event.previousIndex, 1);
+    this.notificationList.splice(event.currentIndex, 0, item);
+    this.notificationList = [...this.notificationList];
   }
 
   handleDelete(id: string) {

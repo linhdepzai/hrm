@@ -13,6 +13,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class EmployeeService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
+  public employeeListForLeader$ = new BehaviorSubject<Employee[]>([]);
   public requestChangeInfoList$ = new BehaviorSubject<Employee[]>([]);
 
   constructor(
@@ -49,7 +50,8 @@ export class EmployeeService {
   }
 
   getAllRequestChangeInfo() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAllRequestChangeInfo')
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAllRequestChangeInfo/' + user.id)
       .pipe(catchError((err) => {
         this.notification.error('Error!', err.error.message);
         return of(err);
@@ -65,5 +67,17 @@ export class EmployeeService {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
       }));
+  }
+
+  getAllEmployeeForLeader() {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAll?id=' + user.id)
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.employeeListForLeader$.next(response.data);
+      });
   }
 }

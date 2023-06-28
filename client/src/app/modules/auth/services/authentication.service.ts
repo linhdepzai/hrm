@@ -52,7 +52,7 @@ export class AuthenticationService {
   logout(): void {
     sessionStorage.removeItem('user');
     localStorage.removeItem('user');
-    this.router.navigate(['login']);
+    document.location.href = 'login';
     this.presence.stopHubConnection();
     this.isLogin.next(false);
   }

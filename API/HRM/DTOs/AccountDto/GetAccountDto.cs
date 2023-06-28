@@ -27,5 +27,6 @@ namespace HRM.DTOs.AccountDto
         public string IssuedBy { get; set; }
         public string UserCode { get; set; }
         public string Token { get; set; }
+        public bool IsLeader { get; set; }
     }
 }

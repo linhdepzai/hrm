@@ -1,9 +1,12 @@
 ﻿using CoreApiResponse;
 using HRM.Data;
 using HRM.DTOs.EvaluateDto;
+using HRM.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HRM.Controllers
@@ -17,10 +20,33 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("Evaluate")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("Evaluate/{id}")]
+        public async Task<IActionResult> GetAll(Guid id, int month, int year)
         {
-            var list = await _dataContext.Evaluate.AsNoTracking().ToListAsync();
+
+            var user = await _dataContext.Employee.FindAsync(id);
+            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
+            if (user.Position == isAdmin.Id) return CustomResult(await _dataContext.Evaluate.Where(i => i.DateEvaluate.AddDays(-30).Month == month && i.DateEvaluate.Year == year).AsNoTracking().ToListAsync());
+            var departments = await _dataContext.Department.Where(i => i.Boss == id).AsNoTracking().ToListAsync();
+            var list = new List<Evaluate>();
+            foreach (var department in departments)
+            {
+                List<Evaluate> data = await (from ev in _dataContext.Evaluate
+                                             join emp in _dataContext.Employee on ev.EmployeeId equals emp.Id
+                                             where emp.DepartmentId == department.Id && ev.DateEvaluate.AddDays(-30).Month == month && ev.DateEvaluate.Year == year
+                                             select ev).AsNoTracking().ToListAsync();
+                if (list.Any())
+                {
+                    foreach (var i in data)
+                    {
+                        list.Add(i);
+                    }
+                }
+                else
+                {
+                    list = data;
+                }
+            }
             return CustomResult(list);
         }
         [HttpPut("Update")]

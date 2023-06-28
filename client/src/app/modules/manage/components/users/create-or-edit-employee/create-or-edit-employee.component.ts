@@ -98,8 +98,11 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
               if (this.employeeForm.value.id) {
                 this.employeeService.employeeList$.value.splice(this.employeeService.employeeList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
                 this.employeeService.employeeList$.next([...this.employeeService.employeeList$.value]);
+                this.employeeService.employeeListForLeader$.value.splice(this.employeeService.employeeListForLeader$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+                this.employeeService.employeeListForLeader$.next([...this.employeeService.employeeListForLeader$.value]);
               } else {
                 this.employeeService.employeeList$.next([response.data, ...this.employeeService.employeeList$.value]);
+                this.employeeService.employeeListForLeader$.next([response.data, ...this.employeeService.employeeListForLeader$.value]);
               };
             };
             this.close();

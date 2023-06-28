@@ -6,7 +6,7 @@
     </button>
 </div>
 <nz-card cdkDropList (cdkDropListDropped)="drop($event)">
-    <nz-card *ngFor="let item of notificationList | async" class="gridStyle" [nzCover]="coverTemplate"
+    <nz-card *ngFor="let item of notificationList" class="gridStyle" [nzCover]="coverTemplate"
         [nzActions]="[actionSetting, actionEdit, actionEllipsis]" nz-card-grid cdkDrag>
         <nz-card-meta [nzTitle]="item.title | uppercase" [nzDescription]="item.createDate | date: 'dd/MM/yyyy'"
             [nzAvatar]="avatarTemplate"></nz-card-meta>
