@@ -5,6 +5,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Login } from 'src/app/interfaces/interfaces';
 import { ApiLoginService } from './api-login.service';
 import { PresenceService } from 'src/app/services/presence.service';
+import { PositionService } from 'src/app/services/position.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,8 @@ export class AuthenticationService {
     private notification: NzNotificationService,
     private router: Router,
     private apiLoginService: ApiLoginService,
-    private presence: PresenceService
+    private presence: PresenceService,
+    private positionService: PositionService,
   ) {
     if (sessionStorage.getItem('user') || localStorage.getItem('user')) {
       this.isLogin.next(true);
@@ -42,7 +44,11 @@ export class AuthenticationService {
           };
           this.presence.createHubConnection(response.data);
           this.notification.success(`Hello ${response.data.fullName}!`, '');
-          this.router.navigate(['member/home']);
+          this.positionService.positionList$.subscribe((data) => {
+            const isAdmin = response.data.position == data.find(i => i.name == "Admin")?.id ? true : false;
+            const isAccoutant = response.data.position == data.find(i => i.name == "Accoutant")?.id ? true : false;
+            this.router.navigate([isAdmin || isAccoutant || response.data.isLeader ? 'member/home' : 'member/checkin']);
+          });
           this.isLogin.next(true);
         }
         this.loading.next(false);
