@@ -44,7 +44,7 @@ namespace HRM.Controllers
         [HttpGet("manage")]
         public async Task<IActionResult> Manage()
         {
-            return CustomResult(await _dataContext.Notification.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
+            return CustomResult(await _dataContext.Notification.Where(i => i.IsDeleted == false && i.Type != "Salary").AsNoTracking().ToListAsync());
         }
         [HttpGet("getANotification/{id}")]
         public async Task<IActionResult> GetANotification(Guid id)
@@ -71,10 +71,6 @@ namespace HRM.Controllers
         [HttpGet("readNotification/{employeeId}")]
         public async Task<IActionResult> ReadNotification(Guid employeeId, Guid id)
         {
-            var user = await _dataContext.Employee.FindAsync(employeeId);
-            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
-            var isAccoutant = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Accoutant");
-            if (user.Position == isAdmin.Id || user.Position == isAccoutant.Id) return CustomResult(await _dataContext.Notification.Where(i => i.Id == id).AsNoTracking().ToListAsync());
             var notification = await _dataContext.NotificationEmployee.FirstOrDefaultAsync(e => e.NotificationId == id && e.EmployeeId == employeeId && e.IsDeleted == false);
             if (notification != null)
             {
@@ -101,6 +97,7 @@ namespace HRM.Controllers
                              Bounty = es.Bounty,
                              ActualSalary = es.ActualSalary,
                              Date = es.Date,
+                             IsConfirm = es.IsConfirm,
                          }).FirstOrDefault();
             var result = from n in _dataContext.Notification
                          where n.Id == id

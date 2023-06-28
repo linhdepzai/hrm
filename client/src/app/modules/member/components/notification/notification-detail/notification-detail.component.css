@@ -1,1 +1,23 @@
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+.employeeName {
+    width: 100%;
+    background-color: var(--ant-primary-color);
+    color: #fff;
+    font-size: x-large;
+    padding: 10px;
+}
+
+.item {
+    font-size: medium;
+}
+
+.total-item {
+    border-top: 2px solid #000;
+}
+
+.total-value {
+    font-size: xx-large;
+    font-weight: bold;
+    color: var(--ant-primary-color);
+}

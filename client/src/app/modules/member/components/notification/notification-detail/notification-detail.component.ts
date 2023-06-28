@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Notification } from 'src/app/interfaces/interfaceReponse';
 import Quill from 'quill';
@@ -8,6 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Level } from 'src/app/enums/Enum';
 import { SalaryService } from 'src/app/services/salary.service';
 import { PositionService } from 'src/app/services/position.service';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 Quill.register('modules/imageHandler', ImageHandler);
 
 @Component({
@@ -25,7 +27,9 @@ export class NotificationDetailComponent implements OnInit {
     private salaryService: SalaryService,
     private positionService: PositionService,
     private route: ActivatedRoute,
+    private location: Location,
     private fb: FormBuilder,
+    private noti: NzNotificationService,
   ) { }
 
   ngOnInit(): void {
@@ -46,7 +50,12 @@ export class NotificationDetailComponent implements OnInit {
   confirmSalary(id: string, action: number){
     this.salaryService.confirmSalary(id, action)
       .subscribe((response) => {
-
+        if (response.data.IsConfirm == 1) {
+          this.noti.success('Inbox with the accountant to solve the problem!','');
+        } else {
+          this.noti.success('Successfully','');
+          this.location.back();
+        }
       })
   }
 }
