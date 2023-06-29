@@ -5,7 +5,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Login } from 'src/app/interfaces/interfaces';
 import { ApiLoginService } from './api-login.service';
 import { PresenceService } from 'src/app/services/presence.service';
-import { PositionService } from 'src/app/services/position.service';
+import { Position } from 'src/app/interfaces/interfaceReponse';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,6 @@ export class AuthenticationService {
     private router: Router,
     private apiLoginService: ApiLoginService,
     private presence: PresenceService,
-    private positionService: PositionService,
   ) {
     if (sessionStorage.getItem('user') || localStorage.getItem('user')) {
       this.isLogin.next(true);
@@ -44,9 +43,9 @@ export class AuthenticationService {
           };
           this.presence.createHubConnection(response.data);
           this.notification.success(`Hello ${response.data.fullName}!`, '');
-          this.positionService.positionList$.subscribe((data) => {
-            const isAdmin = response.data.position == data.find(i => i.name == "Admin")?.id ? true : false;
-            const isAccoutant = response.data.position == data.find(i => i.name == "Accoutant")?.id ? true : false;
+          this.apiLoginService.getAllPosition().subscribe((data) => {
+            const isAdmin = response.data.position == (data.data as Position[]).find(i => i.name == "Admin")?.id ? true : false;
+            const isAccoutant = response.data.position == (data.data as Position[]).find(i => i.name == "Accoutant")?.id ? true : false;
             this.router.navigate([isAdmin || isAccoutant || response.data.isLeader ? 'member/home' : 'member/checkin']);
           });
           this.isLogin.next(true);
@@ -58,7 +57,7 @@ export class AuthenticationService {
   logout(): void {
     sessionStorage.removeItem('user');
     localStorage.removeItem('user');
-    document.location.href = 'login';
+    this.router.navigate(['login']);
     this.presence.stopHubConnection();
     this.isLogin.next(false);
   }

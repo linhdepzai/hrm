@@ -24,7 +24,7 @@ namespace HRM.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _dataContext.Department.AsNoTracking().ToListAsync();
+            var list = await _dataContext.Department.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
         [HttpPost("save")]

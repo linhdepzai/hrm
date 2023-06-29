@@ -1,8 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
-import { Employee } from 'src/app/interfaces/interfaces';
+import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from 'src/app/services/department.service';
 import { EmployeeService } from 'src/app/services/employee.service';
@@ -12,12 +12,15 @@ import { EmployeeService } from 'src/app/services/employee.service';
   templateUrl: './create-department-modal.component.html',
   styleUrls: ['./create-department-modal.component.css']
 })
-export class CreateDepartmentModalComponent implements OnInit {
+export class CreateDepartmentModalComponent implements OnInit, OnChanges {
   @Input() isVisibleModal: boolean = false;
+  @Input() data: Department | undefined;
+  @Input() mode: string= 'create';
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   departmentForm!: FormGroup;
   iconList: string[] = [];
   employeeList = new Observable<Employee[]>();
+  title: string = 'New Position';
 
   constructor(
     private departmentService: DepartmentService,
@@ -25,14 +28,28 @@ export class CreateDepartmentModalComponent implements OnInit {
     private fb: FormBuilder,
     private notification: NzNotificationService,
     private employeeService: EmployeeService,
-  ) { }
+  ) { 
+    this.initForm();
+  }
 
   ngOnInit(): void {
-    this.initForm();
     this.employeeService.getAllEmployee();
     this.employeeList = this.employeeService.employeeList$;
     this.dataService.iconList.subscribe((data) => { this.iconList = data });
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.departmentForm.reset();
+    this.departmentForm.controls['color'].setValue('#00ff00');
+    this.departmentForm.controls['icon'].setValue('house');
+    if (this.mode == 'create') {
+      this.title = 'New Department';
+    } else {
+      this.title = 'Edit Department';
+      this.departmentForm.patchValue(this.data!);
+    }
+  }
+
 
   initForm() {
     this.departmentForm = this.fb.group({

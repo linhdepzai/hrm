@@ -31,6 +31,8 @@ import { NotificationManageComponent } from './components/notification-manage/no
 import { QuillModule } from 'ngx-quill';
 import { CreateOrEditNotificationComponent } from './components/notification-manage/create-or-edit-notification/create-or-edit-notification.component';
 import { CreatePositionModalComponent } from './components/users/create-or-edit-employee/create-position-modal/create-position-modal.component';
+import { PositionManagementComponent } from './components/position-management/position-management.component';
+import { DepartmentManagementComponent } from './components/department-management/department-management.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -57,6 +59,8 @@ registerLocaleData(en);
         NotificationManageComponent,
         CreateOrEditNotificationComponent,
         CreatePositionModalComponent,
+        PositionManagementComponent,
+        DepartmentManagementComponent,
     ],
     exports: [
         ManageRoutingModule,

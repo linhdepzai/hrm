@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.EntityFrameworkCore;
 using HRM.DTOs.PositionDto;
+using System.Linq;
 
 namespace HRM.Controllers
 {

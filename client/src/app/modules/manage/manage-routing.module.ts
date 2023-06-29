@@ -9,9 +9,13 @@ import { WorkingTimeComponent } from './components/working-time/working-time.com
 import { EvaluateComponent } from './components/evaluate/evaluate.component';
 import { NotificationManageComponent } from './components/notification-manage/notification-manage.component';
 import { CreateOrEditNotificationComponent } from './components/notification-manage/create-or-edit-notification/create-or-edit-notification.component';
+import { PositionManagementComponent } from './components/position-management/position-management.component';
+import { DepartmentManagementComponent } from './components/department-management/department-management.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent },
+  { path: 'position', component: PositionManagementComponent },
+  { path: 'department', component: DepartmentManagementComponent },
   { path: 'working-time', component: WorkingTimeComponent },
   { path: 'evaluate', component: EvaluateComponent },
   { path: 'punish', component: PayoffComponent },

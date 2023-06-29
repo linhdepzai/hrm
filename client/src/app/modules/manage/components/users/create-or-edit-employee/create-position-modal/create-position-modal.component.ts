@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { Position } from 'src/app/interfaces/interfaceReponse';
 import { DataService } from 'src/app/services/data.service';
 import { PositionService } from 'src/app/services/position.service';
 
@@ -9,22 +10,37 @@ import { PositionService } from 'src/app/services/position.service';
   templateUrl: './create-position-modal.component.html',
   styleUrls: ['./create-position-modal.component.css']
 })
-export class CreatePositionModalComponent implements OnInit {
+export class CreatePositionModalComponent implements OnInit, OnChanges {
   @Input() isVisibleModal: boolean = false;
+  @Input() data: Position | undefined;
+  @Input() mode: string= 'create';
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   positionForm!: FormGroup;
   iconList: string[] = [];
+  title: string = 'New Position';
 
   constructor(
     private positionService: PositionService,
     private dataService: DataService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
-  ) { }
+  ) { 
+    this.initForm();
+  }
 
   ngOnInit(): void {
-    this.initForm();
     this.dataService.iconList.subscribe((data) => { this.iconList = data });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.positionForm.reset();
+    this.positionForm.controls['color'].setValue('#00ff00');
+    if (this.mode == 'create') {
+      this.title = 'New Position';
+    } else {
+      this.title = 'Edit Position';
+      this.positionForm.patchValue(this.data!);
+    }
   }
 
   initForm() {

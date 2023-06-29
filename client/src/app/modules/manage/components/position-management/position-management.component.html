@@ -1,0 +1,37 @@
+<div class="title">Position Management</div>
+<div style="margin-bottom: 15px;">
+    <button nz-button nzType="primary" (click)="openModal(undefined, 'create')" class="mr-per">
+        <i class="fa-solid fa-user-plus mr-5"></i>
+        <span>Create</span>
+    </button>
+</div>
+<nz-table #table [nzData]="positionList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: null, y: '49.5vh'}">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center" nzWidth="10%">Id</th>
+            <th nzAlign="center">Position</th>
+            <th nzAlign="center">Action</th>
+        </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag>
+            <td nzAlign="center">{{ data.id }}</td>
+            <td nzAlign="center">
+                <app-tag [label]="data.name" [color]="data.color"></app-tag>
+            </td>
+            <td nzAlign="center">
+                <button nz-button nzType="primary" class="mr-5" (click)="openModal(data, 'update')">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button nz-button nzDanger nzType="primary" (click)="deleteItem(data.id!)">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<app-create-position-modal [isVisibleModal]="isVisiblePositionModal" [data]="data" [mode]="mode"
+        (cancel)="isVisiblePositionModal = false"></app-create-position-modal>

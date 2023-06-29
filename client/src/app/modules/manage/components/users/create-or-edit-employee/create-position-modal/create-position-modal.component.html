@@ -2,7 +2,7 @@
     (nzOnCancel)="handleCancel()" (nzOnOk)="handleCancel()"></nz-modal>
 <ng-template #header>
     <i class="fa-solid fa-building-user mr-5"></i>
-    <span>New Position</span>
+    <span>{{title}}</span>
 </ng-template>
 <ng-template #content>
     <form nz-form [formGroup]="positionForm">
