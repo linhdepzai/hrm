@@ -12,9 +12,12 @@ import { Employee, NotificationSalaryPayload } from 'src/app/interfaces/interfac
   styleUrls: ['./salary-for-employee.component.css']
 })
 export class SalaryForEmployeeComponent implements OnInit {
-  salaryForEmployeeList: SalaryForEmployee[] = [];
+  detailList: SalaryForEmployee[] = [];
+  salaryForEmployeeList: any[] = [];
   visibleModal: boolean = false;
+  visibleModalGeneral: boolean = false;
   data!: SalaryForEmployee;
+  dataGeneral: any;
   employeeList = new Observable<Employee[]>();
   monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   yearList: number[] = [];
@@ -37,18 +40,21 @@ export class SalaryForEmployeeComponent implements OnInit {
     this.employeeService.getAllEmployee();
     this.employeeList = this.employeeService.employeeList$;
     this.salaryService.salaryForEmployeeList$.subscribe((data) => {
-      this.salaryForEmployeeList = data;
+      this.detailList = data;
     });
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, new Date().getFullYear() + i];
     };
+    this.salaryService.GetSalaryForEmployee().subscribe((response) => {
+      this.salaryForEmployeeList = response.data;
+    });
   }
 
   drop(event: CdkDragDrop<string[], string[], any>): void {
-    const item = this.salaryForEmployeeList[event.previousIndex];
-    this.salaryForEmployeeList.splice(event.previousIndex, 1);
-    this.salaryForEmployeeList.splice(event.currentIndex, 0, item);
-    this.salaryForEmployeeList = [...this.salaryForEmployeeList];
+    const item = this.detailList[event.previousIndex];
+    this.detailList.splice(event.previousIndex, 1);
+    this.detailList.splice(event.currentIndex, 0, item);
+    this.detailList = [...this.detailList];
   }
 
   getSalaryName(id: string) {
@@ -68,8 +74,8 @@ export class SalaryForEmployeeComponent implements OnInit {
   }
 
   refreshCheckedStatus(): void {
-    this.checked = this.salaryForEmployeeList.every(({ id }) => this.setOfCheckedId.has(id));
-    this.indeterminate = this.salaryForEmployeeList.some(({ id }) => this.setOfCheckedId.has(id)) && !this.checked;
+    this.checked = this.detailList.every(({ id }) => this.setOfCheckedId.has(id));
+    this.indeterminate = this.detailList.some(({ id }) => this.setOfCheckedId.has(id)) && !this.checked;
   }
 
   onItemChecked(id: string, checked: boolean): void {
@@ -78,13 +84,13 @@ export class SalaryForEmployeeComponent implements OnInit {
   }
 
   onAllChecked(checked: boolean): void {
-    this.salaryForEmployeeList
+    this.detailList
       .forEach(({ id }) => this.updateCheckedSet(id, checked));
     this.refreshCheckedStatus();
   }
 
   sendRequest(): void {
-    const requestData = this.salaryForEmployeeList.filter(data => this.setOfCheckedId.has(data.id));
+    const requestData = this.detailList.filter(data => this.setOfCheckedId.has(data.id));
     const response = {
       actionId: '',
       month: new Date().getMonth(),
@@ -105,13 +111,25 @@ export class SalaryForEmployeeComponent implements OnInit {
     this.visibleModal = true;
   }
 
+  openModalGeneral(data: any) {
+    this.dataGeneral = data;
+    this.visibleModalGeneral = true;
+  }
+
+  submitModal(data: any) {
+    this.salaryForEmployeeList.splice(
+      this.salaryForEmployeeList.findIndex((item) => item.id === data.id),
+      1, data);
+    this.salaryForEmployeeList = [...this.salaryForEmployeeList];
+  }
+
   searchName(id: string) {
     this.filterSalaryEmployee = id;
     this.salaryService.salaryForEmployeeList$.subscribe((data) => {
-      this.salaryForEmployeeList = data;
+      this.detailList = data;
     });
     if (this.filterSalaryEmployee != null) {
-      this.salaryForEmployeeList = this.salaryForEmployeeList.filter(i => i.employeeId == this.filterSalaryEmployee);
+      this.detailList = this.detailList.filter(i => i.employeeId == this.filterSalaryEmployee);
     }
   }
 

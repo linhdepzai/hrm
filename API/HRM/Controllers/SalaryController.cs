@@ -119,6 +119,27 @@ namespace HRM.Controllers
             }
             return CustomResult(salary);
         }
+        [HttpGet("getSalaryForEmployee")]
+        public async Task<IActionResult> GetSalaryForEmployee()
+        {
+            var list = await (from s in _dataContext.SalaryForEmployee
+                              join e in _dataContext.Employee on s.EmployeeId equals e.Id
+                              where e.IsDeleted == false
+                              select s).AsNoTracking().ToListAsync();
+            return CustomResult(list);
+        }
+        [HttpPut("updateSalaryForEmployee/{employeeId}")]
+        public async Task<IActionResult> UpdateSalaryForEmployee(Guid employeeId, Guid salaryId)
+        {
+            var salary = await _dataContext.SalaryForEmployee.FirstOrDefaultAsync(i => i.EmployeeId == employeeId);
+            if (salary != null)
+            {
+                salary.Salary = salaryId;
+                _dataContext.SalaryForEmployee.Update(salary);
+                await _dataContext.SaveChangesAsync();
+            }
+            return CustomResult();
+        }
         public static string Random(CreateSalaryDto input)
         {
             string randomStr = "0" + input.Position;

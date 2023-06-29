@@ -38,6 +38,9 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     this.payoffForm.reset();
+    this.payoffForm.controls['amount'].setValue(10000);
+    this.payoffForm.controls['punish'].setValue(false);
+    this.payoffForm.controls['date'].setValue(new Date());
     this.isEdit = true;
     if (this.mode == 'create') {
       this.title = 'Create';

@@ -43,7 +43,11 @@ namespace HRM.Controllers
                     var employees = await _dataContext.Employee.Where(i => i.DepartmentId == department.Id).AsNoTracking().ToListAsync();
                     foreach (var employee in employees)
                     {
-                        list = await _dataContext.OnLeave.Where(i => i.EmployeeId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                        var onleaveList = await _dataContext.OnLeave.Where(i => i.EmployeeId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                        foreach (var i in onleaveList)
+                        {
+                            list.Add(i);
+                        }
                     }
                 }
             }
@@ -53,7 +57,11 @@ namespace HRM.Controllers
                 var employees = await _dataContext.Employee.Where(i => i.DepartmentId == department.Id).AsNoTracking().ToListAsync();
                 foreach (var employee in employees)
                 {
-                    list = await _dataContext.OnLeave.Where(i => i.EmployeeId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                    var onleaveList = await _dataContext.OnLeave.Where(i => i.EmployeeId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
+                    foreach (var i in onleaveList)
+                    {
+                        list.Add(i);
+                    }
                 }
             }
             return CustomResult(list);

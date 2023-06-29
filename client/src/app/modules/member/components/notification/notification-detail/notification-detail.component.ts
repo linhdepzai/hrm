@@ -50,7 +50,7 @@ export class NotificationDetailComponent implements OnInit {
   confirmSalary(id: string, action: number){
     this.salaryService.confirmSalary(id, action)
       .subscribe((response) => {
-        if (response.data.IsConfirm == 1) {
+        if (response.data.isConfirm == 1) {
           this.noti.success('Inbox with the accountant to solve the problem!','');
         } else {
           this.noti.success('Successfully','');

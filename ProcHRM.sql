@@ -135,9 +135,7 @@ as
 	begin
 		declare @UserId uniqueidentifier = (select [Id] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
 		-- cal salary
-		declare @Level int = (select [Level] from Employee where [Id] = @UserId);
-		declare @Position int = (select [Position] from Employee where [Id] = @UserId);
-		declare @Salary uniqueidentifier = (select top 1[Id] from Salary where [Level] = @Level and [Position] = @Position order by [CreationTime] desc);
+		declare @Salary uniqueidentifier = (select top 1[Salary] from SalaryForEmployee where [EmployeeId] = @UserId);
 		-- cal totalWorkday
 		declare @totalWorkday int = (select count(*) from TimeKeeping where EmployeeId = @UserId and datepart(month, [Date]) = (datepart(month, getdate()) - 1) and [Punish] = 0);
 		-- cal total punish

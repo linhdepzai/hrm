@@ -130,7 +130,8 @@ export interface SalaryForEmployee {
     totalWorkdays: number,
     punish: number,
     bounty: number,
-    actualSalary: number
+    actualSalary: number,
+    isConfirm: number,
 }
 
 export interface Notification {

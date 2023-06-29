@@ -141,13 +141,13 @@ namespace HRM.Controllers
             };
             await _dataContext.TimeWorking.AddAsync(timeWorking);
             var salary = await _dataContext.Salary.FirstOrDefaultAsync(i => i.Level == input.Level && i.Position == input.Position);
-            var employeeSalary = new EmployeeSalary
+            var employeeSalary = new SalaryForEmployee
             {
                 Id = new Guid(),
                 EmployeeId = employee.Id,
                 Salary = salary.Id,
             };
-            await _dataContext.EmployeeSalary.AddAsync(employeeSalary);
+            await _dataContext.SalaryForEmployee.AddAsync(employeeSalary);
             await _dataContext.SaveChangesAsync();
             return CustomResult(employee);
         }

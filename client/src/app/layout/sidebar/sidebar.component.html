@@ -40,13 +40,13 @@
     </li>
     <li *ngIf="isAdmin" nz-submenu nzTitle="Admin" nzIcon="deployment-unit">
         <ul>
-            <li nz-menu-item routerLink="/manage/position" [nzMatchRouter]="true">
-                <span nz-icon nzType="audit" nzTheme="outline"></span>
-                <span>Position</span>
-            </li>
             <li nz-menu-item routerLink="/manage/department" [nzMatchRouter]="true">
                 <span nz-icon nzType="group" nzTheme="outline"></span>
                 <span>Department</span>
+            </li>
+            <li nz-menu-item routerLink="/manage/position" [nzMatchRouter]="true">
+                <span nz-icon nzType="audit" nzTheme="outline"></span>
+                <span>Position</span>
             </li>
             <li nz-menu-item routerLink="/manage/users" [nzMatchRouter]="true">
                 <span nz-icon nzType="team" nzTheme="outline"></span>

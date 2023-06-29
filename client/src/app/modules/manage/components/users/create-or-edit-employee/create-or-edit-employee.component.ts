@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { Bank, Level, Status } from 'src/app/enums/Enum';
-import { Position } from 'src/app/interfaces/interfaceReponse';
+import { LoginResponse, Position } from 'src/app/interfaces/interfaceReponse';
 import { Department, Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from 'src/app/services/department.service';
@@ -30,6 +30,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   isVisiblePositionModal: boolean = false;
   isVisibleDepartmentModal: boolean = false;
   isEdit: boolean = false;
+  user!: LoginResponse;
 
   constructor(
     private departmentService: DepartmentService,
@@ -56,6 +57,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.positionService.positionList$;

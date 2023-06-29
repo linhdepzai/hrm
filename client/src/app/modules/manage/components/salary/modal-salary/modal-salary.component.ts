@@ -36,8 +36,8 @@ export class ModalSalaryComponent implements OnInit {
       actionId: [null, Validators.required],
       level: [null, Validators.required],
       position: [null, Validators.required],
-      money: [null, Validators.required],
-      welfare: [null, Validators.required],
+      money: [100000, Validators.required],
+      welfare: [100000, Validators.required],
     });
   }
 

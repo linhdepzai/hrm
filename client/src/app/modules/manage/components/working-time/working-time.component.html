@@ -8,7 +8,7 @@
     <label nz-radio-button nzValue="Approve">Approved</label>
     <label nz-radio-button nzValue="Pending">Pending</label>
 </nz-radio-group>
-<nz-table #table [nzData]="filterList" [nzShowTotal]="rangeTemplate">
+<nz-table #table [nzData]="filterList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'hidden', y: '49.5vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>

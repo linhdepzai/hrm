@@ -10,5 +10,6 @@ namespace HRM.DTOs.PayoffDto
         public string Reason { get; set; }
         public int Amount { get; set; }
         public DateTime Date { get; set; }
+        public bool Punish { get; set; }
     }
 }

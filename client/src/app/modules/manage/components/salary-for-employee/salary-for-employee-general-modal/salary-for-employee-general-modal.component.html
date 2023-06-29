@@ -1,0 +1,31 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" [nzTitle]="header" [nzContent]="content" (nzOnClose)="close()"
+    nzWidth="50%" [nzFooter]="footer">
+</nz-drawer>
+<ng-template #header>
+    <i class="fa-solid fa-user-pen'"></i>
+    <span class="ml-5">{{ title }}</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="salaryForm" class="login-form">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Employee</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <input nz-input placeholder="Enter your name" formControlName="employeeId" id="employeeId" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Salary Code</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <nz-select [ngModel]="salaryForm.value.salaryId" formControlName="salaryId" id="salaryId">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.salaryCode" *ngFor="let item of salaryList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm()">
+        <i class="fa-solid fa-check mr-5"></i>
+        <span>Submit</span>
+    </button>
+</ng-template>

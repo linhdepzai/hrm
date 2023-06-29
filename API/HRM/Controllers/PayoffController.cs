@@ -75,6 +75,7 @@ namespace HRM.Controllers
                 Amount = input.Amount,
                 Date = input.Date,
                 Reason = input.Reason,
+                Punish = input.Punish,
             };
             await _dataContext.Payoff.AddAsync(newPayOff);
             await _dataContext.SaveChangesAsync();
@@ -90,6 +91,7 @@ namespace HRM.Controllers
                 payoff.Amount = input.Amount;
                 payoff.Date = input.Date;
                 payoff.Reason = input.Reason;
+                payoff.Punish = input.Punish;
             }
             _dataContext.Payoff.Update(payoff);
             await _dataContext.SaveChangesAsync();

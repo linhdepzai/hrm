@@ -86,4 +86,22 @@ export class SalaryService {
         return of(err);
       }));
   }
+
+  GetSalaryForEmployee(): Observable<ApiResponse> {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `salary/getSalaryForEmployee`)
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
+  UpdateSalaryForEmployee(value: any): Observable<ApiResponse> {
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + `salary/updateSalaryForEmployee/${value.employeeId}?salaryId=${value.salary}`, null)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
 }

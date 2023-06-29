@@ -47,30 +47,6 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Level</nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Level!">
-                <nz-select [ngModel]="infoForm.value.level" formControlName="level" id="level">
-                    <nz-option [nzValue]="item.value" [nzLabel]="item.label" *ngFor="let item of levelList | async"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Position!">
-                <nz-select [ngModel]="infoForm.value.position" formControlName="position" id="position">
-                    <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of positionList | async"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Department</nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Department!">
-                <nz-select [ngModel]="infoForm.value.departmentId" formControlName="departmentId" id="departmentId">
-                    <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of departmentList | async"></nz-option>
-                </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">
                 <span nz-tooltip nzTooltipTitle="Ngân hàng">Bank</span>
             </nz-form-label>

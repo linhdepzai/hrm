@@ -39,8 +39,8 @@
         <tbody>
             <tr *ngFor="let data of basicTable.data">
                 <td nzAlign="center">{{data.date | date: 'dd/MM/YYYY'}}</td>
-                <td nzAlign="center">{{getTimeWorking(data.date).morningStartTime | date: 'HH:mm'}}</td>
-                <td nzAlign="center">{{getTimeWorking(data.date).afternoonEndTime | date: 'HH:mm'}}</td>
+                <td nzAlign="center">{{getTimeWorking(data.date)?.morningStartTime | date: 'HH:mm'}}</td>
+                <td nzAlign="center">{{getTimeWorking(data.date)?.afternoonEndTime | date: 'HH:mm'}}</td>
                 <td nzAlign="center">{{(data.checkin | date: 'HH:mm')?.indexOf('00:00') ? (data.checkin | date: 'HH:mm') : ''}}</td>
                 <td nzAlign="center">{{(data.checkout | date: 'HH:mm')?.indexOf('00:00') ? (data.checkout | date:
                     'HH:mm') : ''}}</td>

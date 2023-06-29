@@ -33,6 +33,7 @@ import { CreateOrEditNotificationComponent } from './components/notification-man
 import { CreatePositionModalComponent } from './components/users/create-or-edit-employee/create-position-modal/create-position-modal.component';
 import { PositionManagementComponent } from './components/position-management/position-management.component';
 import { DepartmentManagementComponent } from './components/department-management/department-management.component';
+import { SalaryForEmployeeGeneralModalComponent } from './components/salary-for-employee/salary-for-employee-general-modal/salary-for-employee-general-modal.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -61,6 +62,7 @@ registerLocaleData(en);
         CreatePositionModalComponent,
         PositionManagementComponent,
         DepartmentManagementComponent,
+        SalaryForEmployeeGeneralModalComponent,
     ],
     exports: [
         ManageRoutingModule,
