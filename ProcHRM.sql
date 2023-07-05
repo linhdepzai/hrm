@@ -109,19 +109,17 @@ go
 create or alter proc createReviewMonth --Run at 01 every month
 as
 	declare @i int = 1;
-	declare @totalPm int = (select count(*) from MemberProject where [Type] = 1);
-	while @i <= @totalPm
+	declare @totalUser int = (select count(*) from Employee where Status = 3 and LeaveDate is null);
+	while @i <= @totalUser
 	begin
-		declare @projectId uniqueidentifier = (select [ProjectId] from (select row_number() over(order by [CreationTime] asc) as row, * from MemberProject where [Type] = 1) c where row = @i);
-		declare @leader uniqueidentifier = (select [EmployeeId] from MemberProject where [ProjectId] = @projectId and [Type] = 1);
-		declare @totalMember int = (select count(*) from MemberProject where [ProjectId] = @projectId and [Type] = 2);
-		declare @j int = 1;
-		while @j <= @totalMember
-		begin
-			declare @member uniqueidentifier = (select [EmployeeId] from (select row_number() over(order by [CreationTime] asc) as row, * from MemberProject where [ProjectId] = @projectId and [Type] = 2) c where row = @j);
-			declare @oldLevel int = (select [Level] from Employee where [Id] = @member);
-			insert into Evaluate([Id], [DateEvaluate], [PMId], [EmployeeId], [OldLevel], [NewLevel], [Note], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), getdate(), @leader, @member, @oldLevel, @oldLevel, '', getdate(), @leader, 0);
-			set @j = @j + 1;
+		declare @UserId uniqueidentifier = (select [Id] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
+		declare @oldLevel int = (select [Level] from Employee where [Id] = @UserId)
+		declare @DepartmentId uniqueidentifier = (select [DepartmentId] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
+		declare @leader uniqueidentifier = (select [Boss] from Department where [Id] = @DepartmentId);
+		declare @position int = (select [Position] from (select row_number() over(order by [FullName] asc) as row, * from Employee where [Status] = 3 and [LeaveDate] is null) c where row = @i);
+		if (@UserId != @leader and @position != 1) 
+		begin 
+			insert into Evaluate([Id], [DateEvaluate], [PMId], [EmployeeId], [OldLevel], [NewLevel], [Note], [CreationTime], [CreatorUserId], [IsDeleted]) values (newid(), getdate(), @leader, @UserId, @oldLevel, @oldLevel, '', getdate(), @leader, 0);
 		end
 		set @i = @i + 1;
 	end

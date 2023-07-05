@@ -111,6 +111,7 @@ export interface Payoff {
     reason: string,
     amount: number,
     date: Date,
+    punish: boolean,
 }
 
 export interface Salary {
