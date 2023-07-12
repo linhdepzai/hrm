@@ -34,7 +34,7 @@ export class ProjectService {
   ) { }
 
   getAllProject() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getall')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Project/getall')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -45,7 +45,7 @@ export class ProjectService {
   }
 
   getOnlyProject(projectId: string) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'project/getAProject?projectId=' + projectId)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Project/getAProject?projectId=' + projectId)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -57,7 +57,7 @@ export class ProjectService {
   }
 
   saveProject(payload: CreateProject): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'project/save', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Project/save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

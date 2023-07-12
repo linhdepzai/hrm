@@ -20,7 +20,7 @@ export class AccountService {
   ) { }
 
   getAllRequestChangeTimeWorkingForUser(id: string) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'account/getAllRequestChangeTimeWorkingForUser?id=' + id)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Account/getAllRequestChangeTimeWorkingForUser?id=' + id)
       .pipe(catchError((err) => {
         this.notification.error('Error!', err.error.message);
         return of(err);
@@ -31,7 +31,7 @@ export class AccountService {
   }
 
   changePassword(payload: ChangePassword): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/changePassword', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'Account/changePassword', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!', err.error.message);
         return of(err);
@@ -39,7 +39,7 @@ export class AccountService {
   }
 
   requestChangeInfor(payload: Employee): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'account/requestChangeInfor', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'Account/requestChangeInfor', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.errors.message);
         return of(err);

@@ -20,7 +20,7 @@ export class DepartmentService {
   ) { }
 
   getAllDepartment() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'department/getAll')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Department/getAll')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -31,7 +31,7 @@ export class DepartmentService {
   }
 
   saveDepartment(payload: Department): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'department/save', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Department/save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -39,7 +39,7 @@ export class DepartmentService {
   }
 
   deleteDepartment(id: string): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'department/delete?id=' + id)
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'Department/delete?id=' + id)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

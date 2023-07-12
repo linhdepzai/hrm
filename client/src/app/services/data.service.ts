@@ -29,7 +29,7 @@ export class DataService {
   }
 
   getStatistical(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'statistical/totalEmployee')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Statistical/totalEmployee')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -37,7 +37,7 @@ export class DataService {
   }
 
   getStatisticPayOffForMonth(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'statistical/payoffForMonth')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Statistical/payoffForMonth')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

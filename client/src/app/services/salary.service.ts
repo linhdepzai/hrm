@@ -24,7 +24,7 @@ export class SalaryService {
   ) { }
 
   getAllSalary() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'salary/getAll')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Salary/getAll')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -40,7 +40,7 @@ export class SalaryService {
   }
 
   createSalary(payload: Salary): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'salary/create', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Salary/create', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -48,7 +48,7 @@ export class SalaryService {
   }
 
   getAllSalaryForEmployee(month?: number, year?: number) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `salary/getAllSalaryForEmployee?month=${month}&year=${year}`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `Salary/getAllSalaryForEmployee?month=${month}&year=${year}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

@@ -11,7 +11,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   providedIn: 'root'
 })
 export class MessageService {
-  baseUrl = environment.baseUrl + 'message/';
+  baseUrl = environment.baseUrl + 'Message/';
   hubUrl = environment.hubUrl;
   private hubConnection!: HubConnection;
   private messageThreadSource = new BehaviorSubject<Message[]>([]);

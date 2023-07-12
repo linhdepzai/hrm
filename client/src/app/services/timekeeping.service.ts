@@ -18,7 +18,7 @@ export class TimekeepingService {
   ) { }
 
   checkinOrCheckout(payload: CheckinOrCheckout): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'timekeeping/checkinOrCheckout', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'TimeKeeping/checkinOrCheckout', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -26,7 +26,7 @@ export class TimekeepingService {
   }
 
   getTimeKeepingForUser(id: string, month: number, year: number) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `timekeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `TimeKeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -40,7 +40,7 @@ export class TimekeepingService {
   }
 
   complainDailyCheckin(payload: any): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timekeeping/complainDailyCheckin', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'TimeKeeping/complainDailyCheckin', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

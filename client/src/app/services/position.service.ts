@@ -21,7 +21,7 @@ export class PositionService {
   }
 
   getAllPosition() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'position/getAll')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Position/getAll')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -32,7 +32,7 @@ export class PositionService {
   }
 
   savePosition(payload: Position): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'position/save', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Position/save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -40,7 +40,7 @@ export class PositionService {
   }
 
   deletePosition(id: number): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'position/delete?id=' + id)
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'Position/delete?id=' + id)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

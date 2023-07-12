@@ -20,7 +20,7 @@ export class PayoffService {
 
   getAllPayoff() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'payoff/getall/' + user.id)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Payoff/getall/' + user.id)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -31,7 +31,7 @@ export class PayoffService {
   }
 
   savePayoff(payload: Payoff): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'payoff/Save', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Payoff/Save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -40,7 +40,7 @@ export class PayoffService {
 
   deletePayoff(id: string): Observable<ApiResponse> {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `payoff/delete/${user.id}?payoffId=${id}`)
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `Payoff/delete/${user.id}?payoffId=${id}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

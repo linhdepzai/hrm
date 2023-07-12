@@ -19,7 +19,7 @@ export class OnleaveService {
   ) { }
 
   requestOnLeave(payload: any): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'onleave/requestLeave', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'OnLeave/requestLeave', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -28,7 +28,7 @@ export class OnleaveService {
 
   getAllRequestOnLeave() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAllRequest/' + user.id)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'OnLeave/getAllRequest/' + user.id)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -39,7 +39,7 @@ export class OnleaveService {
   }
 
   getAllOnLeave(employeeId: string) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'onleave/getAll/' + employeeId)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'OnLeave/getAll/' + employeeId)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -50,7 +50,7 @@ export class OnleaveService {
   }
 
   deleteOnLeave(id: string): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'onleave/delete?id=' + id)
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'OnLeave/delete?id=' + id)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -58,7 +58,7 @@ export class OnleaveService {
   }
 
   updateStatusRequestOff(payload: { id: string, pmId: string, status: number }) {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'onleave/updateStatus', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'OnLeave/updateStatus', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

@@ -23,7 +23,7 @@ export class EmployeeService {
   ) { }
 
   getAllEmployee() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAll')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Employee/getAll')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -34,7 +34,7 @@ export class EmployeeService {
   }
 
   saveEmployee(payload: Employee): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'employee/save', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Employee/save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -43,7 +43,7 @@ export class EmployeeService {
 
   deleteEmployee(id: string): Observable<ApiResponse> {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `employee/delete/${id}?employeeId=${id}`)
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `Employee/delete/${id}?employeeId=${id}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -52,7 +52,7 @@ export class EmployeeService {
 
   getAllRequestChangeInfo() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAllRequestChangeInfo/' + user.id)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Employee/getAllRequestChangeInfo/' + user.id)
       .pipe(catchError((err) => {
         this.notification.error('Error!', err.error.message);
         return of(err);
@@ -63,7 +63,7 @@ export class EmployeeService {
   }
 
   updateStatusUserInfo(payload: { id: string, pmId: string, status: Status }): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'employee/updateStatus', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'Employee/updateStatus', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -72,7 +72,7 @@ export class EmployeeService {
 
   getAllEmployeeForLeader() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'employee/getAll?id=' + user.id)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Employee/getAll?id=' + user.id)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);

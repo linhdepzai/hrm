@@ -21,7 +21,7 @@ export class EvaluateService {
 
   getAllEvaluate(month: number, year: number) {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `evaluate/Evaluate/${user.id}?month=${month}&year=${year}`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `Evaluate/Evaluate/${user.id}?month=${month}&year=${year}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -32,7 +32,7 @@ export class EvaluateService {
   }
 
   updateEvaluate(payload: { id: string, newLevel: Level, note: string }): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'evaluate/Update', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'Evaluate/Update', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

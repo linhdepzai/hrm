@@ -21,7 +21,7 @@ export class TimeworkingService {
 
 
   getAllTimeWorking() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'timeworking/getAll')
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'TimeWorking/getAll')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -35,7 +35,7 @@ export class TimeworkingService {
   }
 
   requestChangeTimeWorking(payload: WorkingTimeRequest): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'timeworking/requestChangeTimeWorking', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'TimeWorking/requestChangeTimeWorking', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -43,7 +43,7 @@ export class TimeworkingService {
   }
   
   updateStatusChangeTimeWorking(payload: { id: string, status: number }): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'timeworking/updateStatus', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'TimeWorking/updateStatus', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

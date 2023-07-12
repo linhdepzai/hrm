@@ -21,7 +21,7 @@ export class NotificationService {
 
   getAllNotification() {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `notification/getAll/${user.id}`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `Notification/getAll/${user.id}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -35,7 +35,7 @@ export class NotificationService {
   }
 
   getAllNotificationForAccountant(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `notification/manage`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `Notification/manage`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -43,7 +43,7 @@ export class NotificationService {
   }
 
   getOnlyNotification(id: string) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `notification/getANotification/${id}`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `Notification/getANotification/${id}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -52,7 +52,7 @@ export class NotificationService {
 
   readNotification(id: string) {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `notification/readNotification/${user.id}?id=${id}`)
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + `Notification/readNotification/${user.id}?id=${id}`)
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -60,7 +60,7 @@ export class NotificationService {
   }
 
   saveNotification(payload: NotificationPayload):Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'notification/save', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Notification/save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -69,7 +69,7 @@ export class NotificationService {
 
   deleteNotification(id: string): Observable<ApiResponse> {
     const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `notification/delete/${user.id}?notificationId=${id}`)
+    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `Notification/delete/${user.id}?notificationId=${id}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
