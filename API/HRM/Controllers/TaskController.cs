@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Database;
 using Business.DTOs.TaskDto;
 using Entities;
-using Entities.Enum;
+using Entities.Enum.Project;
 
 namespace HRM.Controllers
 {
@@ -22,7 +22,7 @@ namespace HRM.Controllers
         [HttpGet("getall")]
         public async Task<ActionResult> GetAll()
         {
-            var taskList = _dataContext.Tasks.AsNoTracking().ToListAsync();
+            var taskList = _dataContext.Issue.AsNoTracking().ToListAsync();
             return Ok(taskList);
         }
         [HttpPost("save")]
@@ -39,7 +39,7 @@ namespace HRM.Controllers
         }
         private async Task<ActionResult> Create(CreateOrEditTaskDto input)
         {
-            var task = await _dataContext.Tasks.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.ProjectId
+            var task = await _dataContext.Issue.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.ProjectId
                 && e.TaskName.ToLower() == input.TaskName.ToLower());
             if (task != null) return BadRequest("TaskName was existed");
             var project = await _dataContext.Project.FindAsync(input.ProjectId);
@@ -49,7 +49,7 @@ namespace HRM.Controllers
             }
             else
             {
-                var newTask = new Tasks
+                var newTask = new Issue
                 {
                     Id = new Guid(),
                     TaskName = input.TaskName,
@@ -57,21 +57,21 @@ namespace HRM.Controllers
                     CreateDate = DateTime.Now,
                     DeadlineDate = input.DeadlineDate,
                     PriorityCode = input.PriorityCode,
-                    StatusCode = StatusTask.Open,
+                    StatusCode = WorkStatus.Open,
                     Description = input.Description,
                     TaskType = input.TaskType,
                     TaskCode = input.TaskCode,
                     ProjectId = input.ProjectId,
-                    EmployeeId = input.EmployeeId
+                    UserId = input.EmployeeId
                 };
-                await _dataContext.Tasks.AddAsync(newTask);
+                await _dataContext.Issue.AddAsync(newTask);
                 await _dataContext.SaveChangesAsync();
                 return Ok(newTask);
             }
         }
         private async Task<ActionResult> Update(CreateOrEditTaskDto input)
         {
-            var task = await _dataContext.Tasks.FindAsync(input.Id);
+            var task = await _dataContext.Issue.FindAsync(input.Id);
             if (task != null)
             {
                 var project = await _dataContext.Project.FindAsync(input.ProjectId);
@@ -84,23 +84,23 @@ namespace HRM.Controllers
                     task.CreateUserId = input.CreateUserId;
                     task.DeadlineDate = input.DeadlineDate;
                     task.PriorityCode = input.PriorityCode;
-                    task.StatusCode = StatusTask.Open;
+                    task.StatusCode = WorkStatus.Open;
                     task.CompleteDate = input.CompleteDate;
                     task.Description = input.Description;
                     task.TaskType = input.TaskType;
                     task.TaskCode = input.TaskCode;
                     task.ProjectId = input.ProjectId;
-                    task.EmployeeId = input.EmployeeId;
+                    task.UserId = input.EmployeeId;
                 }
             };
-            _dataContext.Tasks.Update(task);
+            _dataContext.Issue.Update(task);
             await _dataContext.SaveChangesAsync();
             return Ok(task);
         }
         [HttpDelete("delete")]
         public async Task<ActionResult> DeleteTask(Guid id)
         {
-            _dataContext.Tasks.Remove(await _dataContext.Tasks.FindAsync(id));
+            _dataContext.Issue.Remove(await _dataContext.Issue.FindAsync(id));
             await _dataContext.SaveChangesAsync();
             return Ok("Removed");
         }

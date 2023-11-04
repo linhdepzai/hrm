@@ -10,19 +10,15 @@ import { PositionService } from 'src/app/services/position.service';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  user!: LoginResponse;
+  user: LoginResponse = JSON.parse(localStorage.getItem('user')!);
   isVisibleModalChangeProfile: boolean = false;
   isVisibleModalChangePassword: boolean = false;
   level = Level;
 
   constructor(
-    private departmentService: DepartmentService,
-    private positionService: PositionService,
     ) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.departmentService.getAllDepartment();
   }
 
   refresh() {
@@ -35,13 +31,5 @@ export class ProfileComponent implements OnInit {
 
   openModalChangePassword() {
     this.isVisibleModalChangePassword = true;
-  }
-
-  getDepartment(id: string): DepartmentResponse {
-    return this.departmentService.departmentList$.value.find(d => d.id == id)!;
-  }
-
-  getPosition(id: number): Position {
-    return this.positionService.positionList$.value.find(i => i.id == id)!;
   }
 }

@@ -7,6 +7,7 @@ using Database;
 using Business.DTOs.MessageDto;
 using Business.Interfaces.IMessageService;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace HRM.Controllers
 {
@@ -24,8 +25,8 @@ namespace HRM.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateMessage(CreateMessageDto createMessageDto)
         {
-            var sender = await _dataContext.Employee.FindAsync(createMessageDto.SenderId);
-            var recipient = await _dataContext.Employee.FindAsync(createMessageDto.RecipientId);
+            var sender = await _dataContext.Employee.FirstOrDefaultAsync(i => i.AppUserId == createMessageDto.SenderId && i.Status == Entities.Enum.Record.RecordStatus.Approved);
+            var recipient = await _dataContext.Employee.FirstOrDefaultAsync(i => i.AppUserId == createMessageDto.RecipientId && i.Status == Entities.Enum.Record.RecordStatus.Approved);
 
             if (sender == recipient) return CustomResult("You cannot send messages to yourself", HttpStatusCode.BadRequest);
 
@@ -34,10 +35,8 @@ namespace HRM.Controllers
             var message = new Message
             {
                 Id = new Guid(),
-                SenderId = sender.Id,
-                SenderUserName = sender.FullName,
-                RecipientId = recipient.Id,
-                RecipientUserName = recipient.FullName,
+                SenderId = sender.AppUserId,
+                RecipientId = recipient.AppUserId,
                 Content = createMessageDto.Content,
             };
             _messageService.AddMessage(message);

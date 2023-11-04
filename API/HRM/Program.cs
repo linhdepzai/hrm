@@ -33,11 +33,13 @@ using Business.Services.SalaryService;
 using Business.Interfaces.IStatisticalService;
 using Business.Services.StatisticalService;
 using Business.Interfaces.ITaskService;
-using Business.Services.TaskService;
 using Business.Interfaces.ITimeKeepingService;
 using Business.Interfaces.ITimeWorkingService;
 using Business.Services.TimeKeepingService;
 using Business.Services.TimeWorkingService;
+using Business.Services.IssueService;
+using Business.Extensions;
+using Serilog;
 
 Environment.SetEnvironmentVariable("APP_BASE_DIRECTORY", Directory.GetCurrentDirectory());
 
@@ -46,11 +48,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddCors();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddSingleton<ISession, SessionWrapper>();
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+
 builder.Services.AddScoped<IAccountAppService, AccountAppService>();
 builder.Services.AddScoped<IDepartmentAppService, DepartmentAppService>();
 builder.Services.AddScoped<IEmployeeAppService, EmployeeAppService>();
@@ -62,10 +67,10 @@ builder.Services.AddScoped<IPayoffAppService, PayoffAppService>();
 builder.Services.AddScoped<IPositionAppService, PositionAppService>();
 builder.Services.AddScoped<ISalaryAppService, SalaryAppService>();
 builder.Services.AddScoped<IStatisticalAppService, StatisticalAppService>();
-builder.Services.AddScoped<ITaskAppService, TaskAppService>();
+builder.Services.AddScoped<IIssueAppService, IssueAppService>();
 builder.Services.AddScoped<ITimeKeepingAppService, TimeKeepingAppService>();
 builder.Services.AddScoped<ITimeWorkingAppService, TimeWorkingAppService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -101,9 +106,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddSignalR();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+});
+// Confifuration write log to file
+var _logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration).Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.AddSerilog(_logger);
+
+// Add Session
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 var app = builder.Build();
 
@@ -130,7 +151,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-//app.UseSession();
+app.UseSession();
+
 app.MapRazorPages();
 app.MapControllers();
 app.MapHub<PresenceHub>("hubs/presence");

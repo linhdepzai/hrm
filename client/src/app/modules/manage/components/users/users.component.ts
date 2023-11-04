@@ -29,7 +29,7 @@ export class UsersComponent implements OnInit {
   statusMode: string = 'Approve';
   filterUserName!: string | null;
   filterUserLevel!: Level | null;
-  filterUserPosition!: number | null;
+  filterUserPosition!: string | null;
   filterUserDepartment!: string | null;
 
   constructor(
@@ -43,9 +43,8 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.departmentService.getAllDepartment();
-    this.employeeService.getAllEmployeeForLeader();
     this.employeeService.getAllRequestChangeInfo();
-    this.employeeService.employeeListForLeader$.subscribe((data) => { this.employeeList = data });
+    this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.positionService.positionList$;
@@ -76,13 +75,13 @@ export class UsersComponent implements OnInit {
   changeFilter(mode: string) {
     this.statusMode = mode;
     if (mode == 'Approve') {
-      this.employeeService.employeeListForLeader$.subscribe((data) => { this.employeeList = data });
+      this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
     } else {
       this.employeeService.requestChangeInfoList$.subscribe((data) => { this.employeeList = data });
     }
   }
 
-  getPositionName(id: number) {
+  getPositionName(id: string) {
     return this.positionService.positionList$.value.find(i => i.id == id)?.name;
   }
 
@@ -95,7 +94,7 @@ export class UsersComponent implements OnInit {
       this.employeeList = this.employeeList.filter(i => i.level == this.filterUserLevel);
     }
     if (this.filterUserPosition != null) {
-      this.employeeList = this.employeeList.filter(i => i.position == this.filterUserPosition);
+      this.employeeList = this.employeeList.filter(i => i.positionId == this.filterUserPosition);
     }
     if (this.filterUserDepartment != null) {
       this.employeeList = this.employeeList.filter(i => i.departmentId == this.filterUserDepartment);
@@ -110,9 +109,9 @@ export class UsersComponent implements OnInit {
         new Promise((resolve, reject) => {
           this.employeeService.deleteEmployee(id).subscribe((response) => {
             if (response.message == 'Removed') {
-              const index = this.employeeService.employeeListForLeader$.value.findIndex((item) => item.id == id);
-              this.employeeService.employeeListForLeader$.value.splice(index, 1);
-              this.employeeService.employeeListForLeader$.next([...this.employeeService.employeeListForLeader$.value]);
+              const index = this.employeeService.employeeList$.value.findIndex((item) => item.id == id);
+              this.employeeService.employeeList$.value.splice(index, 1);
+              this.employeeService.employeeList$.next([...this.employeeService.employeeList$.value]);
             } else {
               this.notification.create('error', 'Failed!', '');
             }
@@ -132,7 +131,7 @@ export class UsersComponent implements OnInit {
     this.filterUser();
   }
 
-  filterPosition(position: number) {
+  filterPosition(position: string) {
     this.filterUserPosition = position;
     this.filterUser();
   }

@@ -10,7 +10,7 @@
     </div>
 </div>
 <ul nz-menu nzMode="inline" class="sider-menu">
-    <li *ngIf="isLeader || isAccoutant || isAdmin" nz-menu-item routerLink="/member/home" [nzMatchRouter]="true">
+    <li nz-menu-item routerLink="/member/home" [nzMatchRouter]="true">
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Home Page</span>
     </li>
@@ -18,27 +18,7 @@
         <span nz-icon nzType="user" nzTheme="outline"></span>
         <span>My Profile</span>
     </li>
-    <li *ngIf="user.isLeader" nz-submenu nzTitle="Manage" nzIcon="deployment-unit">
-        <ul>
-            <li nz-menu-item routerLink="/manage/users" [nzMatchRouter]="true">
-                <span nz-icon nzType="team" nzTheme="outline"></span>
-                <span>Users</span>
-            </li>
-            <li nz-menu-item routerLink="/manage/working-time" [nzMatchRouter]="true">
-                <span nz-icon nzType="field-time" nzTheme="outline"></span>
-                <span>Working Time</span>
-            </li>
-            <li nz-menu-item routerLink="/manage/evaluate" [nzMatchRouter]="true">
-                <span nz-icon nzType="fund" nzTheme="outline"></span>
-                <span>Evaluate</span>
-            </li>
-            <li nz-menu-item routerLink="/manage/punish" [nzMatchRouter]="true">
-                <span nz-icon nzType="dollar-circle" nzTheme="outline"></span>
-                <span>Punish</span>
-            </li>
-        </ul>
-    </li>
-    <li *ngIf="isAdmin" nz-submenu nzTitle="Admin" nzIcon="deployment-unit">
+    <li nz-submenu nzTitle="Admin" nzIcon="deployment-unit">
         <ul>
             <li nz-menu-item routerLink="/manage/department" [nzMatchRouter]="true">
                 <span nz-icon nzType="group" nzTheme="outline"></span>
@@ -60,26 +40,6 @@
                 <span nz-icon nzType="fund" nzTheme="outline"></span>
                 <span>Evaluate</span>
             </li>
-            <li nz-menu-item routerLink="/manage/punish" [nzMatchRouter]="true">
-                <span nz-icon nzType="dollar-circle" nzTheme="outline"></span>
-                <span>Punish</span>
-            </li>
-            <li nz-menu-item routerLink="/manage/salary-management" [nzMatchRouter]="true">
-                <span nz-icon nzType="money-collect" nzTheme="outline"></span>
-                <span>Salary Option</span>
-            </li>
-            <li nz-menu-item routerLink="/manage/salary-for-employee" [nzMatchRouter]="true">
-                <span nz-icon nzType="pic-left" nzTheme="outline"></span>
-                <span>Salary Management</span>
-            </li>
-            <li nz-menu-item routerLink="/manage/notification" [nzMatchRouter]="true">
-                <span nz-icon nzType="bell" nzTheme="outline"></span>
-                <span>Notification</span>
-            </li>
-        </ul>
-    </li>
-    <li *ngIf="isAccoutant" nz-submenu nzTitle="Accoutant" nzIcon="deployment-unit">
-        <ul>
             <li nz-menu-item routerLink="/manage/punish" [nzMatchRouter]="true">
                 <span nz-icon nzType="dollar-circle" nzTheme="outline"></span>
                 <span>Punish</span>

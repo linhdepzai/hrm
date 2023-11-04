@@ -39,7 +39,7 @@ export class PositionService {
       }));
   }
 
-  deletePosition(id: number): Observable<ApiResponse> {
+  deletePosition(id: string): Observable<ApiResponse> {
     return this.httpClient.delete<ApiResponse>(environment.baseUrl + 'Position/delete?id=' + id)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);

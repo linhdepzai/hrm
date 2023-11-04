@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Entities.Enum.Project;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
-using System;
-using Entities.Enum;
 
 namespace Entities
 {
@@ -24,8 +20,8 @@ namespace Entities
         [Required]
         public Priority PriorityCode { get; set; }
         [Required]
-        public StatusTask StatusCode { get; set; }
-        public ICollection<Tasks> Tasks { get; set; }
+        public WorkStatus StatusCode { get; set; }
+        public ICollection<Issue> Issue { get; set; }
         public ICollection<MemberProject> MemberProject { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Entities.Enum;
+using Entities.Enum.Project;
 using System;
 
 namespace Business.DTOs.ProjectDto

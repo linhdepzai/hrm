@@ -1,5 +1,4 @@
-﻿using System;
-using static Entities.Interface.IEntity;
+﻿using static Entities.Interface.IEntity;
 
 namespace Entities
 {

@@ -4,10 +4,10 @@
 </nz-calendar>
 <ng-template #dateCellTpl let-date>
     <ng-container *ngFor="let item of onLeaveList">
-        <div *ngIf="formatDate(item.dateLeave) == formatDate(date)" (click)="openModal(date)">
+        <div *ngIf="formatDate(item.dayOff) == formatDate(date)" (click)="openModal(date)">
             <nz-avatar [nzSize]="20" nzIcon="user"
-                [nzSrc]="getAccount(item.employeeId).avatar"></nz-avatar>
-            <span nz-typography nzEllipsis>{{ getAccount(item.employeeId).fullName }}</span>
+                [nzSrc]="item.avatarUser!"></nz-avatar>
+            <span nz-typography nzEllipsis>{{ getAccountName(item.userId) }}</span>
         </div>
     </ng-container>
 </ng-template>

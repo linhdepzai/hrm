@@ -1,6 +1,7 @@
 ﻿using Business.DTOs.TimeKeepingDto;
 using CoreApiResponse;
 using Database;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,15 +18,15 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("getTimeKeepingForUser")]
-        public async Task<IActionResult> GetTimeKeepingForUser(Guid id, int month, int year)
+        [HttpGet("{userId}/get-timeKeeping-for-user")]
+        public async Task<IActionResult> GetTimeKeepingForUser(Guid userId, int month, int year)
         {
             var timekeeping = await (from t in _dataContext.TimeKeeping
-                                     where t.EmployeeId == id && t.Date.Month == month && t.Date.Year == year
+                                     where t.UserId == userId && t.Date.Month == month && t.Date.Year == year
                                      select new
                                      {
                                          Id = t.Id,
-                                         EmployeeId = t.EmployeeId,
+                                         UserId = t.UserId,
                                          Date = t.Date,
                                          Checkin = t.Checkin,
                                          PhotoCheckin = t.PhotoCheckin,
@@ -36,57 +37,57 @@ namespace HRM.Controllers
                                      }).AsNoTracking().Take(30).ToListAsync();
             return CustomResult(timekeeping);
         }
-        [HttpPost("checkinOrCheckout")]
-        public async Task<IActionResult> CheckinOrCheckout(CreateTimeKeepingDto input)
+        [HttpPost("{userId}/checkin-or-checkout")]
+        public async Task<IActionResult> CheckinOrCheckout(Guid userId, CreateTimeKeepingDto input)
         {
             if (input.PhotoCheckout != null)
             {
                 var checkout = new CheckoutDto
                 {
-                    EmployeeId = input.EmployeeId,
                     Checkout = input.Checkout.AddHours(7),
                     PhotoCheckout = input.PhotoCheckout,
                 };
-                return await CheckOut(checkout);
+                return await CheckOut(userId, checkout);
             } else
             {
                 var checkin = new CheckinDto
                 {
-                    EmployeeId = input.EmployeeId,
                     Checkin = input.Checkin.AddHours(7),
                     PhotoCheckin = input.PhotoCheckin,
                 };
-                return await CheckIn(checkin);
+                return await CheckIn(userId, checkin);
             }
         }
-        private async Task<IActionResult> CheckIn(CheckinDto input)
+        private async Task<IActionResult> CheckIn(Guid userId, CheckinDto input)
         {
-            var checkinToday = await _dataContext.TimeKeeping.AsNoTracking().FirstOrDefaultAsync(i => i.EmployeeId == input.EmployeeId && (
+            var checkinToday = await _dataContext.TimeKeeping.AsNoTracking().FirstOrDefaultAsync(i => i.UserId == userId && (
                 i.Date.Year == DateTime.Now.Year && i.Date.Month == DateTime.Now.Month && i.Date.Date == DateTime.Now.Date));
             if (checkinToday != null)
             {
                 checkinToday.Checkin = input.Checkin;
                 checkinToday.PhotoCheckin = input.PhotoCheckin;
+                checkinToday.LastModifierUserId = userId;
             }
             _dataContext.TimeKeeping.Update(checkinToday);
             await _dataContext.SaveChangesAsync();
             return CustomResult(checkinToday);
         }
-        private async Task<IActionResult> CheckOut(CheckoutDto input)
+        private async Task<IActionResult> CheckOut(Guid userId, CheckoutDto input)
         {
-            var checkoutToday = await _dataContext.TimeKeeping.AsNoTracking().FirstOrDefaultAsync(i => i.EmployeeId == input.EmployeeId && (
+            var checkoutToday = await _dataContext.TimeKeeping.AsNoTracking().FirstOrDefaultAsync(i => i.UserId == userId && (
                 i.Date.Year == DateTime.Now.Year && i.Date.Month == DateTime.Now.Month && i.Date.Date == DateTime.Now.Date));
             if (checkoutToday != null)
             {
                 checkoutToday.Checkout = input.Checkout;
                 checkoutToday.PhotoCheckout = input.PhotoCheckout;
+                checkoutToday.LastModifierUserId = userId;
             }
             _dataContext.TimeKeeping.Update(checkoutToday);
             await _dataContext.SaveChangesAsync();
             return CustomResult(checkoutToday);
         }
-        [HttpPut("complainDailyCheckin")]
-        public async Task<IActionResult> ComplainDailyCheckin(ComplainDailyCheckinDto input)
+        [HttpPut("{userId}/complain-daily-checkin")]
+        public async Task<IActionResult> ComplainDailyCheckin(Guid userId, ComplainDailyCheckinDto input)
         {
             var checkinComplain = await _dataContext.TimeKeeping.FindAsync(input.Id);
             if (checkinComplain != null)

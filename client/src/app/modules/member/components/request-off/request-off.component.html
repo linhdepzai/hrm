@@ -10,9 +10,9 @@
 </nz-calendar>
 <ng-template #dateCellTpl let-date>
     <ng-container *ngFor="let item of requestList">
-        <ng-container *ngIf="formatDate(item.date) == formatDate(date)">
+        <ng-container *ngIf="formatDate(item.dayOff) == formatDate(date)">
             <nz-select [ngModel]="item.option" 
-                (ngModelChange)="changeOptionOnLeave(item.date, $event, item.status)"
+                (ngModelChange)="changeOptionRequestOff(item.dayOff, $event, item.status)"
                 (click)="$event.stopPropagation()">
                 <nz-option [nzValue]="item.value" [nzLabel]="item.label"
                     *ngFor="let item of optionRequestList | async"></nz-option>
@@ -20,24 +20,24 @@
             <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
         </ng-container>
     </ng-container>
-    <ng-container *ngFor="let item of onLeaveList">
-        <ng-container *ngIf="formatDate(item.dateLeave) == formatDate(date)">
-            <ng-container *ngIf="disableDate(item.dateLeave) == false; else approved">
+    <ng-container *ngFor="let item of requestOffList">
+        <ng-container *ngIf="formatDate(item.dayOff) == formatDate(date)">
+            <ng-container *ngIf="disableDate(item.dayOff) == false; else approved">
                 <nz-select [ngModel]="item.option"
-                    (ngModelChange)="changeOptionOnLeave(item.dateLeave, $event, item.status)"
+                    (ngModelChange)="changeOptionRequestOff(item.dayOff, $event, item.status)"
                     (click)="$event.stopPropagation()">
                     <nz-option [nzValue]="item.value" [nzLabel]="item.label"
                         *ngFor="let item of optionRequestList | async"></nz-option>
                 </nz-select>
                 <span class="{{ status[item.status] }}">{{ status[item.status] }}</span>
-                <span role="button" (click)="$event.stopPropagation(); handleDelete(item.id, item.dateLeave)">
+                <span role="button" (click)="$event.stopPropagation(); handleDelete(item.id, item.dayOff)">
                     <i class="fa-solid fa-trash-can"></i>
                 </span>
             </ng-container>
         </ng-container>
         <ng-template #approved>
             <nz-select [ngModel]="item.option" disabled
-                (ngModelChange)="changeOptionOnLeave(item.dateLeave, $event, item.status)"
+                (ngModelChange)="changeOptionRequestOff(item.dayOff, $event, item.status)"
                 (click)="$event.stopPropagation()">
                 <nz-option [nzValue]="item.value" [nzLabel]="item.label"
                     *ngFor="let item of optionRequestList | async"></nz-option>

@@ -20,7 +20,7 @@ export class SalaryComponent implements OnInit {
   positionList = new Observable<Position[]>();
   filterSalaryCode!: string | null;
   filterSalaryLevel!: Level | null;
-  filterSalaryPosition!: number | null;
+  filterSalaryPosition!: string | null;
 
   constructor(
     private salaryService: SalaryService,
@@ -43,7 +43,7 @@ export class SalaryComponent implements OnInit {
     this.salaryList = [...this.salaryList];
   }
 
-  getDepartmentName(id: number) {
+  getDepartmentName(id: string) {
     return this.positionService.positionList$.value.find(i => i.id == id)?.name;
   }
 
@@ -56,7 +56,7 @@ export class SalaryComponent implements OnInit {
       this.salaryList = this.salaryList.filter(i => i.level == this.filterSalaryLevel);
     }
     if(this.filterSalaryPosition != null){
-      this.salaryList = this.salaryList.filter(i => i.position == this.filterSalaryPosition);
+      this.salaryList = this.salaryList.filter(i => i.positionId == this.filterSalaryPosition);
     }
   }
 
@@ -70,7 +70,7 @@ export class SalaryComponent implements OnInit {
     this.filterSalary();
   }
 
-  filterPosition(position: number) {
+  filterPosition(position: string) {
     this.filterSalaryPosition = position;
     this.filterSalary();
   }

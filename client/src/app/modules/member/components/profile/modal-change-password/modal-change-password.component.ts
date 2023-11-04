@@ -14,7 +14,7 @@ export class ModalChangePasswordComponent implements OnInit {
   @Input() isVisibleModal: boolean = false;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   changePasswordForm!: FormGroup;
-  user!: LoginResponse;
+  user: LoginResponse = JSON.parse(localStorage.getItem('user')!);
 
   constructor(
     private accountService: AccountService,
@@ -23,19 +23,17 @@ export class ModalChangePasswordComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     this.changePasswordForm = this.fb.group({
-      id: [this.user.id, Validators.required],
-      email: [null, Validators.required],
-      oldPassword: [null, Validators.required],
+      currentPassword: [null, Validators.required],
       newPassword: [null, Validators.required],
-      confirmPassword: [null, Validators.required],
+      confirmPassword: [null, Validators.required]
     });
   }
 
   submitForm() {
-    if (this.changePasswordForm.valid) {
-      this.changePasswordForm.value.id = this.user.id;
+    if (this.changePasswordForm.valid &&
+      this.changePasswordForm.value.newPassword == this.changePasswordForm.value.confirmPassword
+      ) {
       this.accountService
       .changePassword(this.changePasswordForm.value as ChangePassword)
       .subscribe((response) => {

@@ -12,6 +12,7 @@ using Database;
 using Entities.Enum;
 using Business.DTOs.ProjectDto;
 using Entities;
+using Entities.Enum.Project;
 
 namespace HRM.Controllers
 {
@@ -28,7 +29,7 @@ namespace HRM.Controllers
         {
             var projectList = await (from p in _dataContext.Project
                                      join m in _dataContext.MemberProject on p.Id equals m.ProjectId
-                                     join e in _dataContext.Employee on m.EmployeeId equals e.Id
+                                     join e in _dataContext.Employee on m.UserId equals e.Id
                                      where m.Type == MemberType.ProjectManager
                                      select new GetAllProjectDto
                                      {
@@ -51,11 +52,11 @@ namespace HRM.Controllers
         {
             var member = await (from p in _dataContext.Project
                                 join m in _dataContext.MemberProject on p.Id equals m.ProjectId
-                                join e in _dataContext.Employee on m.EmployeeId equals e.Id
+                                join e in _dataContext.Employee on m.UserId equals e.Id
                                 where p.Id == projectId
                                 select new AddMemberToProjectDto
                                 {
-                                    EmployeeId = m.EmployeeId,
+                                    EmployeeId = m.UserId,
                                     Type = m.Type,
                                 }).AsNoTracking().ToListAsync();
             var project = await _dataContext.Project.FirstOrDefaultAsync(e => e.Id == projectId); 
@@ -100,7 +101,7 @@ namespace HRM.Controllers
                 CreateDate = DateTime.Now,
                 DeadlineDate = input.DeadlineDate,
                 PriorityCode = input.PriorityCode,
-                StatusCode = StatusTask.Open,
+                StatusCode = WorkStatus.Open,
             };
             await _dataContext.Project.AddAsync(data);
             foreach (var i in input.Members)
@@ -109,7 +110,7 @@ namespace HRM.Controllers
                 {
                     Id = new Guid(),
                     ProjectId = data.Id,
-                    EmployeeId = i.EmployeeId,
+                    UserId = i.EmployeeId,
                     Type = i.Type,
                 };
                 await _dataContext.MemberProject.AddAsync(member);
@@ -135,7 +136,7 @@ namespace HRM.Controllers
                                 where m.ProjectId == input.Id
                                 select new
                                 {
-                                    EmployeeId = m.EmployeeId,
+                                    EmployeeId = m.UserId,
                                     Type = m.Type,
                                 }).AsNoTracking().ToListAsync();
             foreach (var i in input.Members)
@@ -147,7 +148,7 @@ namespace HRM.Controllers
                     {
                         Id = new Guid(),
                         ProjectId = (Guid)input.Id,
-                        EmployeeId = i.EmployeeId,
+                        UserId = i.EmployeeId,
                         Type = i.Type,
                     };
                     _dataContext.MemberProject.Update(newMember);
@@ -158,14 +159,14 @@ namespace HRM.Controllers
                 var checkMember = input.Members.Find(m => m.EmployeeId == i.EmployeeId);
                 if (checkMember == null)
                 {
-                    _dataContext.MemberProject.Remove(await _dataContext.MemberProject.FirstOrDefaultAsync(m => m.ProjectId == input.Id && m.EmployeeId == i.EmployeeId));
+                    _dataContext.MemberProject.Remove(await _dataContext.MemberProject.FirstOrDefaultAsync(m => m.ProjectId == input.Id && m.UserId == i.EmployeeId));
                 }
                 else
                 {
-                    var memberProject = await _dataContext.MemberProject.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.Id && e.EmployeeId == i.EmployeeId);
+                    var memberProject = await _dataContext.MemberProject.AsNoTracking().FirstOrDefaultAsync(e => e.ProjectId == input.Id && e.UserId == i.EmployeeId);
                     if (memberProject != null)
                     {
-                        memberProject.EmployeeId = i.EmployeeId;
+                        memberProject.UserId = i.EmployeeId;
                         memberProject.Type = i.Type;
                         _dataContext.MemberProject.Update(memberProject);
                     }
@@ -177,7 +178,7 @@ namespace HRM.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> DeleteProject(Guid id)
         {
-            _dataContext.Tasks.RemoveRange(await _dataContext.Tasks.Where(e => e.ProjectId == id).ToListAsync());
+            _dataContext.Issue.RemoveRange(await _dataContext.Issue.Where(e => e.ProjectId == id).ToListAsync());
             await _dataContext.SaveChangesAsync();
             _dataContext.Project.Remove(await _dataContext.Project.FindAsync(id));
             await _dataContext.SaveChangesAsync();

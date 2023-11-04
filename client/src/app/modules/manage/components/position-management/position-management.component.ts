@@ -43,7 +43,7 @@ export class PositionManagementComponent implements OnInit {
     this.mode = mode;
   }
 
-  deleteItem(id: number) {
+  deleteItem(id: string) {
     this.confirmModal = this.modal.confirm({
       nzTitle: 'Do you Want to delete this movie?',
       nzContent: 'When clicked the OK button, this movie will be deleted system-wide!!!',

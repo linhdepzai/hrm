@@ -14,9 +14,18 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Sex</nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Sex!">
-                <nz-radio-group [ngModel]="true" formControlName="sex" id="sex">
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Role</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid roles!">
+                <nz-select [ngModel]="roleSelect" nzMode="multiple" formControlName="roles" id="roles">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+                        *ngFor="let item of roleList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Gender</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid gender!">
+                <nz-radio-group [ngModel]="true" formControlName="gender" id="gender">
                     <label nz-radio [nzValue]="true">Male</label>
                     <label nz-radio [nzValue]="false">Female</label>
                 </nz-radio-group>
@@ -47,6 +56,14 @@
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">
+                <span nz-tooltip nzTooltipTitle="CCCD/CMT">Identify</span>
+            </nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Identify!">
+                <input nz-input placeholder="Enter your identify" formControlName="identify" id="identify" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Level</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Level!">
                 <nz-select [ngModel]="employeeForm.value.level" formControlName="level" id="level">
@@ -58,13 +75,13 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
             <nz-form-control [nzSm]="11" nzErrorTip="The input is not valid Position!">
-                <nz-select [ngModel]="employeeForm.value.position" formControlName="position" id="position">
+                <nz-select [ngModel]="employeeForm.value.position" formControlName="positionId" id="positionId">
                     <nz-option [nzValue]="item.id" [nzLabel]="item.name"
                         *ngFor="let item of positionList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true" [disabled]="user.isLeader">
+            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Position</span>
             </button>
         </nz-form-item>
@@ -78,7 +95,7 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true" [disabled]="user.isLeader">
+            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Department</span>
             </button>
         </nz-form-item>
@@ -115,14 +132,6 @@
             <nz-form-control [nzSm]="18" [nzXs]="24">
                 <input nz-input placeholder="Enter your insurance status" formControlName="insuranceStatus"
                     id="insuranceStatus" />
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">
-                <span nz-tooltip nzTooltipTitle="CCCD/CMT">Identify</span>
-            </nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Identify!">
-                <input nz-input placeholder="Enter your identify" formControlName="identify" id="identify" />
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

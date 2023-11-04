@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
 })
 export class TimeworkingService {
   public timeWorkingList$ = new BehaviorSubject<TimeWorkingResponse[]>([]);
+  private baseUrl = environment.baseUrl + 'TimeWorking/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
 
   constructor(
     private message: NzMessageService,
@@ -21,7 +22,7 @@ export class TimeworkingService {
 
 
   getAllTimeWorking() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'TimeWorking/getAll')
+    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -35,7 +36,7 @@ export class TimeworkingService {
   }
 
   requestChangeTimeWorking(payload: WorkingTimeRequest): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'TimeWorking/requestChangeTimeWorking', payload)
+    return this.httpClient.post<ApiResponse>(this.baseUrl + 'request-change-timeWorking', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -43,7 +44,7 @@ export class TimeworkingService {
   }
   
   updateStatusChangeTimeWorking(payload: { id: string, status: number }): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'TimeWorking/updateStatus', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'update-status', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

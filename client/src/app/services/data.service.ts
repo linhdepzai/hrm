@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
-import { Bank, Level, OptionOnLeave, Priority, ProjectType, StatusTask } from '../enums/Enum';
+import { Bank, Level, OptionRequestOff, Priority, ProjectType, StatusTask } from '../enums/Enum';
 import { ApiResponse } from '../interfaces/interfaceReponse';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -14,7 +14,7 @@ export class DataService {
   public levelList = new BehaviorSubject<{ value: Level, label: string }[]>([]);
   public bankList = new BehaviorSubject<Bank[]>([]);
   public iconList = new BehaviorSubject<string[]>([]);
-  public requestOffList = new BehaviorSubject<{ value: OptionOnLeave, label: string }[]>([]);
+  public requestOffList = new BehaviorSubject<{ value: OptionRequestOff, label: string }[]>([]);
   public priorityList = new BehaviorSubject<{ value: Priority, label: string }[]>([]);
   public statusTaskList = new BehaviorSubject<{ value: StatusTask, label: string }[]>([]);
   public projectTypeList = new BehaviorSubject<{ value: ProjectType, label: string }[]>([]);
@@ -52,11 +52,11 @@ export class DataService {
       { value: Level.Middle, label: 'Middle' },
       { value: Level.Senior, label: 'Senior' }]);
     this.requestOffList.next([
-      { value: OptionOnLeave.OffMorning, label: 'Off Morning' },
-      { value: OptionOnLeave.OffAfternoon, label: 'Off Afternoon' },
-      { value: OptionOnLeave.OffFullDay, label: 'Off Full Day' },
-      { value: OptionOnLeave.Late, label: 'Late' },
-      { value: OptionOnLeave.LeaveEarly, label: 'Leave Early' }]);
+      { value: OptionRequestOff.OffMorning, label: 'Off Morning' },
+      { value: OptionRequestOff.OffAfternoon, label: 'Off Afternoon' },
+      { value: OptionRequestOff.OffFullDay, label: 'Off Full Day' },
+      { value: OptionRequestOff.Late, label: 'Late' },
+      { value: OptionRequestOff.LeaveEarly, label: 'Leave Early' }]);
     this.bankList.next([Bank.Techcombank, Bank.ACB, Bank.Agribank,
     Bank.BIDV, Bank.DongABank, Bank.MBB, Bank.MSB, Bank.OCB,
     Bank.Sacombank, Bank.ShinhanBank, Bank.TPBank, Bank.VCB,

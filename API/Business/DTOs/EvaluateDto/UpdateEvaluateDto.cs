@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using Entities.Enum;
+using Entities.Enum.User;
 
 namespace Business.DTOs.EvaluateDto
 {

@@ -67,7 +67,7 @@ export class TeamProjectComponent implements OnInit {
     }
   }
 
-  getPositionName(id: number) {
+  getPositionName(id: string) {
     return this.positionService.positionList$.value.find(i => i.id == id)?.name;
   }
 

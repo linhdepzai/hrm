@@ -43,12 +43,8 @@ export class AuthenticationService {
           };
           this.presence.createHubConnection(response.data);
           this.notification.success(`Hello ${response.data.fullName}!`, '');
-          this.apiLoginService.getAllPosition().subscribe((data) => {
-            const isAdmin = response.data.position == (data.data as Position[]).find(i => i.name == "Admin")?.id ? true : false;
-            const isAccoutant = response.data.position == (data.data as Position[]).find(i => i.name == "Accoutant")?.id ? true : false;
-            this.router.navigate([isAdmin || isAccoutant || response.data.isLeader ? 'member/home' : 'member/checkin']);
-          });
           this.isLogin.next(true);
+          this.router.navigate(['home']);
         }
         this.loading.next(false);
       });

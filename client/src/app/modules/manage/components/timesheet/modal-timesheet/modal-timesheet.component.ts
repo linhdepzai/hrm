@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { LoginResponse, OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
 import { DatePipe } from '@angular/common';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { DataService } from 'src/app/services/data.service';
@@ -7,7 +6,8 @@ import { Status } from 'src/app/enums/Enum';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { EmployeeService } from 'src/app/services/employee.service';
-import { OnleaveService } from 'src/app/services/onleave.service';
+import { RequestOffResponse } from 'src/app/interfaces/interfaceReponse';
+import { RequestOffService } from 'src/app/services/requestoff.service';
 
 @Component({
   selector: 'app-modal-timesheet',
@@ -18,30 +18,28 @@ export class ModalTimesheetComponent implements OnChanges {
   @Input() isVisibleModal: boolean = false;
   @Output() cancel: EventEmitter<boolean> = new EventEmitter();
   @Input() date!: Date;
-  onleaveList: OnLeaveResponse[] = [];
+  requestOffList: RequestOffResponse[] = [];
   status = Status;
-  user!: LoginResponse;
 
   constructor(
     private employeeService: EmployeeService,
+    private requestOffService: RequestOffService,
     private dataService: DataService,
-    private onLeaveService: OnleaveService,
     private datepipe: DatePipe,
     private notification: NzNotificationService
   ) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.onLeaveService.onLeaveList$.subscribe((data) => {
-      this.onleaveList = data.filter(i => this.datepipe.transform(i.dateLeave, 'dd/MM/yyyy') == this.datepipe.transform(this.date, 'dd/MM/yyyy'));
+    this.requestOffService.requestOffList$.subscribe((data) => {
+      this.requestOffList = data.filter(i => this.datepipe.transform(i.dayOff, 'dd/MM/yyyy') == this.datepipe.transform(this.date, 'dd/MM/yyyy'));
     });
   }
 
   drop(event: CdkDragDrop<string[], string[], any>): void {
-    const item = this.onleaveList[event.previousIndex];
-    this.onleaveList.splice(event.previousIndex, 1);
-    this.onleaveList.splice(event.currentIndex, 0, item);
-    this.onleaveList = [...this.onleaveList];
+    const item = this.requestOffList[event.previousIndex];
+    this.requestOffList.splice(event.previousIndex, 1);
+    this.requestOffList.splice(event.currentIndex, 0, item);
+    this.requestOffList = [...this.requestOffList];
   }
 
   handleCancel() {
@@ -49,35 +47,23 @@ export class ModalTimesheetComponent implements OnChanges {
   }
 
   getAccountName(id: string) {
-    let employee!: string;
-    this.employeeService.employeeList$
-      .subscribe((data: Employee[]) => {
-        employee = data.find(d => d.id == id)!.fullName;
-      });
-    return employee;
+    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   getOptionRequestOff(value: number) {
-    let requestOff!: string;
-    this.dataService.requestOffList
-      .subscribe((data) => {
-        requestOff = data.find(d => d.value == value)!.label;
-      });
-    return requestOff;
+    return this.dataService.requestOffList.value.find(d => d.value == value)!.label;
   }
 
   actionRequestOff(action: string, id: string) {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
     const payload = {
       id: id,
-      pmId: user.id,
       status: action == 'approve' ? Status.Approved : Status.Rejected
     }
-    this.onLeaveService.updateStatusRequestOff(payload)
+    this.requestOffService.updateStatusRequestOff(payload)
       .subscribe((response) => {
         if (response.statusCode == 200) {
-          this.onLeaveService.onLeaveList$.value.splice(this.onLeaveService.onLeaveList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
-          this.onLeaveService.onLeaveList$.next([...this.onLeaveService.onLeaveList$.value]);
+          this.requestOffService.requestOffList$.value.splice(this.requestOffService.requestOffList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
+          this.requestOffService.requestOffList$.next([...this.requestOffService.requestOffList$.value]);
           this.notification.success('Successfully!', response.message);
         }
       });

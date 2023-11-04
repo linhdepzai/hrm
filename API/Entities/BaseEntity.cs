@@ -1,5 +1,4 @@
 ﻿using Entities.Interfaces;
-using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using static Entities.Interface.IEntity;

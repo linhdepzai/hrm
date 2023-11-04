@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { OnLeaveResponse } from 'src/app/interfaces/interfaceReponse';
+import { RequestOffResponse } from 'src/app/interfaces/interfaceReponse';
 import { Employee } from 'src/app/interfaces/interfaces';
 import { EmployeeService } from 'src/app/services/employee.service';
-import { OnleaveService } from 'src/app/services/onleave.service';
+import { RequestOffService } from 'src/app/services/requestoff.service';
 
 @Component({
   selector: 'app-timesheet',
@@ -12,19 +12,19 @@ import { OnleaveService } from 'src/app/services/onleave.service';
 })
 export class TimesheetComponent implements OnInit {
   date = new Date();
-  onLeaveList: OnLeaveResponse[] = [];
+  onLeaveList: RequestOffResponse[] = [];
   isVisibleModal: boolean = false;
 
   constructor(
     private employeeService: EmployeeService,
-    private onleaveService: OnleaveService,
+    private requestOffService: RequestOffService,
     private datepipe: DatePipe,
   ) { }
 
   ngOnInit(): void {
-    this.onleaveService.getAllRequestOnLeave();
+    this.requestOffService.getAllRequestOff();
     this.employeeService.getAllEmployee();
-    this.onleaveService.onLeaveList$.subscribe((data) => {
+    this.requestOffService.requestOffList$.subscribe((data) => {
       this.onLeaveList = data;
     });
     this.date.getTime();
@@ -34,8 +34,8 @@ export class TimesheetComponent implements OnInit {
     return this.datepipe.transform(date, 'MM/dd/YYYY');
   }
 
-  getAccount(id: string): Employee {
-    return this.employeeService.employeeList$.value.find(d => d.id == id)!;
+  getAccountName(id: string) {
+    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   openModal(date: Date) {

@@ -11,6 +11,7 @@ using Database;
 using Entities.Enum;
 using Business.DTOs.StatisticalDto;
 using Entities;
+using Entities.Enum.Record;
 
 namespace HRM.Controllers
 {
@@ -25,7 +26,7 @@ namespace HRM.Controllers
         [HttpGet("totalEmployee")]
         public async Task<IActionResult> GetAll()
         {
-            var payoffList = await _dataContext.Payoff.Where(i => i.IsDeleted == false && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToListAsync();
+            var payoffList = await _dataContext.PayOff.Where(i => i.IsDeleted == false && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToListAsync();
             int totalPunish = 0;
             int totalBounty = 0;
             foreach (var i in payoffList)
@@ -43,26 +44,26 @@ namespace HRM.Controllers
             {
                 totalEmployee = new
                 {
-                    total = _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate == null).AsNoTracking().ToList().Count,
-                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate == null && ((DateTime)i.CreationTime).Month != DateTime.Now.Month).AsNoTracking().ToList().Count) /
-                        _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate == null).AsNoTracking().ToList().Count),
+                    total = _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && !i.IsActive).AsNoTracking().ToList().Count,
+                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && !i.IsActive && ((DateTime)i.CreationTime).Month != DateTime.Now.Month).AsNoTracking().ToList().Count) /
+                        _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && !i.IsActive).AsNoTracking().ToList().Count),
                 },
                 totalLeave = new
                 {
-                    total = _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate != null && ((DateTime)i.LastModificationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
-                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate != null && (((DateTime)i.LastModificationTime).Month - 1) == (DateTime.Now.Month - 1)).AsNoTracking().ToList().Count) /
-                        _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate != null && ((DateTime)i.LastModificationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count),
+                    total = _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsActive && ((DateTime)i.LastModificationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
+                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsActive && (((DateTime)i.LastModificationTime).Month - 1) == (DateTime.Now.Month - 1)).AsNoTracking().ToList().Count) /
+                        _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsActive && ((DateTime)i.LastModificationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count),
                 },
                 totalNewEmployee = new
                 {
-                    total = _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate != null && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
-                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate != null && (((DateTime)i.CreationTime).Month - 1) == (DateTime.Now.Month - 1)).AsNoTracking().ToList().Count) /
-                        _dataContext.Employee.Where(i => i.Status == Status.Approved && i.LeaveDate != null && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count),
+                    total = _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsActive && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
+                    percent = 100 - (int)Math.Round((double)(100 * _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsActive && (((DateTime)i.CreationTime).Month - 1) == (DateTime.Now.Month - 1)).AsNoTracking().ToList().Count) /
+                        _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsActive && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count),
                 },
-                totalRequestUpdateProfile = _dataContext.Employee.Where(i => i.Status != Status.Approved && i.LeaveDate != null && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
-                totalRequestChangeWorkingTime = _dataContext.TimeWorking.Where(i => i.Status != Status.Approved && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
-                totalRequestOff = _dataContext.OnLeave.Where(i => i.Status != Status.Approved && i.Option != OptionOnLeave.Late && i.Option != OptionOnLeave.LeaveEarly && ((DateTime)i.DateLeave).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
-                totalRequestLateOrLeaveEarly = _dataContext.OnLeave.Where(i => i.Status != Status.Approved && i.Option == OptionOnLeave.Late && i.Option == OptionOnLeave.LeaveEarly && ((DateTime)i.DateLeave).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
+                totalRequestUpdateProfile = _dataContext.Employee.Where(i => i.Status != RecordStatus.Approved && !i.IsActive && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
+                totalRequestChangeWorkingTime = _dataContext.TimeWorking.Where(i => i.Status != RecordStatus.Approved && ((DateTime)i.CreationTime).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
+                totalRequestOff = _dataContext.RequestOff.Where(i => i.Status != RecordStatus.Approved && i.Option != OptionRequest.Late && i.Option != OptionRequest.LeaveEarly && ((DateTime)i.DayOff).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
+                totalRequestLateOrLeaveEarly = _dataContext.RequestOff.Where(i => i.Status != RecordStatus.Approved && i.Option == OptionRequest.Late && i.Option == OptionRequest.LeaveEarly && ((DateTime)i.DayOff).Month == DateTime.Now.Month).AsNoTracking().ToList().Count,
                 totalPunish = totalPunish,
                 totalBounty = totalBounty,
                 totalEmployeeUpLevel = new
@@ -80,7 +81,7 @@ namespace HRM.Controllers
             var result = new List<PayOffForMonthDto>();
             for (int j = 1; j <= 12; j++)
             {
-                var payoffList = await _dataContext.Payoff.Where(i => i.IsDeleted == false && ((DateTime)i.CreationTime).Month == j).AsNoTracking().ToListAsync();
+                var payoffList = await _dataContext.PayOff.Where(i => i.IsDeleted == false && ((DateTime)i.CreationTime).Month == j).AsNoTracking().ToListAsync();
                 int totalPunish = 0;
                 int totalBounty = 0;
                 foreach (var i in payoffList)
@@ -111,7 +112,7 @@ namespace HRM.Controllers
             var list = new List<Employee>();
             foreach (var i in result)
             {
-                list.Add(_dataContext.Employee.Find(i.EmployeeId));
+                list.Add(_dataContext.Employee.Find(i.UserId));
             }
             return CustomResult(list);
         }

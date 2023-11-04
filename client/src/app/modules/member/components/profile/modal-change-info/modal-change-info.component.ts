@@ -25,18 +25,13 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
   departmentList = new Observable<DepartmentResponse[]>();
 
   constructor(
-    private departmentService: DepartmentService,
     private accountService: AccountService,
     private notification: NzNotificationService,
-    private positionService: PositionService,
     private dataService: DataService,
     private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
-    this.departmentList = this.departmentService.departmentList$;
-    this.levelList = this.dataService.levelList;
-    this.positionList = this.positionService.positionList$;
     this.bankList = this.dataService.bankList;
   }
 
@@ -47,22 +42,11 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
 
   changeInfoForm() {
     this.infoForm = this.fb.group({
-      id: [null, Validators.required],
-      userCode: [null, Validators.required],
-      fullName: [null, Validators.required],
-      sex: [true, Validators.required],
-      email: [null, Validators.required],
       phone: [null, Validators.required],
-      doB: [null, Validators.required],
-      level: [Level.Intern, Validators.required],
-      position: [1, Validators.required],
-      departmentId: [null],
-      startingDate: [null, Validators.required],
       bank: [null],
       bankAccount: [null],
       taxCode: [null],
       insuranceStatus: [null],
-      identify: [null, Validators.required],
       placeOfOrigin: [null],
       placeOfResidence: [null],
       dateOfIssue: [null],
@@ -72,7 +56,6 @@ export class ModalChangeInfoComponent implements OnInit, OnChanges {
 
   submitForm() {
     if (this.infoForm.valid) {
-      this.infoForm.controls['userCode'].setValue(this.user.userCode);
       this.accountService
         .requestChangeInfor(this.infoForm.value)
         .subscribe((response) => {

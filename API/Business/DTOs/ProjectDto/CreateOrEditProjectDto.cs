@@ -1,4 +1,5 @@
 ﻿using Entities.Enum;
+using Entities.Enum.Project;
 
 namespace Business.DTOs.ProjectDto
 {
@@ -11,7 +12,7 @@ namespace Business.DTOs.ProjectDto
         public string ProjectCode { get; set; }
         public DateTime DeadlineDate { get; set; }
         public Priority PriorityCode { get; set; }
-        public StatusTask StatusCode { get; set; }
+        public WorkStatus StatusCode { get; set; }
         public List<AddMemberToProjectDto> Members { get; set; }
     }
 }

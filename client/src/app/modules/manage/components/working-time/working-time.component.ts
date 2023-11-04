@@ -41,12 +41,7 @@ export class WorkingTimeComponent implements OnInit {
   }
 
   getUserName(id: string) {
-    let name: string | undefined;
-    this.employeeService.employeeList$
-      .subscribe((data: Employee[]) => {
-        name = data.find(d => d.id == id)?.fullName;
-      });
-    return name;
+    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   calcTime(startTime: any, endTime: any) {

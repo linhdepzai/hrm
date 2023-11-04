@@ -9,6 +9,7 @@ using Entities;
 using Business.DTOs.MessageDto;
 using Entities.Enum;
 using Business.Interfaces.IMessageService;
+using Entities.Enum.Record;
 
 namespace Business.Services.MessageService
 {
@@ -45,11 +46,11 @@ namespace Business.Services.MessageService
                                  {
                                      Id = m.Id,
                                      SenderId = m.SenderId,
-                                     SenderUserName = m.SenderUserName,
-                                     SenderPhotoUrl = _context.Employee.Where(i => i.Id == m.SenderId && i.Status == Status.Approved).First().Avatar,
+                                     SenderUserName = _context.Employee.FirstOrDefault(i => i.AppUserId == m.SenderId && i.Status == RecordStatus.Approved).FullName,
+                                     SenderPhotoUrl = _context.AppUser.FirstOrDefault(i => i.Id == m.SenderId).AvatarUrl,
                                      RecipientId = m.RecipientId,
-                                     RecipientUserName = m.RecipientUserName,
-                                     RecipientPhotoUrl = _context.Employee.Where(i => i.Id == m.RecipientId && i.Status == Status.Approved).First().Avatar,
+                                     RecipientUserName = _context.Employee.FirstOrDefault(i => i.AppUserId == m.RecipientId && i.Status == RecordStatus.Approved).FullName,
+                                     RecipientPhotoUrl = _context.AppUser.FirstOrDefault(i => i.Id == m.RecipientId).AvatarUrl,
                                      Content = m.Content,
                                      DateRead = m.DateRead,
                                      MessageSent = m.MessageSent,

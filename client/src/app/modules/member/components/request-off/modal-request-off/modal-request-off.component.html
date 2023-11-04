@@ -17,7 +17,7 @@
     <div class="request-list">
         <div *ngFor="let item of requestList" class="item-request">
             {{ getNameOptionLeave(item.option) }} (
-                {{ item.date | date: 'dd-MM-YYYY' }}
+                {{ item.dayOff | date: 'dd-MM-YYYY' }}
             )
         </div>
     </div>

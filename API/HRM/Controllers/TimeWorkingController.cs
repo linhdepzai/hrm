@@ -8,6 +8,8 @@ using Database;
 using Business.DTOs.TimeWorkingDto;
 using Entities;
 using Entities.Enum;
+using Entities.Enum.Record;
+using Microsoft.AspNetCore.Http;
 
 namespace HRM.Controllers
 {
@@ -19,26 +21,27 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{userId}/get-all")]
+        public async Task<IActionResult> GetAll(Guid userId)
         {
             var list = await _dataContext.TimeWorking.AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
-        [HttpPost("requestChangeTimeWorking")]
-        public async Task<IActionResult> RequestChangeWorkingTime(CreateOrEditTimeWorkingDto input)
+        [HttpPost("{userId}/request-change-timeWorking")]
+        public async Task<IActionResult> RequestChangeWorkingTime(Guid userId, CreateOrEditTimeWorkingDto input)
         {
-            var timeWorking = await _dataContext.TimeWorking.FirstOrDefaultAsync(i => i.EmployeeId == input.EmployeeId && i.Status == Status.Pending);
+            var timeWorking = await _dataContext.TimeWorking.FirstOrDefaultAsync(i => i.UserId == userId && i.Status == RecordStatus.Pending);
             if (timeWorking != null)
             {
-                timeWorking.EmployeeId = input.EmployeeId;
+                timeWorking.UserId = userId;
                 timeWorking.MorningStartTime = input.MorningStartTime.AddHours(7);
                 timeWorking.MorningEndTime = input.MorningEndTime.AddHours(7);
                 timeWorking.AfternoonStartTime = input.AfternoonStartTime.AddHours(7);
                 timeWorking.AfternoonEndTime = input.AfternoonEndTime.AddHours(7);
                 timeWorking.ApplyDate = input.ApplyDate.AddHours(7);
                 timeWorking.RequestDate = DateTime.Now;
-                timeWorking.Status = Status.Pending;
+                timeWorking.Status = RecordStatus.Pending;
+                timeWorking.LastModifierUserId = userId;
                 _dataContext.TimeWorking.Update(timeWorking);
                 await _dataContext.SaveChangesAsync();
                 return CustomResult(timeWorking);
@@ -48,22 +51,23 @@ namespace HRM.Controllers
                 var newTimeWorking = new TimeWorking
                 {
                     Id = new Guid(),
-                    EmployeeId = input.EmployeeId,
+                    UserId = userId,
                     MorningStartTime = input.MorningStartTime.AddHours(7),
                     MorningEndTime = input.MorningEndTime.AddHours(7),
                     AfternoonStartTime = input.AfternoonStartTime.AddHours(7),
                     AfternoonEndTime = input.AfternoonEndTime.AddHours(7),
                     ApplyDate = input.ApplyDate.AddHours(7),
                     RequestDate = DateTime.Now,
-                    Status = Status.Pending,
+                    Status = RecordStatus.Pending,
+                    CreatorUserId = userId,
                 };
                 await _dataContext.TimeWorking.AddAsync(newTimeWorking);
                 await _dataContext.SaveChangesAsync();
                 return CustomResult(newTimeWorking);
             }
         }
-        [HttpPut("updateStatus")]
-        public async Task<IActionResult> UpdateStatus(UpdateStatusTimeWorkingDto input)
+        [HttpPut("{userId}/update-status")]
+        public async Task<IActionResult> UpdateStatus(Guid userId, UpdateStatusTimeWorkingDto input)
         {
             var timeWorking = await _dataContext.TimeWorking.FindAsync(input.Id);
             if (timeWorking != null)
@@ -71,10 +75,11 @@ namespace HRM.Controllers
                 timeWorking.Status = input.Status;
                 string applyDate = timeWorking.ApplyDate.ToString();
                 string today = DateTime.Now.ToString();
-                if (input.Status == Status.Approved && DateTime.Compare(DateTime.Parse(applyDate), DateTime.Parse(today)) < 0)
+                if (input.Status == RecordStatus.Approved && DateTime.Compare(DateTime.Parse(applyDate), DateTime.Parse(today)) < 0)
                 {
                     timeWorking.ApplyDate = DateTime.Now;
                 }
+                timeWorking.LastModifierUserId = userId;
             };
             _dataContext.TimeWorking.Update(timeWorking);
             await _dataContext.SaveChangesAsync();

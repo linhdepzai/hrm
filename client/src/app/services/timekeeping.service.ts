@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class TimekeepingService {
   public myTimeKeepingList$ = new BehaviorSubject<TimeKeepingResponse[]>([]);
+  private baseUrl = environment.baseUrl + 'TimeKeeping/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
 
   constructor(
     private notification: NzNotificationService,
@@ -18,15 +19,15 @@ export class TimekeepingService {
   ) { }
 
   checkinOrCheckout(payload: CheckinOrCheckout): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'TimeKeeping/checkinOrCheckout', payload)
+    return this.httpClient.post<ApiResponse>(this.baseUrl + 'checkin-or-checkout', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
       }));
   }
 
-  getTimeKeepingForUser(id: string, month: number, year: number) {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + `TimeKeeping/getTimeKeepingForUser?id=${id}&month=${month}&year=${year}`)
+  getTimeKeepingForUser(month: number, year: number) {
+    return this.httpClient.get<ApiResponse>(this.baseUrl + `get-timeKeeping-for-user?month=${month}&year=${year}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -40,7 +41,7 @@ export class TimekeepingService {
   }
 
   complainDailyCheckin(payload: any): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'TimeKeeping/complainDailyCheckin', payload)
+    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'complain-daily-checkin', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

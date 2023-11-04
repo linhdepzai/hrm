@@ -1,5 +1,4 @@
-﻿using Entities.Enum;
-using System;
+﻿using Entities.Enum.User;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities
@@ -8,8 +7,8 @@ namespace Entities
     {
         public DateTime DateEvaluate { get; set; }
         public Guid PMId { get; set; }
-        [ForeignKey("Employee")]
-        public Guid EmployeeId { get; set; }
+        [ForeignKey("AppUserId")]
+        public Guid UserId { get; set; }
         public Level OldLevel { get; set; }
         public Level NewLevel { get; set; }
         public string? Note { get; set; }

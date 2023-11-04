@@ -1,19 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System;
 
 namespace Entities
 {
     public class Message : BaseEntity<Guid>
     {
-        [Required, ForeignKey("Employee")]
+        [Required, ForeignKey("AppUserId")]
         public Guid SenderId { get; set; }
-        [Required, StringLength(40)]
-        public string? SenderUserName { get; set; }
-        [Required, ForeignKey("Employee")]
+        [Required, ForeignKey("AppUserId")]
         public Guid RecipientId { get; set; }
-        [Required, StringLength(40)]
-        public string? RecipientUserName { get; set; }
         public string? Content { get; set; }
         public DateTime? DateRead { get; set; }
         public DateTime MessageSent { get; set; } = DateTime.Now;

@@ -13,8 +13,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class EmployeeService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
-  public employeeListForLeader$ = new BehaviorSubject<Employee[]>([]);
   public requestChangeInfoList$ = new BehaviorSubject<Employee[]>([]);
+  private baseUrl = environment.baseUrl + 'Employee/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
 
   constructor(
     private notification: NzNotificationService,
@@ -23,7 +23,7 @@ export class EmployeeService {
   ) { }
 
   getAllEmployee() {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Employee/getAll')
+    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all/Approved')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -34,7 +34,7 @@ export class EmployeeService {
   }
 
   saveEmployee(payload: Employee): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Employee/save', payload)
+    return this.httpClient.post<ApiResponse>(this.baseUrl + 'save', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -42,8 +42,7 @@ export class EmployeeService {
   }
 
   deleteEmployee(id: string): Observable<ApiResponse> {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.delete<ApiResponse>(environment.baseUrl + `Employee/delete/${id}?employeeId=${id}`)
+    return this.httpClient.delete<ApiResponse>(this.baseUrl + `delete/${id}?employeeId=${id}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -51,8 +50,7 @@ export class EmployeeService {
   }
 
   getAllRequestChangeInfo() {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Employee/getAllRequestChangeInfo/' + user.id)
+    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all/Pending')
       .pipe(catchError((err) => {
         this.notification.error('Error!', err.error.message);
         return of(err);
@@ -63,22 +61,10 @@ export class EmployeeService {
   }
 
   updateStatusUserInfo(payload: { id: string, pmId: string, status: Status }): Observable<ApiResponse> {
-    return this.httpClient.put<ApiResponse>(environment.baseUrl + 'Employee/updateStatus', payload)
+    return this.httpClient.put<ApiResponse>(this.baseUrl + 'update-status', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
       }));
-  }
-
-  getAllEmployeeForLeader() {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Employee/getAll?id=' + user.id)
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
-      .subscribe((response) => {
-        this.employeeListForLeader$.next(response.data);
-      });
   }
 }

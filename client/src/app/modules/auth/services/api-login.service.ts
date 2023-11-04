@@ -25,12 +25,4 @@ export class ApiLoginService {
         return of(err);
       }));
   }
-
-  getAllPosition(): Observable<ApiResponse> {
-    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'position/getAll')
-      .pipe(catchError((err) => {
-        this.message.error('Server not responding!!!', { nzDuration: 3000 });
-        return of(err);
-      }))
-  }
 }

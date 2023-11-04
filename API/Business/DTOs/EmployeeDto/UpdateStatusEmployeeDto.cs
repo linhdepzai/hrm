@@ -1,4 +1,5 @@
 ﻿using Entities.Enum;
+using Entities.Enum.Record;
 using System;
 
 namespace Business.DTOs.EmployeeDto
@@ -6,7 +7,6 @@ namespace Business.DTOs.EmployeeDto
     public class UpdateStatusEmployeeDto
     {
         public Guid Id { get; set; }
-        public Guid PmId { get; set; }
-        public Status Status { get; set; }
+        public RecordStatus Status { get; set; }
     }
 }

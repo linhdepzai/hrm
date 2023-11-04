@@ -6,20 +6,27 @@ export interface Login {
     rememberMe: boolean;
 }
 
+export interface Role {
+    id: string,
+    name: string,
+}
+
 export interface Employee {
     id: string | null,
+    appUserId: string | null,
+    roles: Role[],
     avatar: string,
     userCode: string,
     fullName: string,
-    sex: true,
+    gender: true,
     email: string,
     password: string,
     phone: string,
     doB: Date,
     level: Level,
-    position: number,
+    positionId: string,
     departmentId: string,
-    startingDate: Date,
+    joinDate: Date,
     bank: string,
     bankAccount: string,
     taxCode: string,
@@ -67,11 +74,8 @@ export interface CheckinOrCheckout {
 }
 
 export interface ChangePassword {
-    id: string,
-    email: string,
-    oldPassword: string,
+    currentPassword: string,
     newPassword: string,
-    confirmPassword: string,
 }
 
 export interface WorkingTimeRequest {

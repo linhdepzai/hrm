@@ -19,7 +19,6 @@ export class ModalListCheckinComponent implements OnInit {
   monthList: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   yearList: number[] = [];
   today = new Date();
-  user!: LoginResponse;
   totalPunish: number = 0;
   month = new Date().getMonth() + 1;
   year = new Date().getFullYear();
@@ -34,8 +33,7 @@ export class ModalListCheckinComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.accountService.getAllRequestChangeTimeWorkingForUser(this.user.id);
+    this.accountService.getAllRequestChangeTimeWorkingForUser();
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, this.today.getFullYear() + i];
     };
@@ -51,7 +49,7 @@ export class ModalListCheckinComponent implements OnInit {
   }
 
   filterYear(year: number) {
-    this.timekeepingService.getTimeKeepingForUser(this.user.id, this.month, year);
+    this.timekeepingService.getTimeKeepingForUser(this.month, year);
     this.yearList = [];
     for (let i = -10; i <= 10; i++) {
       this.yearList = [...this.yearList, year + i];
@@ -59,7 +57,7 @@ export class ModalListCheckinComponent implements OnInit {
   }
 
   filterMonth(month: number) {
-    this.timekeepingService.getTimeKeepingForUser(this.user.id, month, this.year);
+    this.timekeepingService.getTimeKeepingForUser(month, this.year);
   }
 
   openComplain(id: string | null) {

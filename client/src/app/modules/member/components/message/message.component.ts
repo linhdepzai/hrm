@@ -68,8 +68,8 @@ export class MessageComponent implements OnInit, OnDestroy {
   }
 
   openMessage(user: Employee) {
-    this.messageService.createHubConnection(this.user, user.id!);
-    this.recipient = { id: user.id!, name: user.fullName, photoUrl: user.avatar };
+    this.messageService.createHubConnection(this.user, user.appUserId!);
+    this.recipient = { id: user.appUserId!, name: user.fullName, photoUrl: user.avatar };
     this.isVisibleCurrentMessage = true;
   }
 

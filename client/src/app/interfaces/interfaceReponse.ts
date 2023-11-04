@@ -1,4 +1,4 @@
-import { Bank, Level, OptionOnLeave, Priority, ProjectType, Status, StatusTask } from "../enums/Enum";
+import { Bank, Level, OptionRequestOff, Priority, ProjectType, Status, StatusTask } from "../enums/Enum";
 
 export interface ApiResponse {
     statusCode: number,
@@ -9,13 +9,17 @@ export interface LoginResponse {
     id: string;
     avatar: string,
     fullName: string;
-    sex: boolean;
+    gender: boolean;
     email: string,
     phone: string,
     doB: Date,
     level: Level,
-    position: number,
+    positionId: string,
+    positionName: string,
+    positionColor: string,
     departmentId: string,
+    departmentName: string,
+    departmentColor: string,
     startingDate: Date,
     bank: Bank | null,
     bankAccount: string,
@@ -27,8 +31,7 @@ export interface LoginResponse {
     dateOfIssue: string,
     issuedBy: string,
     userCode: string,
-    token: string,
-    isLeader: boolean,
+    token: string
 }
 
 export interface DepartmentResponse {
@@ -39,11 +42,12 @@ export interface DepartmentResponse {
     boss: string,
 }
 
-export interface OnLeaveResponse {
+export interface RequestOffResponse {
     id: string,
-    employeeId: string,
-    dateLeave: Date,
-    option: OptionOnLeave,
+    userId: string,
+    avatarUser: string | null,
+    dayOff: Date,
+    option: OptionRequestOff,
     reason: string,
     status: Status,
     creationTime: Date,
@@ -100,7 +104,7 @@ export interface Evaluate {
 }
 
 export interface Position {
-    id: number | null,
+    id: string | null,
     name: string,
     color: string,
 }
@@ -118,7 +122,7 @@ export interface Salary {
     id: string,
     salaryCode: string,
     level: Level,
-    position: number,
+    positionId: string,
     money: number,
     welfare: number,
 }

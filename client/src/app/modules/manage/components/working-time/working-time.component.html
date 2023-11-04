@@ -27,7 +27,9 @@
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table.data" cdkDrag>
-            <td>{{ getUserName(data.employeeId) }}</td>
+            <td nz-typography nzEllipsis>
+                <span nz-tooltip [nzTooltipTitle]="getUserName(data.employeeId)">{{ getUserName(data.employeeId) }}</span>
+            </td>
             <td nzAlign="center">{{ data.applyDate | date: 'dd/MM/yyyy' }}</td>
             <td nzAlign="center">{{ data.morningStartTime | date: 'HH:mm' }}</td>
             <td nzAlign="center">{{ data.morningEndTime | date: 'HH:mm' }}</td>

@@ -22,7 +22,6 @@ export class CheckinComponent implements OnInit, OnDestroy {
   checkinList: { photo: string, time: Date, checkin: boolean, punish: boolean }[] = [];
   confirmModal?: NzModalRef;
   checkinForm!: FormGroup;
-  user!: LoginResponse;
   myTimeKeepingList: TimeKeepingResponse[] = [];
   btnText = 'Check In';
   modalTitle = '';
@@ -38,8 +37,7 @@ export class CheckinComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.timekeepingService.getTimeKeepingForUser(this.user.id, new Date().getMonth() + 1, new Date().getFullYear());
+    this.timekeepingService.getTimeKeepingForUser(new Date().getMonth() + 1, new Date().getFullYear());
     this.timekeepingService.myTimeKeepingList$.subscribe((data) => {
       this.myTimeKeepingList = data;
       this.checkTimeKeepingToday();
@@ -81,7 +79,6 @@ export class CheckinComponent implements OnInit, OnDestroy {
 
   initForm() {
     this.checkinForm = this.fb.group({
-      employeeId: [this.user.id, Validators.required],
       checkin: [new Date()],
       photoCheckin: [''],
       checkout: [new Date()],
@@ -107,8 +104,6 @@ export class CheckinComponent implements OnInit, OnDestroy {
 
   showConfirm(): void {
     this.trigger.next();
-    const check = this.myTimeKeepingList.find(i => this.datepipe.transform(i.checkin, 'dd/MM/YYYY')?.indexOf(this.datepipe.transform(new Date(), 'dd/MM/YYYY')!) != -1);
-    this.checkinForm.controls['employeeId'].setValue(this.user.id);
     this.checkinForm.controls['checkin'].setValue(new Date());
     this.checkinForm.controls['photoCheckin'].setValue(this.webcamImage.imageAsDataUrl);
     this.checkinForm.controls['checkout'].setValue(new Date());

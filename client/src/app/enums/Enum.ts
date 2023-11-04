@@ -35,7 +35,7 @@ export enum Status {
     Rejected = 4,
 }
 
-export enum OptionOnLeave {
+export enum OptionRequestOff {
     OffMorning = 1,
     OffAfternoon = 2,
     OffFullDay = 3,

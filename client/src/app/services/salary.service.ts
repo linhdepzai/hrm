@@ -5,9 +5,7 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
 import { ApiResponse, Salary, SalaryForEmployee } from 'src/app/interfaces/interfaceReponse';
 import { environment } from 'src/environments/environment';
-import { Level } from '../enums/Enum';
-import { DataService } from './data.service';
-import { NotificationPayload, NotificationSalaryPayload, UpdateSalaryPayload } from '../interfaces/interfaces';
+import { NotificationSalaryPayload, UpdateSalaryPayload } from '../interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +18,6 @@ export class SalaryService {
     private httpClient: HttpClient,
     private message: NzMessageService,
     private notification: NzNotificationService,
-    private dataService: DataService,
   ) { }
 
   getAllSalary() {

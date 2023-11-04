@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Entities
+﻿namespace Entities
 {
-    public class Position
+    public class Position : BaseEntity<Guid>
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
         public string? Color { get; set; }
         public ICollection<Employee> Employee { get; set; }

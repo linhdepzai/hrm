@@ -43,7 +43,7 @@ namespace HRM.Controllers
             if (newPosition != null) return CustomResult("PositionName is taken", HttpStatusCode.NotFound);
             var position = new Position
             {
-                Id = new int(),
+                Id = new Guid(),
                 Name = input.Name,
                 Color = input.Color,
             };

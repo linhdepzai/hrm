@@ -34,7 +34,7 @@ namespace HRM.Controllers
                                               IsRead = e.IsRead,
                                               CreateUserId = n.CreatorUserId,
                                               CreateUserName = _dataContext.Employee.FirstOrDefault(i => i.Id == n.CreatorUserId).FullName,
-                                              CreateUserPhoto = _dataContext.Employee.FirstOrDefault(i => i.Id == n.CreatorUserId).Avatar,
+                                              CreateUserPhoto = _dataContext.AppUser.FirstOrDefault(i => i.Id == n.CreatorUserId).AvatarUrl,
                                           }).AsNoTracking().ToListAsync();
             return CustomResult(notificationList);
         }
@@ -76,15 +76,15 @@ namespace HRM.Controllers
                 await _dataContext.SaveChangesAsync();
             };
             var month = _dataContext.Notification.FirstOrDefault(i => i.Id == id).CreateDate.Month;
-            var salary = (from es in _dataContext.EmployeeSalary
-                         join s in _dataContext.Salary on es.Salary equals s.Id
-                         join e in _dataContext.Employee on es.EmployeeId equals e.Id
-                         where es.EmployeeId == employeeId && es.Date.Month == month
+            var salary = (from es in _dataContext.SalaryReport
+                          join s in _dataContext.Salary on es.Salary equals s.Id
+                         join e in _dataContext.Employee on es.UserId equals e.Id
+                         where es.UserId == employeeId && es.Date.Month == month
                          select new
                          {
                              Id = es.Id,
                              Employee = e.FullName,
-                             Position = s.Position,
+                             PositionId = s.PositionId,
                              Level = s.Level,
                              SalaryCode = s.SalaryCode,
                              Salary = s.Money,

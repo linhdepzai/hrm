@@ -4,6 +4,7 @@ using Business.Interfaces.IDepartmentService;
 using Database;
 using Entities;
 using Entities.Enum;
+using Entities.Enum.Record;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace Business.Services.DepartmentService
                                      Icon = d.Icon,
                                      Color = d.Color,
                                      Boss = d.Boss,
-                                     BossName = _context.Employee.FirstOrDefault(e => e.Id == d.Boss && e.Status == Status.Approved).FullName,
+                                     BossName = _context.Employee.FirstOrDefault(e => e.Id == d.Boss && e.Status == RecordStatus.Approved).FullName,
                                  }).AsNoTracking().ToListAsync();
             return list;
         }

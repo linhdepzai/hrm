@@ -5,7 +5,6 @@ namespace Business.DTOs.TimeWorkingDto
 {
     public class CreateOrEditTimeWorkingDto
     {
-        public Guid EmployeeId { get; set; }
         public DateTime MorningStartTime { get; set; }
         public DateTime MorningEndTime { get; set; }
         public DateTime AfternoonStartTime { get; set; }

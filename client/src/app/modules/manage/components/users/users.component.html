@@ -28,7 +28,7 @@
     <thead>
         <tr>
             <th nzAlign="center">Name</th>
-            <th nzAlign="center">Sex</th>
+            <th nzAlign="center">Gender</th>
             <th nzAlign="center">Email</th>
             <th nzAlign="center">Phone</th>
             <th nzAlign="center">Level</th>
@@ -39,16 +39,20 @@
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table.data" cdkDrag>
-            <td>{{ data.fullName }}</td>
-            <td nzAlign="center">
-                <i class="fa-solid" [ngClass]="data.sex == true ? 'fa-mars' : 'fa-venus'"></i>
+            <td nz-typography nzEllipsis>
+                <span nz-tooltip [nzTooltipTitle]="data.fullName">{{ data.fullName }}</span>
             </td>
-            <td>{{ data.email }}</td>
+            <td nzAlign="center">
+                <i class="fa-solid" [ngClass]="data.gender == true ? 'fa-mars' : 'fa-venus'"></i>
+            </td>
+            <td nz-typography nzEllipsis>
+                <span nz-tooltip [nzTooltipTitle]="data.email">{{ data.email }}</span>
+            </td>
             <td nzAlign="center">{{ data.phone }}</td>
             <td nzAlign="center">
                 <app-tag [label]="level[data.level]"></app-tag>
             </td>
-            <td nzAlign="center">{{ getPositionName(data.position) }}</td>
+            <td nzAlign="center">{{ getPositionName(data.positionId) }}</td>
             <td nzAlign="center">
                 <app-tag *ngIf="data.departmentId" [color]="getDepartmentName(data.departmentId).color"
                     [label]="getDepartmentName(data.departmentId).name"></app-tag>

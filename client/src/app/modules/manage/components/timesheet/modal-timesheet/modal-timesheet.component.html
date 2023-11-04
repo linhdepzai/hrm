@@ -11,7 +11,7 @@
     <span>List Off {{ date | date: 'dd-MM-yyyy' }}</span>
 </ng-template>
 <ng-template #content>
-    <nz-table #table [nzData]="onleaveList" [nzShowTotal]="rangeTemplate">
+    <nz-table #table [nzData]="requestOffList" [nzShowTotal]="rangeTemplate">
         <ng-template #rangeTemplate let-range="range" let-total>
             {{ range[0] }}-{{ range[1] }} of {{ total }} items
         </ng-template>
@@ -23,12 +23,12 @@
                 <th nzAlign="center">Status</th>
                 <th nzAlign="center">Request At</th>
                 <th nzAlign="center">Approved At</th>
-                <th *ngIf="user.isLeader" nzAlign="center">Action</th>
+                <th nzAlign="center">Action</th>
             </tr>
         </thead>
         <tbody  cdkDropList (cdkDropListDropped)="drop($event)">
             <tr *ngFor="let item of table.data" cdkDrag>
-                <td>{{ getAccountName(item.employeeId) }}</td>
+                <td>{{ getAccountName(item.userId) }}</td>
                 <td>{{ getOptionRequestOff(item.option) }}</td>
                 <td>{{ item.reason }}</td>
                 <td nzAlign="center" [ngClass]="status[item.status]">{{ status[item.status] }}</td>
@@ -39,7 +39,7 @@
                         {{ getAccountName(item.lastModifierUserId) }}
                     </span>
                 </td>
-                <td  *ngIf="user.isLeader" nzAlign="center">
+                <td  nzAlign="center">
                     <ng-container *ngIf="item.status != 3">
                         <button nz-button nzDanger nzType="primary" class="btn-action" (click)="actionRequestOff('reject', item.id)">
                             <i class="fa-solid fa-xmark"></i>

@@ -6,6 +6,7 @@ using Business.Interfaces.IMessageService;
 using Database;
 using Business.DTOs.MessageDto;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.SignalR
 {
@@ -28,7 +29,7 @@ namespace Business.SignalR
             var currentUserId = httpContext.Request.Query["currentUserId"].ToString();
             var recipientUserId = httpContext.Request.Query["recipientUserId"].ToString();
 
-            var groupName = GetGroupName(Context.User.Identity.Name, _dataContext.Employee.Where(i => i.Id == new Guid(recipientUserId)).First().FullName);
+            var groupName = GetGroupName(Context.User.Identity.Name, _dataContext.Employee.Where(i => i.AppUserId == new Guid(recipientUserId)).First().FullName);
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             var messages = await _messageService.GetMessageThread(new Guid(currentUserId), new Guid(recipientUserId));
             await Clients.Group(groupName).SendAsync("ReceiveMessageThread", messages);
@@ -41,18 +42,16 @@ namespace Business.SignalR
 
         public async Task SendMessage(CreateMessageDto createMessageDto)
         {
-            var sender = await _dataContext.Employee.FindAsync(createMessageDto.SenderId);
-            var recipient = await _dataContext.Employee.FindAsync(createMessageDto.RecipientId);
+            var sender = await _dataContext.Employee.FirstOrDefaultAsync(i => i.AppUserId == createMessageDto.SenderId && i.Status == Entities.Enum.Record.RecordStatus.Approved);
+            var recipient = await _dataContext.Employee.FirstOrDefaultAsync(i => i.AppUserId == createMessageDto.RecipientId && i.Status == Entities.Enum.Record.RecordStatus.Approved);
 
             if (recipient == null) throw new HubException("Not found user");
 
             var message = new Message
             {
                 Id = new Guid(),
-                SenderId = sender.Id,
-                SenderUserName = sender.FullName,
-                RecipientId = recipient.Id,
-                RecipientUserName = recipient.FullName,
+                SenderId = sender.AppUserId,
+                RecipientId = recipient.AppUserId,
                 Content = createMessageDto.Content,
             };
             _messageService.AddMessage(message);

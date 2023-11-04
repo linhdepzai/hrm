@@ -2,7 +2,7 @@
     <div class="title">Message</div>
     <div class="content">
         <div *ngFor="let item of employeeList | async" (click)="openMessage(item!)">
-            <div *ngIf="item.id != user.id" class="card" nz-row [nzGutter]="24">
+            <div *ngIf="item.appUserId != user.id" class="card" nz-row [nzGutter]="24">
                 <div style="width: 100px;">
                     <nz-avatar [nzSize]="64" nzIcon="user" [nzSrc]="item.avatar"></nz-avatar>
                     <div [class.circle]="(presence.onlineUsers | async)!.includes(item.fullName)"></div>
@@ -12,14 +12,14 @@
                         {{ item.fullName }}
                     </div>
                     <div>
-                        <span [ngClass]="getTotalUnSeen(item.id!) != 0 ? 'fw-bold' : ''">
-                            {{ getTheLastMessageContent(item.id!) }}
+                        <span [ngClass]="getTotalUnSeen(item.appUserId!) != 0 ? 'fw-bold' : ''">
+                            {{ getTheLastMessageContent(item.appUserId!) }}
                         </span>
-                        <app-tag *ngIf="getTotalUnSeen(item.id!) != 0" [label]="getTotalUnSeen(item.id!).toString()"
+                        <app-tag *ngIf="getTotalUnSeen(item.appUserId!) != 0" [label]="getTotalUnSeen(item.appUserId!).toString()"
                             [color]="'red'"></app-tag>
                     </div>
                     <div>
-                        {{ getTheLastMessageTime(item.id!) }}
+                        {{ getTheLastMessageTime(item.appUserId!) }}
                     </div>
                 </div>
             </div>

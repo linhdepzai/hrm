@@ -11,6 +11,9 @@ namespace Business.Interfaces.IAccountService
 {
     public interface IAccountAppService
     {
-        public void Login(LoginDto input);
+        public void AddAsync(LoginDto input);
+        public void UpdateAsync(LoginDto input);
+        public Task<bool> SaveChangeAsync();
+        public void DeleteAsync();
     }
 }

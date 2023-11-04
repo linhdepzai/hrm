@@ -5,23 +5,25 @@ using Business.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using Entities;
 using System.IdentityModel.Tokens.Jwt;
+using Database;
 
 namespace HRM.Services
 {
     public class TokenService : ITokenService
     {
         private readonly SymmetricSecurityKey _key;
+        private readonly DataContext _context;
         public TokenService(IConfiguration config)
         {
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.GetSection("JWTToken:Key").Value!));
         }
 
-        public string CreateToken(Employee employee)
+        public string CreateToken(string email, string name)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, employee.Email),
-                new Claim(JwtRegisteredClaimNames.UniqueName, employee.FullName)
+                new Claim(JwtRegisteredClaimNames.NameId, email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, name)
             };
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
 

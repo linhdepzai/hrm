@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
@@ -10,6 +9,7 @@ import { DataService } from 'src/app/services/data.service';
 import { DepartmentService } from 'src/app/services/department.service';
 import { EmployeeService } from 'src/app/services/employee.service';
 import { PositionService } from 'src/app/services/position.service';
+import { RoleService } from 'src/app/services/role.service';
 
 @Component({
   selector: 'app-create-or-edit-employee',
@@ -26,11 +26,14 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   levelList = new Observable<{ value: Level; label: string }[]>();
   positionList = new Observable<Position[]>();
   bankList = new Observable<Bank[]>();
+  roleList = new Observable<any[]>();
   departmentList = new Observable<Department[]>();
   isVisiblePositionModal: boolean = false;
   isVisibleDepartmentModal: boolean = false;
   isEdit: boolean = false;
-  user!: LoginResponse;
+  roles: any;
+  user: LoginResponse= JSON.parse(localStorage.getItem('user')!);
+  roleSelect: string[] = [];
 
   constructor(
     private departmentService: DepartmentService,
@@ -39,44 +42,52 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
     private positionService: PositionService,
     private notification: NzNotificationService,
     private fb: FormBuilder,
-    private datepipe: DatePipe,
+    private roleService: RoleService,
   ) {
     this.initForm();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.employeeForm.reset();
+    this.roleSelect = [];
     this.isEdit = true;
     if (this.mode == 'create') {
       this.title = 'Create';
       this.employeeForm.enable();
     } else {
       this.employeeForm.patchValue(this.data!);
+      this.employeeForm.value.roles.forEach((i: any) => {
+        this.roleSelect.push(i.id);
+      });
       this.changeMode();
     }
   }
 
   ngOnInit(): void {
-    this.user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+    this.roleService.getAllRole();
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
     this.positionList = this.positionService.positionList$;
     this.bankList = this.dataService.bankList;
+    this.roleList = this.roleService.roleList$;
   }
 
   initForm() {
     this.employeeForm = this.fb.group({
       id: [null],
       fullName: [null, Validators.required],
-      sex: [true, Validators.required],
+      roles: [this.fb.array([{
+        id: [null],
+        name: [null]
+      }]), Validators.required],
+      gender: [true, Validators.required],
       email: [null, Validators.required],
       password: [null, Validators.required],
       phone: [null, Validators.required],
       doB: [null, Validators.required],
       level: [Level.Intern, Validators.required],
-      position: [1, Validators.required],
+      positionId: [1, Validators.required],
       departmentId: [null],
-      startingDate: [null, Validators.required],
       bank: [null],
       bankAccount: [null],
       taxCode: [null],
@@ -91,7 +102,6 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
 
   submitForm(mode: string) {
     if (mode == 'edit') {
-      this.employeeForm.controls['startingDate'].setValue(this.datepipe.transform(new Date(), 'YYYY-MM-dd'));
       if (this.employeeForm.valid) {
         this.employeeService.saveEmployee(this.employeeForm.value)
           .subscribe((response) => {
@@ -100,11 +110,8 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
               if (this.employeeForm.value.id) {
                 this.employeeService.employeeList$.value.splice(this.employeeService.employeeList$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
                 this.employeeService.employeeList$.next([...this.employeeService.employeeList$.value]);
-                this.employeeService.employeeListForLeader$.value.splice(this.employeeService.employeeListForLeader$.value.findIndex((item) => item.id === response.data.id), 1, response.data);
-                this.employeeService.employeeListForLeader$.next([...this.employeeService.employeeListForLeader$.value]);
               } else {
                 this.employeeService.employeeList$.next([response.data, ...this.employeeService.employeeList$.value]);
-                this.employeeService.employeeListForLeader$.next([response.data, ...this.employeeService.employeeListForLeader$.value]);
               };
             };
             this.close();
@@ -118,10 +125,9 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
         });
       }
     } else {
-      const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
       const payload = {
         id: this.data?.id!,
-        pmId: user.id,
+        pmId: this.user.id,
         status: mode == 'reject' ? Status.Rejected : Status.Approved,
       }
       this.employeeService
@@ -157,7 +163,6 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   resetForm() {
     this.employeeForm.reset();
     this.employeeForm.controls['level'].setValue(Level.Intern);
-    this.employeeForm.controls['position'].setValue(1);
-    this.employeeForm.controls['sex'].setValue(true);
+    this.employeeForm.controls['gender'].setValue(true);
   }
 }

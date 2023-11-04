@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Entities
+﻿namespace Entities
 {
     public class Notification : BaseEntity<Guid>
     {

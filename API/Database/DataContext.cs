@@ -9,23 +9,26 @@ namespace Database
         public DataContext(DbContextOptions options) : base(options)
         {
         }
+        public DbSet<AppUser> AppUser { get; set; }
+        public DbSet<AppRole> AppRole { get; set; }
+        public DbSet<AppUserRole> AppUserRole { get; set; }
         public DbSet<Employee> Employee { get; set; }
         public DbSet<Department> Department { get; set; }
         public DbSet<Evaluate> Evaluate { get; set; }
-        public DbSet<OnLeave> OnLeave { get; set; }
-        public DbSet<Payoff> Payoff { get; set; }
+        public DbSet<RequestOff> RequestOff { get; set; }
+        public DbSet<PayOff> PayOff { get; set; }
         public DbSet<Salary> Salary { get; set; }
         public DbSet<TimeKeeping> TimeKeeping { get; set; }
         public DbSet<TimeWorking> TimeWorking { get; set; }
         public DbSet<Project> Project { get; set; }
-        public DbSet<Tasks> Tasks { get; set; }
+        public DbSet<Issue> Issue { get; set; }
         public DbSet<Message> Message { get; set; }
         public DbSet<MemberProject> MemberProject { get; set; }
         public DbSet<Position> Position { get; set; }
         public DbSet<EmployeeSalary> EmployeeSalary { get; set; }
         public DbSet<Notification> Notification { get; set; }
         public DbSet<NotificationEmployee> NotificationEmployee { get; set; }
-        public DbSet<SalaryForEmployee> SalaryForEmployee { get; set; }
+        public DbSet<SalaryReport> SalaryReport { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
