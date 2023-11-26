@@ -27,6 +27,7 @@ export interface Employee {
     positionId: string,
     departmentId: string,
     joinDate: Date,
+    manager: string,
     bank: string,
     bankAccount: string,
     taxCode: string,
@@ -111,24 +112,20 @@ export interface NotificationPayload {
 }
 
 export interface EmployeeId {
-    employeeId: string
+    userId: string
 }
 
 export interface NotificationSalaryPayload {
-    actionId: string,
     month: number,
     year: number,
     employee: EmployeeId[],
 }
 
 export interface UpdateSalaryPayload {
-    id: string
-    actionId: string
-    salary: string
-    date: string
-    totalWorkdays: number
-    punish: number
-    bounty: number
-    actualSalary: number
+    id: string,
+    salary: string,
+    totalWorkdays: number,
+    punish: number,
+    bounty: number,
   }
   

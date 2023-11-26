@@ -22,21 +22,25 @@ namespace HRM.Controllers
             _dataContext = dataContext;
             _session = session;
         }
-        [HttpGet("getall")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{userId}/get-all")]
+        public async Task<IActionResult> GetAll(Guid userId)
         {
-            Guid id = new Guid(_session.GetString("UserId"));
-            var user = await _dataContext.Employee.FindAsync(id);
-            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
-            var isAccoutant = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Accoutant");
-            if (user.PositionId == isAdmin.Id || user.PositionId == isAccoutant.Id) return CustomResult(await _dataContext.PayOff.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
-            var departments = await _dataContext.Department.Where(i => i.Boss == id).AsNoTracking().ToListAsync();
+            var user = await _dataContext.Employee.FindAsync(userId);
+            var isAdmin = await (from u in _dataContext.AppUserRole
+                                 join r in _dataContext.AppRole on u.RoleId equals r.Id
+                                 where u.UserId == userId && (r.Name == "Admin" || r.Name == "Accoutant")
+                                 select new
+                                 {
+                                     Role = r.Name,
+                                 }).AsNoTracking().ToListAsync();
+            if (isAdmin.Count > 0) return CustomResult(await _dataContext.PayOff.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
+            var departments = await _dataContext.Department.Where(i => i.Boss == userId).AsNoTracking().ToListAsync();
             var list = new List<PayOff>();
             foreach (var department in departments)
             {
                 List<PayOff> data = await (from p in _dataContext.PayOff
                                            join e in _dataContext.Employee on p.UserId equals e.Id
-                                           where e.DepartmentId == department.Id && p.UserId != id
+                                           where e.DepartmentId == department.Id && p.UserId != userId
                                            select p).AsNoTracking().ToListAsync();
                 if (list.Any())
                 {
@@ -52,25 +56,25 @@ namespace HRM.Controllers
             }
             return CustomResult(list);
         }
-        [HttpPost("Save")]
-        public async Task<IActionResult> CreateOrEdit(CreateOrEditPayOffDto input)
+        [HttpPost("{userId}/Save")]
+        public async Task<IActionResult> CreateOrEdit(CreateOrEditPayOffDto input, Guid userId)
         {
             if (input.Id == null)
             {
-                return await Create(input);
+                return await Create(input, userId);
             }
             else
             {
-                return await Update(input);
+                return await Update(input, userId);
             }
         }
-        private async Task<IActionResult> Create(CreateOrEditPayOffDto input)
+        private async Task<IActionResult> Create(CreateOrEditPayOffDto input, Guid userId)
         {
             var newPayOff = new PayOff
             {
                 Id = new Guid(),
-                CreatorUserId = new Guid(_session.GetString("UserId")),
-                UserId = input.EmployeeId,
+                CreatorUserId = userId,
+                UserId = input.UserId,
                 Amount = input.Amount,
                 Date = input.Date,
                 Reason = input.Reason,
@@ -80,13 +84,13 @@ namespace HRM.Controllers
             await _dataContext.SaveChangesAsync();
             return CustomResult(newPayOff);
         }
-        private async Task<IActionResult> Update(CreateOrEditPayOffDto input)
+        private async Task<IActionResult> Update(CreateOrEditPayOffDto input, Guid userId)
         {
             var payoff = await _dataContext.PayOff.FindAsync(input.Id);
             if(payoff != null)
             {
-                payoff.LastModifierUserId = new Guid(_session.GetString("UserId"));
-                payoff.UserId = input.EmployeeId;
+                payoff.LastModifierUserId = userId;
+                payoff.UserId = input.UserId;
                 payoff.Amount = input.Amount;
                 payoff.Date = input.Date;
                 payoff.Reason = input.Reason;
@@ -97,10 +101,10 @@ namespace HRM.Controllers
             return CustomResult(payoff);
         }
         [HttpDelete("delete")]
-        public async Task<IActionResult> Delete(Guid payoffId)
+        public async Task<IActionResult> Delete(Guid payoffId, Guid userId)
         {
             var payoff = await _dataContext.PayOff.FindAsync(payoffId);
-            payoff.DeleteUserId = new Guid(_session.GetString("UserId"));
+            payoff.DeleteUserId = userId;
             _dataContext.Update(payoff);
             _dataContext.PayOff.Remove(payoff);
             await _dataContext.SaveChangesAsync();

@@ -18,6 +18,7 @@ namespace Business.DTOs.EmployeeDto
         public Level Level { get; set; }
         public Guid PositionId { get; set; }
         public Guid? DepartmentId { get; set; }
+        public Guid Manager { get; set; }
         public string? Bank { get; set; }
         public string? BankAccount { get; set; }
         public string? TaxCode { get; set; }

@@ -12,8 +12,8 @@
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table1.data" cdkDrag>
-            <td>{{ getEmployeeName(data.employeeId) }}</td>
-            <td nzAlign="center">{{ getSalaryName(data.salary) }}</td>
+            <td>{{ getEmployeeName(data.appUserId) }}</td>
+            <td nzAlign="center">{{ getSalaryName(data.salaryId) }}</td>
             <td nzAlign="center">
                 <button nz-button nzType="primary" (click)="openModalGeneral(data)">
                     <i class="fa-solid fa-pen-to-square"></i>
@@ -30,7 +30,7 @@
     </button>
     <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null"
         (ngModelChange)="searchName($event)" style="width: 20%;">
-        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.appUserId" *ngFor="let item of employeeList | async"></nz-option>
     </nz-select>
     <nz-select nzShowSearch nzPlaceHolder="Search level..." [ngModel]="filterSalaryMonth"
         (ngModelChange)="filterMonth($event)" style="width: 20%;">
@@ -50,7 +50,8 @@
             <th [nzChecked]="checked" [nzDisabled]="isDisable" [nzIndeterminate]="indeterminate" (nzCheckedChange)="onAllChecked($event)" nzWidth="50px"></th>
             <th nzAlign="center">Status</th>
             <th nzAlign="center">Employee</th>
-            <th nzAlign="center">Date</th>
+            <th nzAlign="center">Salary</th>
+            <th nzAlign="center">Punish</th>
             <th nzAlign="center">Salary</th>
             <th nzAlign="center">Workdays</th>
             <th nzAlign="center">Actual</th>
@@ -66,9 +67,10 @@
                 <i *ngIf="data.isConfirm == 1" class="fa-solid fa-check" style="color: aqua"></i>
                 <i *ngIf="data.isConfirm == 2" class="fa-solid fa-xmark" style="color: tomato"></i>
             </td>
-            <td>{{ getEmployeeName(data.employeeId) }}</td>
-            <td nzAlign="center">{{ data.date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ getEmployeeName(data.userId) }}</td>
             <td nzAlign="center">{{ getSalaryName(data.salary) }}</td>
+            <td nzAlign="center">{{ data.punish }}</td>
+            <td nzAlign="center">{{ data.bounty }}</td>
             <td nzAlign="center">{{ data.totalWorkdays }}</td>
             <td nzAlign="center">{{ data.actualSalary | vnd }}</td>
             <td nzAlign="center">
@@ -82,4 +84,4 @@
 <app-modal-salary-for-employee [visible]="visibleModal" [data]="data"
     (cancel)="visibleModal = false"></app-modal-salary-for-employee>
 <app-salary-for-employee-general-modal [visible]="visibleModalGeneral" [data]="dataGeneral"
-    (cancel)="visibleModalGeneral = false"></app-salary-for-employee-general-modal>
+    (cancel)="visibleModalGeneral = false" (submit)="visibleModalGeneral = false"></app-salary-for-employee-general-modal>

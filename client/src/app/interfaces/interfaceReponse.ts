@@ -57,7 +57,7 @@ export interface RequestOffResponse {
 
 export interface TimeWorkingResponse {
     id: string,
-    employeeId: string,
+    userId: string,
     morningStartTime: Date,
     morningEndTime: Date,
     afternoonStartTime: Date,
@@ -80,6 +80,19 @@ export interface ProjectResponse {
     pm: string
 }
 
+export interface IssueResponse {
+    id: string,
+    taskName: string,
+    deadlineDate: Date,
+    priorityCode: Priority,
+    statusCode: StatusTask,
+    description: string,
+    taskType: string,
+    taskCode: string,
+    ProjectId: string,
+    userId: string
+}
+
 export interface TimeKeepingResponse {
     id: string | null,
     employeeId: string,
@@ -96,7 +109,7 @@ export interface Evaluate {
     id: string,
     dateEvaluate: Date,
     pmId: string,
-    employeeId: string,
+    userId: string,
     oldLevel: Level,
     newLevel: Level,
     note: string,
@@ -111,7 +124,7 @@ export interface Position {
 
 export interface Payoff {
     id: string,
-    employeeId: string,
+    userId: string,
     reason: string,
     amount: number,
     date: Date,
@@ -129,7 +142,7 @@ export interface Salary {
 
 export interface SalaryForEmployee {
     id: string,
-    employeeId: string,
+    userId: string,
     salary: string,
     date: Date,
     totalWorkdays: number,

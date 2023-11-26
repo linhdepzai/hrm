@@ -49,7 +49,7 @@ export class PayoffComponent implements OnInit {
   }
 
   getUserName(id: string) {
-    return this.employeeList.find(i => i.id == id)?.fullName;
+    return this.employeeList.find(d => d.appUserId == id)?.fullName;
   }
 
   searchName(id: string) {
@@ -57,7 +57,7 @@ export class PayoffComponent implements OnInit {
       this.payoffList = data;
     });
     if (id != null) {
-      this.payoffList = this.payoffList.filter(i => i.employeeId == id);
+      this.payoffList = this.payoffList.filter(i => i.userId == id);
     };
   }
 

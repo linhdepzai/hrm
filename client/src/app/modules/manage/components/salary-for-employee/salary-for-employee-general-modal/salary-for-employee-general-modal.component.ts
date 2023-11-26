@@ -36,7 +36,7 @@ export class SalaryForEmployeeGeneralModalComponent implements OnChanges {
     if (this.data) {
       this.salaryForm.reset();
       this.salaryForm.patchValue(this.data);
-      this.salaryForm.controls['employeeId'].setValue(this.getUserName(this.data.employeeId));
+      this.salaryForm.controls['employeeId'].setValue(this.getUserName(this.data.appUserId));
       this.salaryForm.controls['employeeId'].disable();
     }
   }
@@ -45,17 +45,18 @@ export class SalaryForEmployeeGeneralModalComponent implements OnChanges {
     this.salaryForm = this.fb.group({
       id: [null],
       employeeId: [null],
-      salary: [null, Validators.required],
+      salaryId: [null, Validators.required],
     });
   }
 
   getUserName(id: string) {
-    return this.employeeService.employeeList$.value.find(d => d.id == id)?.fullName;
+    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   submitForm() {
-      this.salaryForm.controls['employeeId'].setValue(this.data.employeeId);
-      if (this.salaryForm.valid) {
+    this.salaryForm.controls['employeeId'].enable();
+    this.salaryForm.controls['employeeId'].setValue(this.data.appUserId);
+    if (this.salaryForm.valid) {
       this.salaryService.UpdateSalaryForEmployee(this.salaryForm.value)
         .subscribe((response) => {
           if (response.statusCode == 200) {

@@ -34,6 +34,7 @@ export class TeamProjectComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.memberList = [];
     this.employeeService.getAllEmployee();
     this.positionList = this.positionService.positionList$;
     this.memberForm = this.fb.group({
@@ -45,11 +46,12 @@ export class TeamProjectComponent implements OnInit {
     if (this.generalForm.id != ('' || null)) {
       this.projectService.project$.subscribe((data) => {
         data.members.forEach((member) => {
-          const user = this.employeeList.find(e => e.id == member.employeeId)!;
+          const user = this.employeeList.find(e => e.appUserId == member.employeeId)!;
           this.actionMember(user, 'add');
         });
       });
     };
+    console.log(this.memberList, this.employeeList)
   }
 
   actionMember(user: Employee, action: string) {
@@ -88,7 +90,7 @@ export class TeamProjectComponent implements OnInit {
     } else {
       this.memberList.forEach((item) => {
         const memberForm = this.fb.group({
-          employeeId: item.member.id,
+          employeeId: item.member.appUserId,
           type: item.type,
         });
         (this.memberForm.controls['members'] as FormArray).push(memberForm);
@@ -100,7 +102,7 @@ export class TeamProjectComponent implements OnInit {
             this.notification.success('Successfully!', 'This project has been created!');
             this.submit.emit();
           }
-        });;
+        });
     }
   }
 }

@@ -81,7 +81,7 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true">
+            <button [disabled]="!isEdit" nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Position</span>
             </button>
         </nz-form-item>
@@ -95,9 +95,18 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true">
+            <button [disabled]="!isEdit" nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Department</span>
             </button>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Manager</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid manager!">
+                <nz-select [ngModel]="employeeForm.value.manager" formControlName="manager" id="manager">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.fullName"
+                        *ngFor="let item of employeeList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="name">

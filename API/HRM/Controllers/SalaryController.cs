@@ -2,48 +2,41 @@
 using CoreApiResponse;
 using Database;
 using Entities;
-using Entities.Enum;
 using Entities.Enum.Record;
 using Entities.Enum.User;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HRM.Controllers
 {
     public class SalaryController : BaseApiController
     {
         private readonly DataContext _dataContext;
-        private readonly ISession _session;
 
-        public SalaryController(DataContext dataContext, ISession session)
+        public SalaryController(DataContext dataContext)
         {
             _dataContext = dataContext;
-            _session = session;
         }
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{userId}/get-all")]
+        public async Task<IActionResult> GetAll(Guid userId)
         {
             var list = await _dataContext.Salary.AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
-        [HttpGet("getAllSalaryForEmployee")]
-        public async Task<IActionResult> GetAllSalaryForEmployee(int month, int year)
+        [HttpGet("{userId}/get-all-salary-for-employee")]
+        public async Task<IActionResult> GetAllSalaryForEmployee(int month, int year, Guid userId)
         {
             var userList = await _dataContext.SalaryReport.Where(i => i.Date.Month - 1 == month && i.Date.Year == year).AsNoTracking().ToListAsync();
             return CustomResult(userList);
         }
-        [HttpPost("create")]
-        public async Task<IActionResult> Create(CreateSalaryDto input)
+        [HttpPost("{userId}/create")]
+        public async Task<IActionResult> Create(CreateSalaryDto input, Guid userId)
         {
             var salary = new Salary
             {
-                Id = new System.Guid(),
-                CreatorUserId = new Guid(_session.GetString("UserId")),
+                Id = new Guid(),
+                CreatorUserId = userId,
                 SalaryCode = Random(input),
                 Level = input.Level,
                 PositionId = input.PositionId,
@@ -54,26 +47,27 @@ namespace HRM.Controllers
             await _dataContext.SaveChangesAsync();
             return CustomResult(salary);
         }
-        [HttpPut("update")]
-        public async Task<IActionResult> Update(UpdateSalaryDto input)
+        [HttpPut("{userId}/update")]
+        public async Task<IActionResult> Update(UpdateSalaryDto input, Guid userId)
         {
+            var sal = await _dataContext.Salary.FirstOrDefaultAsync(i => i.Id == input.Salary);
             var salary = await _dataContext.SalaryReport.FindAsync(input.Id);
             if (salary != null)
             {
-                salary.LastModifierUserId = new Guid(_session.GetString("UserId"));
+                salary.LastModifierUserId = userId;
                 salary.Salary = input.Salary;
-                salary.Date = input.Date;
+                salary.Date = DateTime.Now;
                 salary.TotalWorkdays = input.TotalWorkdays;
                 salary.Punish = input.Punish;
                 salary.Bounty = input.Bounty;
-                salary.ActualSalary = input.ActualSalary;
+                salary.ActualSalary = sal.Money + sal.Welfare + input.Bounty - input.Punish;
+                _dataContext.Update(salary);
             }
-            _dataContext.Update(salary);
             await _dataContext.SaveChangesAsync();
             return CustomResult(salary);
         }
-        [HttpPost("sendNotificationSalary")]
-        public async Task<IActionResult> SendNotificationSalary(SendNotificationSalaryDto input)
+        [HttpPost("{userId}/send-notification-salary")]
+        public async Task<IActionResult> SendNotificationSalary(SendNotificationSalaryDto input, Guid userId)
         {
             var notification = new Notification
             {
@@ -83,7 +77,7 @@ namespace HRM.Controllers
                 Content = "",
                 Type = "Salary",
                 CreateDate = DateTime.Now,
-                CreatorUserId = new Guid(_session.GetString("UserId")),
+                CreatorUserId = userId,
             };
             await _dataContext.Notification.AddAsync(notification);
             foreach (var i in input.Employee)
@@ -94,7 +88,7 @@ namespace HRM.Controllers
                     NotificationId = notification.Id,
                     EmployeeId = i.EmployeeId,
                     IsRead = false,
-                    CreatorUserId = new Guid(_session.GetString("UserId")),
+                    CreatorUserId = userId,
                 };
                 await _dataContext.AddAsync(employee);
             }
@@ -109,39 +103,40 @@ namespace HRM.Controllers
             };
             return CustomResult(result);
         }
-        [HttpPut("confirmSalary")]
-        public async Task<IActionResult> ConfirmSalary(Guid salaryId, ConfirmStatus confirm)
+        [HttpPut("{userId}/confirm-salary")]
+        public async Task<IActionResult> ConfirmSalary(Guid salaryId, ConfirmStatus confirm, Guid userId)
         {
             var salary = await _dataContext.SalaryReport.FindAsync(salaryId);
             if (salary != null)
             {
                 salary.IsConfirm = confirm;
-                salary.LastModifierUserId = new Guid(_session.GetString("UserId"));
+                salary.LastModifierUserId = userId;
                 _dataContext.SalaryReport.Update(salary);
                 await _dataContext.SaveChangesAsync();
             }
             return CustomResult(salary);
         }
-        [HttpGet("getSalaryForEmployee")]
-        public async Task<IActionResult> GetSalaryForEmployee()
+        [HttpGet("{userId}/get-salary-for-employee")]
+        public async Task<IActionResult> GetSalaryForEmployee(Guid userId)
         {
-            var list = await (from s in _dataContext.SalaryReport
-                              join e in _dataContext.Employee on s.UserId equals e.Id
+            var list = await (from s in _dataContext.EmployeeSalary
+                              join e in _dataContext.Employee on s.AppUserId equals e.AppUserId
                               where e.IsDeleted == false
                               select s).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
-        [HttpPut("updateSalaryForEmployee/{employeeId}")]
-        public async Task<IActionResult> UpdateSalaryForEmployee(Guid employeeId, Guid salaryId)
+        [HttpPut("{userId}/update-salary-for-employee/{employeeId}")]
+        public async Task<IActionResult> UpdateSalaryForEmployee(Guid employeeId, Guid salaryId, Guid userId)
         {
-            var salary = await _dataContext.SalaryReport.FirstOrDefaultAsync(i => i.UserId == employeeId);
+            var salary = await _dataContext.EmployeeSalary.FirstOrDefaultAsync(i => i.AppUserId == employeeId);
             if (salary != null)
             {
-                salary.Salary = salaryId;
-                _dataContext.SalaryReport.Update(salary);
+                salary.SalaryId = salaryId;
+                salary.LastModifierUserId = userId;
+                _dataContext.EmployeeSalary.Update(salary);
                 await _dataContext.SaveChangesAsync();
             }
-            return CustomResult();
+            return CustomResult(salary);
         }
         public static string Random(CreateSalaryDto input)
         {

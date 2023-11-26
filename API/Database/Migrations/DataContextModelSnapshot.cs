@@ -200,6 +200,9 @@ namespace Database.Migrations
                     b.Property<int>("Level")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("Manager")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -241,7 +244,7 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppUserId")
+                    b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreationTime")
@@ -256,9 +259,6 @@ namespace Database.Migrations
                     b.Property<DateTime?>("DeletionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -270,10 +270,7 @@ namespace Database.Migrations
                     b.Property<Guid?>("LastModifierUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("Salary")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("SalaryId")
+                    b.Property<Guid>("SalaryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -436,7 +433,7 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AppUserId")
+                    b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreationTime")
@@ -467,9 +464,6 @@ namespace Database.Migrations
 
                     b.Property<short>("Type")
                         .HasColumnType("smallint");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1115,11 +1109,15 @@ namespace Database.Migrations
                 {
                     b.HasOne("Entities.AppUser", null)
                         .WithMany("EmployeeSalary")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entities.Salary", null)
                         .WithMany("EmployeeSalary")
-                        .HasForeignKey("SalaryId");
+                        .HasForeignKey("SalaryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Entities.Evaluate", b =>
@@ -1146,7 +1144,9 @@ namespace Database.Migrations
                 {
                     b.HasOne("Entities.AppUser", null)
                         .WithMany("MemberProject")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Entities.Project", null)
                         .WithMany("MemberProject")

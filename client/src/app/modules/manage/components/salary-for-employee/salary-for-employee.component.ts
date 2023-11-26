@@ -62,7 +62,7 @@ export class SalaryForEmployeeComponent implements OnInit {
   }
 
   getEmployeeName(id: string) {
-    return this.employeeService.employeeList$.value.find(i => i.id == id)?.fullName;
+    return this.employeeService.employeeList$.value.find(i => i.appUserId == id)?.fullName;
   }
 
   updateCheckedSet(id: string, checked: boolean): void {
@@ -92,7 +92,6 @@ export class SalaryForEmployeeComponent implements OnInit {
   sendRequest(): void {
     const requestData = this.detailList.filter(data => this.setOfCheckedId.has(data.id));
     const response = {
-      actionId: '',
       month: new Date().getMonth(),
       year: new Date().getFullYear(),
       employee: requestData,
@@ -129,7 +128,7 @@ export class SalaryForEmployeeComponent implements OnInit {
       this.detailList = data;
     });
     if (this.filterSalaryEmployee != null) {
-      this.detailList = this.detailList.filter(i => i.employeeId == this.filterSalaryEmployee);
+      this.detailList = this.detailList.filter(i => i.userId == this.filterSalaryEmployee);
     }
   }
 

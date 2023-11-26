@@ -1,1 +1,30 @@
-<div class="title">Tasks</div>
+<div class="title">Issues</div>
+<button nz-button nzType="primary" (click)="openModal()">Create</button>
+<!-- <app-create-or-edit-project [visibleCreateOrEditProject]="visibleCreateOrEditProject" (cancel)="closeModal()"></app-create-or-edit-project> -->
+<nz-table #basicTable [nzData]="issueList | async">
+    <thead>
+      <tr>
+        <th nzAlign="center">Name</th>
+        <th nzAlign="center">Type</th>
+        <th nzAlign="center">Priority</th>
+        <th nzAlign="center">Status</th>
+        <th nzAlign="center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable.data">
+        <td>{{data.taskName}}</td>
+        <td nzAlign="center">{{data.taskType}}</td>
+        <td nzAlign="center">{{data.priorityCode}}</td>
+        <td nzAlign="center">{{data.statusCode}}</td>
+        <td nzAlign="center">
+            <button nz-button nzType="primary" class="btn-action mr-5" (click)="editIssue(data.id)">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button nz-button nzDanger nzType="primary" class="btn-action">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>

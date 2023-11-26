@@ -4,8 +4,6 @@ using Database;
 using Entities;
 using Business.DTOs.EmployeeDto;
 using Entities.Enum.Record;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Entities.Enum.User;
 
 namespace HRM.Controllers
 {
@@ -29,7 +27,6 @@ namespace HRM.Controllers
                                  {
                                      Role = r.Name,
                                  }).AsNoTracking().ToListAsync();
-            if (isAdmin.Count > 0) return CustomResult(await _dataContext.Employee.Where(i => i.Status == RecordStatus.Approved && i.IsDeleted == false).AsNoTracking().ToListAsync());
             var departments = await _dataContext.Department.Where(i => i.Boss == userId).AsNoTracking().ToListAsync();
             var data = await (from e in _dataContext.Employee
                               join u in _dataContext.AppUser on e.AppUserId equals u.Id
@@ -56,6 +53,7 @@ namespace HRM.Controllers
                                   PositionId = e.PositionId,
                                   DepartmentId = e.DepartmentId,
                                   JoinDate = e.JoinDate,
+                                  Manager = e.Manager,
                                   Bank = e.Bank,
                                   BankAccount = e.BankAccount,
                                   TaxCode = e.TaxCode,
@@ -66,6 +64,7 @@ namespace HRM.Controllers
                                   DateOfIssue = e.DateOfIssue,
                                   IssuedBy = e.IssuedBy
                               }).AsNoTracking().ToListAsync();
+            if (isAdmin.Count > 0) return CustomResult(data);
             if (departments.Count > 0)
             {
                 var list = new List<GetAllEmployeeForViewDto>();
@@ -139,6 +138,7 @@ namespace HRM.Controllers
                 PositionId = input.PositionId,
                 DepartmentId = input.DepartmentId != null ? input.DepartmentId : null,
                 JoinDate = DateTime.Now,
+                Manager = input.Manager,
                 IsActive = true,
                 Bank = input.Bank,
                 BankAccount = input.BankAccount,
@@ -174,8 +174,8 @@ namespace HRM.Controllers
             var employeeSalary = new EmployeeSalary
             {
                 Id = new Guid(),
-                EmployeeId = account.Id,
-                Salary = salary.Id,
+                AppUserId = account.Id,
+                SalaryId = salary.Id,
                 CreatorUserId = userId,
                 IsDeleted = false,
             };
@@ -214,6 +214,7 @@ namespace HRM.Controllers
                 employee.Level = input.Level;
                 employee.PositionId = input.PositionId;
                 employee.DepartmentId = input.DepartmentId != null ? input.DepartmentId : null;
+                employee.Manager = input.Manager;
                 employee.IsActive = true;
                 employee.Bank = input.Bank;
                 employee.BankAccount = input.BankAccount;
@@ -253,6 +254,7 @@ namespace HRM.Controllers
                     employee.DoB = employeeDraft.DoB;
                     employee.JoinDate = employeeDraft.JoinDate;
                     employee.Bank = employeeDraft.Bank;
+                    employee.Manager = employeeDraft.Manager;
                     employee.BankAccount = employeeDraft.BankAccount;
                     employee.TaxCode = employeeDraft.TaxCode;
                     employee.InsuranceStatus = employeeDraft.InsuranceStatus;

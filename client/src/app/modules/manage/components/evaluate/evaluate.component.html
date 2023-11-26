@@ -1,7 +1,7 @@
 <div class="title">Evaluate</div>
 <div style="margin-bottom: 15px;">
     <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
-        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.appUserId" *ngFor="let item of employeeList | async"></nz-option>
     </nz-select>
     <nz-select nzShowSearch nzPlaceHolder="Search month..." [ngModel]="filterEvaluateMonth" (ngModelChange)="searchMonth($event)" style="width: 20%;">
         <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of monthList"></nz-option>
@@ -25,7 +25,7 @@
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table.data" cdkDrag [ngClass]="data.lastModifierUserId == null ? 'fw-bold': ''">
-            <td>{{ getUserName(data.employeeId) }}</td>
+            <td>{{ getUserName(data.userId) }}</td>
             <td nzAlign="center">{{ data.dateEvaluate | date: 'dd/MM/yyyy' }}</td>
             <td nzAlign="center">{{ level[data.oldLevel] }}</td>
             <td nzAlign="center">{{ level[data.newLevel] }}</td>

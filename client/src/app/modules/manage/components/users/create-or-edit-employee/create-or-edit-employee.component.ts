@@ -34,6 +34,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   roles: any;
   user: LoginResponse= JSON.parse(localStorage.getItem('user')!);
   roleSelect: string[] = [];
+  employeeList = new Observable<Employee[]>();
 
   constructor(
     private departmentService: DepartmentService,
@@ -70,6 +71,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
     this.positionList = this.positionService.positionList$;
     this.bankList = this.dataService.bankList;
     this.roleList = this.roleService.roleList$;
+    this.employeeList = this.employeeService.employeeList$;
   }
 
   initForm() {
@@ -88,6 +90,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
       level: [Level.Intern, Validators.required],
       positionId: [1, Validators.required],
       departmentId: [null],
+      manager: [null],
       bank: [null],
       bankAccount: [null],
       taxCode: [null],

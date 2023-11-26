@@ -41,7 +41,7 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
       this.isEdit = true;
       this.evaluateForm.reset();
       this.evaluateForm.patchValue(this.data);
-      this.evaluateForm.controls['employeeId'].setValue(this.getUserName(this.data.employeeId));
+      this.evaluateForm.controls['userId'].setValue(this.getUserName(this.data.userId));
       this.changeMode();
     }
   }
@@ -49,7 +49,7 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
   initForm() {
     this.evaluateForm = this.fb.group({
       id: [null],
-      employeeId: [null],
+      userId: [null],
       dateEvaluate: [null],
       oldLevel: [null],
       newLevel: [true, Validators.required],
@@ -58,15 +58,15 @@ export class EditEvaluateComponent implements OnInit, OnChanges {
   }
 
   getUserName(id: string) {
-    return this.employeeService.employeeList$.value.find(d => d.id == id)?.fullName;
+    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   changeMode() {
     this.isEdit = !this.isEdit;
-    this.title = (this.isEdit ? 'Evaluate: ' : 'View: ') + this.getUserName(this.data.employeeId);
+    this.title = (this.isEdit ? 'Evaluate: ' : 'View: ') + this.getUserName(this.data.userId);
     if (this.isEdit) {
       this.evaluateForm.enable();
-      this.evaluateForm.controls['employeeId'].disable();
+      this.evaluateForm.controls['userId'].disable();
       this.evaluateForm.controls['dateEvaluate'].disable();
       this.evaluateForm.controls['oldLevel'].disable();
     } else {

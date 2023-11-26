@@ -54,8 +54,7 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
   initForm() {
     this.payoffForm = this.fb.group({
       id: [null],
-      actionId: [null],
-      employeeId: [null, Validators.required],
+      userId: [null, Validators.required],
       amount: [10000, Validators.required],
       punish: [false, Validators.required],
       reason: [null, Validators.required],
@@ -69,7 +68,7 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
 
   changeMode() {
     this.isEdit = !this.isEdit;
-    this.title = (this.isEdit ? 'Edit: ' : 'View: ') + this.getUserName(this.data!.employeeId);
+    this.title = (this.isEdit ? 'Edit: ' : 'View: ') + this.getUserName(this.data!.userId);
     if (this.isEdit) {
       this.payoffForm.enable();
     } else {
@@ -78,8 +77,6 @@ export class ModalPayoffComponent implements OnInit, OnChanges {
   }
 
   submitForm() {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.payoffForm.controls['actionId'].setValue(user.id);
     if (this.payoffForm.valid) {
       this.payoffService.savePayoff(this.payoffForm.value)
       .subscribe((response) => {

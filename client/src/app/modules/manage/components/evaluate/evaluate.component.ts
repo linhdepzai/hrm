@@ -49,12 +49,7 @@ export class EvaluateComponent implements OnInit {
   }
 
   getUserName(id: string) {
-    let name: string | undefined;
-    this.employeeService.employeeList$
-      .subscribe((data: Employee[]) => {
-        name = data.find(d => d.id == id)?.fullName;
-      });
-    return name;
+    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   openModal(data: Evaluate) {
@@ -64,7 +59,7 @@ export class EvaluateComponent implements OnInit {
 
   filterList() {
     this.evaluateService.getAllEvaluate(this.filterEvaluateMonth, this.filterEvaluateYear);
-    if (this.filterEvaluateName != null) this.evaluateList.filter(i => i.employeeId == this.filterEvaluateName);
+    if (this.filterEvaluateName != null) this.evaluateList.filter(i => i.userId == this.filterEvaluateName);
   }
 
   searchName(id: string) {

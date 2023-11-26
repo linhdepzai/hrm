@@ -7,8 +7,8 @@ namespace Entities
     {
         [ForeignKey("Project")]
         public Guid ProjectId { get; set; }
-        [ForeignKey("AppUserId")]
-        public Guid UserId { get; set; }
+        [ForeignKey("AppUser")]
+        public Guid AppUserId { get; set; }
         public MemberType Type { get; set; }
     }
 }

@@ -424,6 +424,7 @@ namespace Database.Migrations
                     PositionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Manager = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Bank = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BankAccount = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -514,9 +515,8 @@ namespace Database.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<short>(type: "smallint", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifierUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -532,7 +532,8 @@ namespace Database.Migrations
                         name: "FK_MemberProject_AppUser_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AppUser",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_MemberProject_Project_ProjectId",
                         column: x => x.ProjectId,
@@ -546,10 +547,8 @@ namespace Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EmployeeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Salary = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SalaryId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SalaryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifierUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
@@ -565,12 +564,14 @@ namespace Database.Migrations
                         name: "FK_EmployeeSalary_AppUser_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AppUser",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EmployeeSalary_Salary_SalaryId",
                         column: x => x.SalaryId,
                         principalTable: "Salary",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

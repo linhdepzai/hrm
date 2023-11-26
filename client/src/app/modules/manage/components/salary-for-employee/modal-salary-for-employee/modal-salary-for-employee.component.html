@@ -10,16 +10,10 @@
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Salary</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid salary">
-                <nz-select [ngModel]="salaryForm.value.salary" formControlName="salary" id="salary">
+                <nz-select [ngModel]="salaryForm.value.salary" formControlName="salary" id="salary" (ngModelChange)="getInfoSalary()">
                     <nz-option [nzValue]="item.id" [nzLabel]="item.salaryCode"
                         *ngFor="let item of salaryList | async"></nz-option>
                 </nz-select>
-            </nz-form-control>
-        </nz-form-item>
-        <nz-form-item>
-            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Date</nz-form-label>
-            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid date!">
-                <nz-date-picker style="width: 100%;" formControlName="date" id="date"></nz-date-picker>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>
@@ -28,6 +22,26 @@
                 <nz-space nzDirection="vertical" style="width: 100%">
                     <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
                         <nz-input-number [nzStep]="1" formControlName="totalWorkdays" id="totalWorkdays"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Money</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid money!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
+                        <nz-input-number [nzStep]="1000" formControlName="money" id="money"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Welfare</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid welfare!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
+                        <nz-input-number [nzStep]="1000" formControlName="welfare" id="welfare"></nz-input-number>
                     </nz-input-number-group>
                 </nz-space>
             </nz-form-control>
@@ -48,6 +62,16 @@
                 <nz-space nzDirection="vertical" style="width: 100%">
                     <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
                         <nz-input-number [nzStep]="1000" formControlName="bounty" id="bounty"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Total</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid total!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem nzAddOnAfter="VNĐ">
+                        <nz-input-number [nzStep]="1000" formControlName="actualSalary" id="actualSalary"></nz-input-number>
                     </nz-input-number-group>
                 </nz-space>
             </nz-form-control>

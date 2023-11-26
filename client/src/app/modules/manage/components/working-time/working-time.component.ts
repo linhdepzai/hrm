@@ -60,7 +60,7 @@ export class WorkingTimeComponent implements OnInit {
   searchName(id: string) {
     if(id != null) {
       this.changeFilter(this.optionFilter);
-      this.filterList = this.filterList.filter(i => i.employeeId == id);
+      this.filterList = this.filterList.filter(i => i.userId == id);
     } else {
       this.changeFilter(this.optionFilter);
     }
@@ -73,9 +73,9 @@ export class WorkingTimeComponent implements OnInit {
     } else if (value == 'Approve') {
       this.filterList = this.timeWorkingList.filter(i => i.status == Status.Approved && new Date(i.applyDate) < new Date());
       this.employeeService.employeeList$.value.filter(i => i.status == Status.Approved).forEach((item) => {
-        const duplicate = this.filterList.filter(i => i.employeeId == item.id);
+        const duplicate = this.filterList.filter(i => i.userId == item.id);
         if (duplicate.length > 1) {
-          const index = this.filterList.findIndex((i) => i.employeeId == item.id && i.id != duplicate[0].id);
+          const index = this.filterList.findIndex((i) => i.userId == item.id && i.id != duplicate[0].id);
           this.filterList.splice(index, 1);
           this.filterList = [...this.filterList];
         }

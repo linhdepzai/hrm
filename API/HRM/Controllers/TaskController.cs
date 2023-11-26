@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Database;
 using Business.DTOs.TaskDto;
@@ -18,15 +17,18 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-
-        [HttpGet("getall")]
-        public async Task<ActionResult> GetAll()
+        [HttpGet("{userId}/get-all")]
+        public async Task<ActionResult> GetAll(Guid userId)
         {
-            var taskList = _dataContext.Issue.AsNoTracking().ToListAsync();
-            return Ok(taskList);
+            var issueList = await (from i in _dataContext.Issue
+                                   join p in _dataContext.Project on i.ProjectId equals p.Id
+                                   join m in _dataContext.MemberProject on p.Id equals m.ProjectId
+                                   where m.AppUserId == userId
+                                   select i).AsNoTracking().ToListAsync();
+            return Ok(issueList);
         }
-        [HttpPost("save")]
-        public async Task<ActionResult> CreateOrEdit(CreateOrEditTaskDto input)
+        [HttpPost("{userId}/save")]
+        public async Task<ActionResult> CreateOrEdit(CreateOrEditTaskDto input, Guid userId)
         {
             if (input.Id == null)
             {
@@ -97,8 +99,8 @@ namespace HRM.Controllers
             await _dataContext.SaveChangesAsync();
             return Ok(task);
         }
-        [HttpDelete("delete")]
-        public async Task<ActionResult> DeleteTask(Guid id)
+        [HttpDelete("{userId}/delete")]
+        public async Task<ActionResult> DeleteTask(Guid id, Guid userId)
         {
             _dataContext.Issue.Remove(await _dataContext.Issue.FindAsync(id));
             await _dataContext.SaveChangesAsync();

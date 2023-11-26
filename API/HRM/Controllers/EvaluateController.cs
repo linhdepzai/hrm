@@ -15,20 +15,22 @@ namespace HRM.Controllers
     public class EvaluateController : BaseApiController
     {
         private readonly DataContext _dataContext;
-        private readonly ISession _session;
-        public EvaluateController(DataContext dataContext, ISession session)
+        public EvaluateController(DataContext dataContext)
         {
             _dataContext = dataContext;
-            _session = session;
         }
-        [HttpGet("Evaluate")]
-        public async Task<IActionResult> GetAll(int month, int year)
+        [HttpGet("{userId}/Evaluate")]
+        public async Task<IActionResult> GetAll(int month, int year, Guid userId)
         {
-
-            var user = await _dataContext.Employee.FindAsync(new Guid(_session.GetString("UserId")));
-            var isAdmin = await _dataContext.Position.FirstOrDefaultAsync(i => i.Name == "Admin");
-            if (user.PositionId == isAdmin.Id) return CustomResult(await _dataContext.Evaluate.Where(i => i.DateEvaluate.AddDays(-30).Month == month && i.DateEvaluate.Year == year).AsNoTracking().ToListAsync());
-            var departments = await _dataContext.Department.Where(i => i.Boss == new Guid(_session.GetString("UserId"))).AsNoTracking().ToListAsync();
+            var isAdmin = await (from u in _dataContext.AppUserRole
+                                 join r in _dataContext.AppRole on u.RoleId equals r.Id
+                                 where u.UserId == userId && (r.Name == "Admin")
+                                 select new
+                                 {
+                                     Role = r.Name,
+                                 }).AsNoTracking().ToListAsync();
+            if (isAdmin.Count > 0) return CustomResult(await _dataContext.Evaluate.Where(i => i.DateEvaluate.AddDays(-30).Month == month && i.DateEvaluate.Year == year).AsNoTracking().ToListAsync());
+            var departments = await _dataContext.Department.Where(i => i.Boss == userId).AsNoTracking().ToListAsync();
             var list = new List<Evaluate>();
             foreach (var department in departments)
             {
@@ -50,16 +52,16 @@ namespace HRM.Controllers
             }
             return CustomResult(list);
         }
-        [HttpPut("Update")]
-        public async Task<IActionResult> Update(UpdateEvaluateDto input)
+        [HttpPut("{userId}/Update")]
+        public async Task<IActionResult> Update(UpdateEvaluateDto input, Guid userId)
         {
             var evaluate = await _dataContext.Evaluate.FindAsync(input.Id);
-            var employee = await _dataContext.Employee.FirstOrDefaultAsync(i => i.Id == evaluate.UserId);
+            var employee = await _dataContext.Employee.FirstOrDefaultAsync(i => i.AppUserId == evaluate.UserId && i.IsDeleted == false);
             evaluate.DateEvaluate = DateTime.Now;
             evaluate.OldLevel = employee.Level;
             evaluate.NewLevel = input.NewLevel;
             evaluate.Note = input.Note;
-            evaluate.LastModifierUserId = new Guid(_session.GetString("UserId"));
+            evaluate.LastModifierUserId = userId;
             _dataContext.Update(evaluate);
             await _dataContext.SaveChangesAsync();
             return CustomResult(evaluate);

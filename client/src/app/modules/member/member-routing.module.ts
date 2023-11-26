@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'request-off', component: RequestOffComponent },
   { path: 'my-working-time', component: MyWorkingTimeComponent },
   { path: 'project', component: ProjectComponent },
-  { path: 'task', component: TaskComponent },
+  { path: 'issue', component: TaskComponent },
   { path: 'notification-detail/:id', component: NotificationDetailComponent },
 ];
 

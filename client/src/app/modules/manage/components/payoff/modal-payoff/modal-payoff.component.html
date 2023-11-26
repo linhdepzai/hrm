@@ -11,8 +11,8 @@
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Employee</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
                 <nz-select nzShowSearch nzAllowClear [ngModel]="payoffForm.value.employeeId"
-                    nzPlaceHolder="Enter your name" formControlName="employeeId" id="employeeId">
-                    <nz-option [nzLabel]="item.fullName" [nzValue]="item.id"
+                    nzPlaceHolder="Enter your name" formControlName="userId" id="userId">
+                    <nz-option [nzLabel]="item.fullName" [nzValue]="item.appUserId"
                         *ngFor="let item of employeeList | async"></nz-option>
                 </nz-select>
             </nz-form-control>

@@ -26,6 +26,7 @@ namespace Entities
         public Guid? DepartmentId { get; set; }
         [Required]
         public DateTime JoinDate { get; set; }
+        public Guid Manager { get; set; }
         public bool IsActive { get; set; }
         public string? Bank { get; set; }
         public string? BankAccount { get; set; }
