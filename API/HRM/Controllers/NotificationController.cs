@@ -7,16 +7,22 @@ using Microsoft.EntityFrameworkCore;
 using Database;
 using Business.DTOs.NotificationDto;
 using Entities;
+using Business.DTOs.EmailDto;
+using MimeKit.Text;
+using System.Globalization;
+using Business.Interfaces.IEmailServce;
 
 namespace HRM.Controllers
 {
     public class NotificationController : BaseApiController
     {
         private readonly DataContext _dataContext;
+        private readonly IEmailSender _emailSender;
 
-        public NotificationController(DataContext dataContext)
+        public NotificationController(DataContext dataContext, IEmailSender emailSender)
         {
             _dataContext = dataContext;
+            _emailSender = emailSender;
         }
         [HttpGet("getAll/{id}")]
         public async Task<IActionResult> GetAll(Guid id)
@@ -53,16 +59,16 @@ namespace HRM.Controllers
                                         EmployeeId = e.EmployeeId,
                                     }).AsNoTracking().ToListAsync();
             var result = await (from n in _dataContext.Notification
-                         where n.Id == id
-                         select new
-                         {
-                             Id = n.Id,
-                             Thumbnail = n.Thumbnail,
-                             Title = n.Title,
-                             Content = n.Content,
-                             CreateDate = n.CreateDate,
-                             Employee = employeeId,
-                         }).AsNoTracking().ToListAsync();
+                                where n.Id == id
+                                select new
+                                {
+                                    Id = n.Id,
+                                    Thumbnail = n.Thumbnail,
+                                    Title = n.Title,
+                                    Content = n.Content,
+                                    CreateDate = n.CreateDate,
+                                    Employee = employeeId,
+                                }).AsNoTracking().ToListAsync();
             return CustomResult(result);
         }
         [HttpGet("readNotification/{employeeId}")]
@@ -78,24 +84,24 @@ namespace HRM.Controllers
             var month = _dataContext.Notification.FirstOrDefault(i => i.Id == id).CreateDate.Month;
             var salary = (from es in _dataContext.SalaryReport
                           join s in _dataContext.Salary on es.Salary equals s.Id
-                         join e in _dataContext.Employee on es.UserId equals e.Id
-                         where es.UserId == employeeId && es.Date.Month == month
-                         select new
-                         {
-                             Id = es.Id,
-                             Employee = e.FullName,
-                             PositionId = s.PositionId,
-                             Level = s.Level,
-                             SalaryCode = s.SalaryCode,
-                             Salary = s.Money,
-                             Welfare = s.Welfare,
-                             Workdays = es.TotalWorkdays,
-                             Punish = es.Punish,
-                             Bounty = es.Bounty,
-                             ActualSalary = es.ActualSalary,
-                             Date = es.Date,
-                             IsConfirm = es.IsConfirm,
-                         }).FirstOrDefault();
+                          join e in _dataContext.Employee on es.UserId equals e.Id
+                          where es.UserId == employeeId && es.Date.Month == month
+                          select new
+                          {
+                              Id = es.Id,
+                              Employee = e.FullName,
+                              PositionId = s.PositionId,
+                              Level = s.Level,
+                              SalaryCode = s.SalaryCode,
+                              Salary = s.Money,
+                              Welfare = s.Welfare,
+                              Workdays = es.TotalWorkdays,
+                              Punish = es.Punish,
+                              Bounty = es.Bounty,
+                              ActualSalary = es.ActualSalary,
+                              Date = es.Date,
+                              IsConfirm = es.IsConfirm,
+                          }).FirstOrDefault();
             var result = from n in _dataContext.Notification
                          where n.Id == id
                          select new
@@ -148,7 +154,23 @@ namespace HRM.Controllers
                 };
                 await _dataContext.AddAsync(employee);
             }
-            await _dataContext.SaveChangesAsync();
+            if (await _dataContext.SaveChangesAsync() > 0)
+            {
+                foreach (var i in input.Employee)
+                {
+                    var email = await _dataContext.AppUser.FirstOrDefaultAsync(u => u.Id == i.EmployeeId);
+                    var name = await _dataContext.Employee.FirstOrDefaultAsync(u => u.AppUserId == i.EmployeeId);
+                    var mail = new SendNotificationToEmail
+                    {
+                        Email = email.Email,
+                        Name = name.FullName,
+                        Title = notification.Title,
+                        Content = notification.Content,
+                        CreateDate = notification.CreateDate,
+                    };
+                    await SendEmail(mail);
+                }
+            }
             var result = new
             {
                 Id = notification.Id,
@@ -222,6 +244,67 @@ namespace HRM.Controllers
             _dataContext.Notification.Remove(notification);
             await _dataContext.SaveChangesAsync();
             return CustomResult("Removed");
+        }
+        private async Task SendEmail(SendNotificationToEmail input)
+        {
+            string head = @"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <title>" + input.Title + @"</title>
+                  <style>
+                    body {
+                      font-family: Arial, sans-serif;
+                    }
+
+                    .container {
+                      width: 500px;
+                      margin: 0 auto;
+                      padding: 20px;
+                      background-color: #f5f5f5;
+                      border: 1px solid #ccc;
+                      border-radius: 4px;
+                    }
+
+                    h1 {
+                      text-align: center;
+                      color: #333;
+                    }
+
+                    p {
+                      margin-bottom: 20px;
+                      line-height: 1.5;
+                    }
+
+                    .button {
+                      display: inline-block;
+                      padding: 10px 20px;
+                      background-color: #fca311;
+                      color: #242525;
+                      text-decoration: none;
+                      border-radius: 4px;
+                    }
+                  </style>
+                </head>
+            ";
+
+            EmailMessage message = new(new string[] { input.Email! }, "[HRM] " + input.Title, head + $@"
+                <body>
+                  <div class=""container"">
+                    <h1>{input.Title}</h1>
+                    <p>Dear {input.Name} </p>
+                    {input.Content}
+                    <p>Sincerely,</p>
+                    <p>The [Company Name] Team</p>
+                    <div style=""text-align: center;"">
+                      <a href=""[Company Website]"" class=""button"">Visit Our Website</a>
+                    </div>
+                  </div>
+                </body>
+                </html>
+            ");
+
+            await _emailSender.SendEmailAsync(message, TextFormat.Html);
         }
     }
 }

@@ -8,6 +8,9 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
+    path: 'recuitment', loadChildren: () => import('./modules/recuitment/recuitment.module').then((m) => m.RecuitmentModule)
+  },
+  {
     path: 'login', component: LoginLayoutComponent, children: [
       { path: '', loadChildren: () => import('./modules/auth/auth.module').then((m) => m.AuthModule) }
     ]

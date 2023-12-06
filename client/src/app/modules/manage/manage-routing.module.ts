@@ -11,6 +11,8 @@ import { NotificationManageComponent } from './components/notification-manage/no
 import { CreateOrEditNotificationComponent } from './components/notification-manage/create-or-edit-notification/create-or-edit-notification.component';
 import { PositionManagementComponent } from './components/position-management/position-management.component';
 import { DepartmentManagementComponent } from './components/department-management/department-management.component';
+import { JobComponent } from './components/job/job.component';
+import { CandidateComponent } from './components/candidate/candidate.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent },
@@ -23,6 +25,8 @@ const routes: Routes = [
   { path: 'salary-for-employee', component: SalaryForEmployeeComponent },
   { path: 'notification', component: NotificationManageComponent },
   { path: 'notification/:id', component: CreateOrEditNotificationComponent },
+  { path: 'job', component: JobComponent },
+  { path: 'candidate', component: CandidateComponent },
 
   { path: '**', component: PageNotFoundComponent }
 ];

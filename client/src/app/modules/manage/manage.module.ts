@@ -34,6 +34,10 @@ import { CreatePositionModalComponent } from './components/users/create-or-edit-
 import { PositionManagementComponent } from './components/position-management/position-management.component';
 import { DepartmentManagementComponent } from './components/department-management/department-management.component';
 import { SalaryForEmployeeGeneralModalComponent } from './components/salary-for-employee/salary-for-employee-general-modal/salary-for-employee-general-modal.component';
+import { JobComponent } from './components/job/job.component';
+import { CandidateComponent } from './components/candidate/candidate.component';
+import { ModalCandidateComponent } from './components/candidate/modal-candidate/modal-candidate.component';
+import { ModalJobComponent } from './components/job/modal-job/modal-job.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -63,6 +67,10 @@ registerLocaleData(en);
         PositionManagementComponent,
         DepartmentManagementComponent,
         SalaryForEmployeeGeneralModalComponent,
+        JobComponent,
+        CandidateComponent,
+        ModalCandidateComponent,
+        ModalJobComponent,
     ],
     exports: [
         ManageRoutingModule,

@@ -40,6 +40,9 @@ using Business.Services.TimeWorkingService;
 using Business.Services.IssueService;
 using Business.Extensions;
 using Serilog;
+using Business.Interfaces.IEmailServce;
+using Business.Services.EmailService;
+using Business.DTOs.EmailDto;
 
 Environment.SetEnvironmentVariable("APP_BASE_DIRECTORY", Directory.GetCurrentDirectory());
 
@@ -56,6 +59,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddSingleton<PresenceTracker>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IAccountAppService, AccountAppService>();
 builder.Services.AddScoped<IDepartmentAppService, DepartmentAppService>();
 builder.Services.AddScoped<IEmployeeAppService, EmployeeAppService>();
@@ -126,6 +130,11 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
+// Add EmailService Service
+EmailConfiguration? emailConfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig!);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

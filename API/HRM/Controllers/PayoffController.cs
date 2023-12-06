@@ -100,7 +100,7 @@ namespace HRM.Controllers
             await _dataContext.SaveChangesAsync();
             return CustomResult(payoff);
         }
-        [HttpDelete("delete")]
+        [HttpDelete("{userId}/delete")]
         public async Task<IActionResult> Delete(Guid payoffId, Guid userId)
         {
             var payoff = await _dataContext.PayOff.FindAsync(payoffId);

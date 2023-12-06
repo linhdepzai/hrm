@@ -165,3 +165,28 @@ export interface Notification {
     createUserPhoto: string,
     salary: any | null;
 }
+
+export interface Candidate {
+    id: string,
+    jobId: string,
+    fullName: string,
+    email: string,
+    phone: string,
+    fileCV: string,
+    evaluate: string,
+    status: number,
+}
+
+export interface Job {
+    id: string,
+    jobTitle: string,
+    positionId: string,
+    level: string,
+    quantity: number,
+    salaryRange: string,
+    fromDate: Date,
+    toDate: Date,
+    description: string,
+    require: string,
+    visible: boolean
+}

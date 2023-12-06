@@ -51,12 +51,7 @@ export class UsersComponent implements OnInit {
   }
 
   getDepartmentName(id: string) {
-    let department!: DepartmentResponse;
-    this.departmentService.departmentList$
-      .subscribe((data: DepartmentResponse[]) => {
-        department = data.find(d => d.id == id)!;
-      });
-    return department;
+    return this.departmentService.departmentList$.value.find(d => d.id == id)!;
   }
 
   openModal(data: Employee | undefined, mode: string) {

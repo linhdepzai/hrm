@@ -1,0 +1,39 @@
+<div class="title">Candidate</div>
+<div style="margin-bottom: 15px;">
+    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Search name..." [ngModel]="null" (ngModelChange)="searchName($event)" style="width: 20%;">
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.fullName" *ngFor="let item of candidateList"></nz-option>
+    </nz-select>
+</div>
+<nz-table #table [nzData]="candidateList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '49.5vh'}">
+    <ng-template #rangeTemplate let-range="range" let-total>
+        {{ range[0] }}-{{ range[1] }} of {{ total }} items
+    </ng-template>
+    <thead>
+        <tr>
+            <th nzAlign="center">Position</th>
+            <th nzAlign="center">Name</th>
+            <th nzAlign="center">Email</th>
+            <th nzAlign="center">Phone</th>
+            <th nzAlign="center">CV</th>
+            <th nzAlign="center">Action</th>
+        </tr>
+    </thead>
+    <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let data of table.data" cdkDrag>
+            <td>{{ getJobPosition(data.jobId) }}</td>
+            <td>{{ data.fullName }}</td>
+            <td nzAlign="center">{{ data.email }}</td>
+            <td nzAlign="center">{{ data.phone }}</td>
+            <td nzAlign="center">{{ data.fileCV }}</td>
+            <td nzAlign="center">
+                <button nz-button nzType="primary" class="mr-5" (click)="openModal(data, 'update')">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button nz-button nzDanger nzType="primary" (click)="deleteItem(data.id)">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<app-modal-candidate [visible]="visibleModal" [data]="data" [mode]="mode" (cancel)="visibleModal = false"></app-modal-candidate>

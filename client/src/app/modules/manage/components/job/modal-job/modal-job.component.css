@@ -1,0 +1,5 @@
+@import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
+
+nz-range-picker {
+  width: 100%;
+}

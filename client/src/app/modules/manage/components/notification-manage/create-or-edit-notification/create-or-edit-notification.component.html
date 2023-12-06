@@ -22,7 +22,7 @@
     <span nz-col [nzSpan]="2">Users:</span>
     <nz-select nz-col [nzSpan]="22" nzMode="multiple" nzPlaceHolder="Select users" nzAllowClear nzShowSearch
         [ngModel]="selectEmployee" (ngModelChange)="onSearch($event)">
-        <nz-option [nzLabel]="item.fullName" [nzValue]="item.id" *ngFor="let item of employeeList | async"></nz-option>
+        <nz-option [nzLabel]="item.fullName" [nzValue]="item.appUserId" *ngFor="let item of employeeList | async"></nz-option>
     </nz-select>
 </div>
 <form nz-form [formGroup]="notificationForm">

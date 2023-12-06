@@ -1,0 +1,57 @@
+<form nz-form [formGroup]="candidateForm">
+    <nz-form-item>
+        <nz-form-control [nzSpan]="9" [nzOffset]="2" nzErrorTip="The input is not valid Full Name!">
+            <input nz-input placeholder="Full Name" formControlName="fullName" id="fullName" />
+        </nz-form-control>
+        <nz-form-control [nzSpan]="9" [nzOffset]="2" nzErrorTip="The input is not valid Email!">
+            <input nz-input placeholder="Email" formControlName="email" id="email" />
+        </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+        <nz-form-control [nzSpan]="9" [nzOffset]="2" nzErrorTip="The input is not valid Phone!">
+            <input nz-input placeholder="Phone" formControlName="phone" id="phone" />
+        </nz-form-control>
+        <nz-form-control [nzSpan]="9" [nzOffset]="2" nzErrorTip="The input is not valid Job Title!">
+            <nz-select [ngModel]="candidateForm.value.jobId" formControlName="jobId" id="jobId">
+                <nz-option [nzValue]="item.id" [nzLabel]="item.jobTitle"
+                    *ngFor="let item of jobList"></nz-option>
+            </nz-select>
+        </nz-form-control>
+    </nz-form-item>
+    <div nz-row>
+        <div nz-col [nzSpan]="3" [nzOffset]="2">
+            <nz-select [ngModel]="candidateForm.value.option" formControlName="option" id="option">
+                <nz-option nzValue="cv" nzLabel="Attach CV"></nz-option>
+                <nz-option nzValue="port" nzLabel="Portfolio"></nz-option>
+            </nz-select>
+        </div>
+        <div nz-col [nzSpan]="13">
+            <div *ngIf="candidateForm.value.option == 'cv'; else portfolio" class="clearfix">
+                <nz-upload
+                nzAction="https://localhost:7114/api/Candidate/upload-cv"
+                nzListType="text"
+                style="display: flex;"
+                [nzMultiple]="false" 
+                [nzShowUploadList]="true" 
+                [nzBeforeUpload]="beforeUpload"
+                [nzDownload]="downloadCV"
+                [nzOpenFileDialogOnClick]="true"
+                [nzLimit]="1"
+                >
+                <button nz-button>
+                    <span nz-icon nzType="upload"></span>
+                    Upload
+                </button>
+            </nz-upload>
+        </div>
+        <ng-template #portfolio>
+            <nz-form-control nzErrorTip="The input is not valid CV!">
+                <input nz-input placeholder="Portfolio" formControlName="fileCV" id="fileCV" />
+            </nz-form-control>
+        </ng-template>
+    </div>
+    <div nz-col nzSpan="4">
+        <button nz-button style="float: right;" (click)="handleSubmit()">Submit</button>
+    </div>
+</div>
+</form>

@@ -1,0 +1,36 @@
+.card-grid {
+  width: 50%;
+}
+
+.body {
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #fff;
+}
+
+.logo {
+  position: absolute;
+  height: 50px;
+  width: 150px;
+  top: 75px;
+  left: 120px;
+  background-image: linear-gradient(45deg, #be6cce, #c673cd);
+}
+
+.btn-action {
+  width: 125px;
+  color: #000;
+}
+
+.col-btn {
+  text-align: center;
+}
+
+#apply {
+  padding-top: 50px;
+}
+
+.footer {
+    background-color: #be6cce;
+    color: #fff;
+}

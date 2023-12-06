@@ -29,6 +29,8 @@ namespace Database
         public DbSet<Notification> Notification { get; set; }
         public DbSet<NotificationEmployee> NotificationEmployee { get; set; }
         public DbSet<SalaryReport> SalaryReport { get; set; }
+        public DbSet<Job> Job { get; set; }
+        public DbSet<Candidate> Candidate { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -1,0 +1,119 @@
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" [nzTitle]="header" [nzContent]="content" (nzOnClose)="close()"
+    nzWidth="50%" [nzFooter]="footer">
+</nz-drawer>
+<ng-template #header>
+    <i class="fa-solid fa-user-pen'"></i>
+    <span class="ml-5">{{ title }}</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="jobForm" class="login-form">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Level</nz-form-label>
+            <nz-form-control [nzSm]="6" [nzXs]="24" nzErrorTip="The input is not valid level!">
+                <nz-select [ngModel]="jobForm.value.level" formControlName="level" id="level" (ngModelChange)="setJobTitle()">
+                    <nz-option [nzValue]="item.value" [nzLabel]="item.label"
+                        *ngFor="let item of levelList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+            <nz-form-control [nzSm]="2" [nzXs]="24" nzFor="name"></nz-form-control>
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="name">Position</nz-form-label>
+            <nz-form-control [nzSm]="6" [nzXs]="24" nzErrorTip="The input is not valid position!">
+                <nz-select [ngModel]="jobForm.value.positionId" (ngModelChange)="setJobTitle()"
+                    nzPlaceHolder="Enter your name" formControlName="positionId" id="positionId">
+                    <nz-option [nzLabel]="item.name" [nzValue]="item.id"
+                        *ngFor="let item of positionList | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Title</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid title!">
+                <input nz-input placeholder="Enter job title" formControlName="jobTitle" id="jobTitle" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Quantity</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid quantity!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem [nzAddOnAfter]="jobForm.value.quantity > 1 ? 'people' : 'person'" style="width: 100%">
+                        <nz-input-number [nzStep]="1" formControlName="quantity" id="quantity"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Salary Range</nz-form-label>
+            <nz-form-control [nzSm]="jobForm.value.optionSalary == 'Range' ? 4 : 18" [nzXs]="24">
+                <nz-select [ngModel]="jobForm.value.optionSalary"  formControlName="optionSalary" id="optionSalary">
+                    <nz-option [nzValue]="'Agreement'" [nzLabel]="'A wage agreement'"></nz-option>
+                    <nz-option [nzValue]="'About'" [nzLabel]="'About'"></nz-option>
+                    <nz-option [nzValue]="'Range'" [nzLabel]="'Range'"></nz-option>
+                </nz-select>
+            </nz-form-control>
+            <nz-form-control [nzSm]="18" [nzXs]="24" *ngIf="jobForm.value.optionSalary == 'Range'">
+                <nz-space nzDirection="vertical" style="width: 45%">
+                    <nz-input-number-group *nzSpaceItem [nzAddOnAfter]="'VNĐ'" style="width: 100%">
+                        <nz-input-number [nzStep]="1" formControlName="fromSalary" id="fromSalary"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+                <nz-space nzDirection="vertical" style="width: 10%">
+                    <label style="text-align: center;">~</label>
+                </nz-space>
+                <nz-space nzDirection="vertical" style="width: 45%">
+                    <nz-input-number-group *nzSpaceItem [nzAddOnAfter]="'VNĐ'" style="width: 100%">
+                        <nz-input-number [nzStep]="1" formControlName="toSalary" id="toSalary"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+            <nz-form-control [nzSm]="18" [nzXs]="24" *ngIf="jobForm.value.optionSalary == 'About'" nzErrorTip="The input is not valid salary!">
+                <nz-space nzDirection="vertical" style="width: 100%">
+                    <nz-input-number-group *nzSpaceItem [nzAddOnAfter]="'VNĐ'" style="width: 100%">
+                        <nz-input-number [nzStep]="1" formControlName="fromSalary" id="fromSalary"></nz-input-number>
+                    </nz-input-number-group>
+                </nz-space>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Period</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid salary!">
+                <nz-range-picker nz-input placeholder="Enter to period" formControlName="dateRange" id="dateRange"/>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Visible</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid visible">
+                <label nz-checkbox formControlName="visible" id="visible">Displayed in the recuitment page.</label>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Description</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid description!">
+                <textarea nz-input placeholder="Description..." [rows]="10" [nzAutosize]="{ minRows: 3, maxRows: 10 }"
+                    formControlName="description" id="description"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Require</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid require!">
+                <textarea nz-input placeholder="Require..." [rows]="10" [nzAutosize]="{ minRows: 3, maxRows: 10 }"
+                    formControlName="require" id="require"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button *ngIf="!isEdit else edit" nz-button nzType="primary" style="float: right;" (click)="changeMode()">
+        <i class="fa-solid fa-pen-to-square mr-5"></i>
+        <span>Edit</span>
+    </button>
+    <ng-template #edit>
+        <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm()">
+            <i class="fa-solid fa-check mr-5"></i>
+            <span>Submit</span>
+        </button>
+        <button *ngIf="mode == 'update'" style="float: right;" nz-button nzDanger nzType="default" (click)="changeMode()">
+            <i class="fa-solid fa-xmark mr-5"></i>
+            <span>Cancel</span>
+        </button>
+    </ng-template>
+</ng-template>

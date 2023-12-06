@@ -17,6 +17,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberModule } from './modules/member/member.module';
 import { TagComponent } from "./shared/components/tag/tag.component";
+import { RecuitmentModule } from './modules/recuitment/recuitment.module';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -40,6 +41,7 @@ registerLocaleData(en);
         AuthModule,
         ManageModule,
         MemberModule,
+        RecuitmentModule,
         NgZorroSharedModule,
         TagComponent
     ]
