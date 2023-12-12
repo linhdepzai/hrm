@@ -2,11 +2,14 @@
 using Business.DTOs.JobDto;
 using Business.DTOs.NotificationDto;
 using Business.Interfaces;
+using Business.Interfaces.ICandidateService;
 using Business.Services;
+using Business.Services.CandidateService;
 using Database;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace HRM.Controllers
 {
@@ -14,25 +17,21 @@ namespace HRM.Controllers
     {
         private readonly DataContext _dataContext;
         private readonly IPhotoService _photoService;
-        public CandidateController(DataContext dataContext, IPhotoService photoService)
+        private readonly ICandidateService _candidateService;
+        private readonly IUploadFileService _uploadFileService;
+
+        public CandidateController(DataContext dataContext, IPhotoService photoService, ICandidateService candidateService, IUploadFileService uploadFileService)
         {
             _dataContext = dataContext;
             _photoService = photoService;
+            _candidateService = candidateService;
+            _uploadFileService = uploadFileService;
         }
         [HttpGet("{userId}/get-all")]
         public async Task<IActionResult> GetAll(Guid userId)
         {
             var candidates = await _dataContext.Candidate.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(candidates);
-        }
-        [HttpPost("upload-cv")]
-        public async Task<IActionResult> UploadCV(IFormFile file)
-        {
-            var result = await _photoService.AddPhotoAsync(file);
-
-            if (result.Error != null) return CustomResult(result.Error.Message, System.Net.HttpStatusCode.BadRequest);
-
-            return CustomResult(result.SecureUrl.AbsoluteUri);
         }
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateCandidateDto input)
@@ -45,7 +44,9 @@ namespace HRM.Controllers
                 FullName = input.FullName,
                 Email = input.Email,
                 Phone = input.Phone,
-                FileCV = input.FileCV
+                FileCV = input.FileCV,
+                Status = Entities.Enum.Recuitment.StatusCandidate.Waiting,
+                Evaluate = ""
             };
             await _dataContext.Candidate.AddAsync(newCandidate);
             await _dataContext.SaveChangesAsync();
@@ -78,6 +79,26 @@ namespace HRM.Controllers
             _dataContext.Candidate.Remove(candidate);
             await _dataContext.SaveChangesAsync();
             return CustomResult("Removed");
+        }
+
+        [HttpPost("upload-cv")]
+        public async Task<IActionResult> UploadCV(IFormFile file)
+        {
+            var res = _uploadFileService.UploadFile(file);
+            return CustomResult(file.FileName);
+        }
+
+        [HttpGet("download-cv")]
+        public async Task<IActionResult> DownloadCV(string filename)
+        {
+            var res = _uploadFileService.DownloadFile(filename);
+            if(res is null)
+            {
+                return CustomResult(null, HttpStatusCode.NoContent);
+            }
+            string contentType = " image/jpeg";
+            res.Position = 0;
+            return File(res, contentType, filename);
         }
     }
 }

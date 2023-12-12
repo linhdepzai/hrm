@@ -28,9 +28,93 @@
 
 #apply {
   padding-top: 50px;
+  padding-bottom: 100px;
+}
+
+.bottom {
+	bottom: 0;
+	background-color: #be6cce;
+	width: 100%;
+	height: 108px;
 }
 
 .footer {
     background-color: #be6cce;
     color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.social-btn {
+	cursor: pointer;
+	height: 50px;
+	width: 50px;
+	font-family: 'Titillium Web', sans-serif;
+	color: #333;
+	border-radius: 10px;
+	box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+	color: #fff;
+	margin: 5px;
+	transition: 1s;
+}
+
+.social-btn span {
+	width: 0px;
+	overflow: hidden;
+	transition: 1s;
+	text-align: center;
+}
+
+.social-btn:hover {
+	width: 150px;
+	border-radius: 5px;
+}
+
+.social-btn:hover span {
+	padding: 2px;
+	width: max-content;
+}
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.twitter {
+	background: linear-gradient(90deg, rgba(92,228,255,1) 0%, rgba(101,197,224,1) 50%, rgba(0,166,255,1) 100%);
+}
+
+.linkedin {
+	background-color: #0071ae;
+}
+
+.github {
+	background-color: #742e9b;
+}
+
+.facebook {
+	background: #067af1;
+}
+
+.discord {
+	background-color: #5766b6;
+}
+
+.phone {
+	background-color: #000000;
+}
+
+.instagram {
+	background: linear-gradient(90deg, rgba(250,255,92,1) 0%, rgba(224,101,220,1) 50%, rgba(156,0,255,1) 100%);
+}
+
+.youtube {
+	background: red;
+}
+
+.mail {
+	background: #ffffff;
+	color: #000000;
 }

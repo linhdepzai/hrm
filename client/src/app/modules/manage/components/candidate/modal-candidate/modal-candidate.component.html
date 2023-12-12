@@ -1,1 +1,62 @@
-<p>modal-candidate works!</p>
+<nz-drawer [nzClosable]="false" [nzVisible]="visible" [nzTitle]="header" [nzContent]="content" (nzOnClose)="close()"
+    nzWidth="50%" [nzFooter]="footer">
+</nz-drawer>
+<ng-template #header>
+    <i class="fa-solid fa-user-pen'"></i>
+    <span class="ml-5">{{ title }}</span>
+</ng-template>
+<ng-template #content>
+    <form nz-form [formGroup]="candidateForm" class="login-form">
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Name</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid Name!">
+                <input nz-input placeholder="Enter your name" formControlName="fullName" id="fullName" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Mail</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid mail!">
+                <input nz-input placeholder="Enter your email" formControlName="email" id="email" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Phone</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid phone!">
+                <input nz-input placeholder="Enter your phone" formControlName="phone" id="phone" />
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Step</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid step!">
+                <nz-select nzShowSearch [ngModel]="candidateForm.value.status"
+                    nzPlaceHolder="Enter your name" formControlName="status" id="status">
+                    <nz-option [nzLabel]="item.label" [nzValue]="item.value"
+                        *ngFor="let item of statusCandidate | async"></nz-option>
+                </nz-select>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Evaluate</nz-form-label>
+            <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid evaluate!">
+                <textarea nz-input placeholder="Evaluate..." [rows]="10" [nzAutosize]="{ minRows: 3, maxRows: 10 }"
+                    formControlName="evaluate" id="evaluate"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</ng-template>
+<ng-template #footer>
+    <button *ngIf="!isEdit else edit" nz-button nzType="primary" style="float: right;" (click)="changeMode()">
+        <i class="fa-solid fa-pen-to-square mr-5"></i>
+        <span>Edit</span>
+    </button>
+    <ng-template #edit>
+        <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm()">
+            <i class="fa-solid fa-check mr-5"></i>
+            <span>Submit</span>
+        </button>
+        <button *ngIf="mode == 'update'" style="float: right;" nz-button nzDanger nzType="default" (click)="changeMode()">
+            <i class="fa-solid fa-xmark mr-5"></i>
+            <span>Cancel</span>
+        </button>
+    </ng-template>
+</ng-template>

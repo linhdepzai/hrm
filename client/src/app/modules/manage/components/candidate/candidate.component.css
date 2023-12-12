@@ -1,9 +1,19 @@
 @import "/node_modules/ng-zorro-antd/ng-zorro-antd.variable.min.css";
 
 ::ng-deep .cdk-drag-preview {
-    display: table;
+  display: table;
 }
 
 ::ng-deep .cdk-drag-placeholder {
-    opacity: 0;
+  opacity: 0;
+}
+
+.download {
+  cursor: pointer;
+  color: mediumblue;
+  font-style: italic;
+}
+
+.download:hover {
+  text-decoration: underline;
 }

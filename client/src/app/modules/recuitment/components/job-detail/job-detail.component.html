@@ -1,1 +1,33 @@
-<p>job-detail works!</p>
+<h3>
+  <span class="fw-bold">{{job.jobTitle}}</span>
+  <i class="fa-solid fa-link ml-5" (click)="copyToClipboard()"></i>
+</h3>
+<div nz-row>
+  <div nz-col [nzSpan]="16">
+    <div>Location: Think List, Hoang Mike, High Noise</div>
+    <div>Working time: Monday to Friday.</div>
+  </div>
+  <div nz-col [nzSpan]="8" class="center">
+    <button nz-button [nzType]="'primary'" [nzSize]="'large'" class="btn-apply" (click)="applyNow()">
+      Apply Now
+    </button>
+  </div>
+</div>
+<div>Working hours: 8h30 AM -12h00 PM & 1h00 PM – 5h30 PM (can be changed accordingly).</div>
+<h5 style="margin-top: 10px;">1. JOB DESCRIPTION</h5>
+<div>{{job.description}}</div>
+<h5 style="margin-top: 10px;">2. YOUR SKILLS AND EXPERIENCES</h5>
+<div>{{job.description}}</div>
+<h5 style="margin-top: 10px;">3. WHY YOU'LL LOVE WORKING HERE</h5>
+<div>
+    Income = Net salary + Benefit + Performance bonus (>14 months salary).
+    Review salary twice per year base on your performance and output.
+    Health check once per year.
+    Health insurance PVI care if you work here more than one year.
+    Enjoy all of our company policies: insurance, vacation, public holiday, party, birthday and more.
+    Free coffee, tea and cakes.
+    We have these clubs for you to join: Football, Table football, Music, English, media and more.
+    Have a chance to involved and learn from our senior.
+    Have our senior to review your works, instruct you during the project using Scrum.
+    Get advices for career development.
+</div>

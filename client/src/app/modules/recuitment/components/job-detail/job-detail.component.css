@@ -1,0 +1,14 @@
+.fa-link {
+  opacity: 0.5;
+}
+
+.fa-link:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.btn-apply {
+  background-color: #8345c9;
+  border-color: #8345c9;
+  border-radius: 10px;
+}

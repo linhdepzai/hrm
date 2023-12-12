@@ -1,23 +1,18 @@
 ﻿using Business.Interfaces.IEmailServce;
 using MimeKit.Text;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using Business.DTOs.EmailDto;
-using MailKit.Net.Smtp;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
+using Microsoft.Extensions.Options;
 
 namespace Business.Services.EmailService
 {
     public class EmailSender : IEmailSender
     {
-        private readonly EmailConfiguration _emailConfig;
-        public EmailSender(EmailConfiguration emailConfig)
+        private readonly EmailConfigurationSettings _emailConfig;
+        public EmailSender(IOptionsMonitor<EmailConfigurationSettings> emailConfig)
         {
-            _emailConfig = emailConfig;
+            _emailConfig = emailConfig.CurrentValue;
         }
         public void SendEmail(EmailMessage message, TextFormat textFormat = TextFormat.Text)
         {
@@ -27,7 +22,7 @@ namespace Business.Services.EmailService
 
         private void Send(MimeMessage mailMessage)
         {
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            using (var client = new SmtpClient())
             {
                 try
                 {
@@ -58,7 +53,7 @@ namespace Business.Services.EmailService
 
         private async Task SendAsync(MimeMessage mailMessage)
         {
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            using (var client = new SmtpClient())
             {
                 try
                 {

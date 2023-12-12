@@ -1,0 +1,70 @@
+<nz-layout class="body">
+  <div style="position: relative;">
+    <img width="100%" height="100%" style="object-fit:cover" src="../../../assets/background-recuitment.png" alt="background">
+    <img class="logo" src="../../../assets/HRMLogo.png" alt="Logo">
+  </div>
+  <nz-layout>
+    <nz-content>
+      <div class="content">
+        <router-outlet></router-outlet>
+        <div #apply id="apply">
+          <div style="text-align: center"><h1 class="fw-bold">Apply Now</h1></div>
+          <div style="text-align: center"><h5>We build up young and talented software engineers</h5></div>
+          <div style="text-align: center; padding-bottom: 10px;"><h5>to a world class level</h5></div>
+          <app-register></app-register>
+        </div>
+      </div>
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="#bc312a0f" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="#bc312a24" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="#cd7ace" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#8345c9" />
+        </g>
+      </svg>
+      <nz-footer class="footer">
+        <div class='social-btn flex-center phone' (click)="openSocial('https://twitter.com/linhdepzais')">
+          <i class="fa-solid fa-phone-volume fa-2x mr-5 ml-5"></i>
+          <span>0387008631</span>
+        </div>
+        <div class='social-btn flex-center mail' (click)="openSocial('https://mail.google.com/mail/u/1/#inbox?compose=CllgCJqXxbwhTbMPMlwPnWXCSTKNKdswHqslJXprhRQFJQnNHJwFjDSDmMljLtnHNgPjfSLQJxB')">
+          <i class="fa-regular fa-envelope fa-2x mr-5 ml-5"></i>
+          <span>linhdt2311@gmail.com</span>
+        </div>
+        <div class='social-btn flex-center twitter' (click)="openSocial('https://twitter.com/linhdepzais')">
+          <i class="fa-brands fa-twitter fa-2x mr-5 ml-5"></i>
+          <span>@linhdepzais</span>
+        </div>
+        <div class='social-btn flex-center github' (click)="openSocial('https://github.com/linhdepzai')">
+          <i class="fa-brands fa-github fa-2x mr-5 ml-5"></i>
+          <span>Linhdepzai</span>
+        </div>
+        <div class='social-btn flex-center facebook' (click)="openSocial('https://www.facebook.com/linhdepzais/')">
+          <i class="fa-brands fa-facebook fa-2x mr-5 ml-5"></i>
+          <span>linhdepzai</span>
+        </div>
+        <div class='social-btn flex-center discord' (click)="openSocial('https://discord.gg/linhdepzais')">
+          <i class="fa-brands fa-discord fa-2x mr-5 ml-5"></i>
+          <span>Linhdepzai</span>
+        </div>
+        <div class='social-btn flex-center instagram' (click)="openSocial('https://www.instagram.com/linhdepzais/')">
+          <i class="fa-brands fa-instagram fa-2x mr-5 ml-5"></i>
+          <span>@linhdepzai</span>
+        </div>
+        <div class='social-btn flex-center linkedin'
+          (click)="openSocial('https://www.linkedin.com/in/linh-%C4%91%E1%BA%B7ng-tu%E1%BA%A5n-b45b98244/')">
+          <i class="fa-brands fa-linkedin fa-2x mr-5 ml-5"></i>
+          <span>in/hbqhm</span>
+        </div>
+        <div class='social-btn flex-center youtube'
+          (click)="openSocial('https://www.youtube.com/channel/UCDysGnPZIOzgoddk1d5pwkQ')">
+          <i class="fa-brands fa-youtube fa-2x mr-5 ml-5"></i>
+          <span>linhdepzai</span>
+        </div>
+      </nz-footer>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

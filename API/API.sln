@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRM", "HRM\HRM.csproj", "{64FC7963-6F8A-4544-8E01-76990E11BD56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRM", "HRM\HRM.csproj", "{64FC7963-6F8A-4544-8E01-76990E11BD56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{5AAEF39A-815A-4200-B39A-BAE6F191FE04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{5AAEF39A-815A-4200-B39A-BAE6F191FE04}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{D8DDD93D-5D5A-479A-8AA0-C3EBBAFFBDF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Database\Database.csproj", "{D8DDD93D-5D5A-479A-8AA0-C3EBBAFFBDF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{89581B2F-8A48-439C-AF38-CCF533360D9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{89581B2F-8A48-439C-AF38-CCF533360D9F}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{30F8E0C6-F268-46D8-AC7E-E00248E91F90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{89581B2F-8A48-439C-AF38-CCF533360D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89581B2F-8A48-439C-AF38-CCF533360D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89581B2F-8A48-439C-AF38-CCF533360D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F8E0C6-F268-46D8-AC7E-E00248E91F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F8E0C6-F268-46D8-AC7E-E00248E91F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F8E0C6-F268-46D8-AC7E-E00248E91F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F8E0C6-F268-46D8-AC7E-E00248E91F90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

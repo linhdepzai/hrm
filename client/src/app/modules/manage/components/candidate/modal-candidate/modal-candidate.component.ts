@@ -8,8 +8,10 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
+import { StatusCandidate } from 'src/app/enums/Enum';
 import { Candidate } from 'src/app/interfaces/interfaceReponse';
 import { CandidateService } from 'src/app/services/candidate.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-modal-candidate',
@@ -24,9 +26,11 @@ export class ModalCandidateComponent {
   title: string = 'View';
   isEdit: boolean = false;
   candidateForm!: FormGroup;
+  statusCandidate = new Observable<{ value: StatusCandidate, label: string }[]>();
 
   constructor(
     private candidateService: CandidateService,
+    private dataService: DataService,
     private notification: NzNotificationService,
     private fb: FormBuilder
   ) {
@@ -34,6 +38,7 @@ export class ModalCandidateComponent {
   }
 
   ngOnInit(): void {
+    this.statusCandidate = this.dataService.statusCandidate;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

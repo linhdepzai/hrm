@@ -18,6 +18,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MemberModule } from './modules/member/member.module';
 import { TagComponent } from "./shared/components/tag/tag.component";
 import { RecuitmentModule } from './modules/recuitment/recuitment.module';
+import { LayoutRecuitmentComponent } from './modules/recuitment/components/layout-recuitment/layout-recuitment.component';
+import { RegisterComponent } from './modules/recuitment/components/register/register.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -28,6 +30,8 @@ registerLocaleData(en);
         SidebarComponent,
         LoginLayoutComponent,
         SettingComponent,
+        LayoutRecuitmentComponent,
+        RegisterComponent,
     ],
     providers: [
         { provide: NZ_I18N, useValue: en_US },

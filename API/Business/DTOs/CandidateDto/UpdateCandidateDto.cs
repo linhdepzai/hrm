@@ -14,7 +14,6 @@ namespace Business.DTOs.CandidateDto
         public string FullName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string FileCV { get; set; }
         public string Evaluate { get; set; }
         public StatusCandidate Status { get; set; }
     }

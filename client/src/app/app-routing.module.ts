@@ -4,11 +4,14 @@ import { LoginLayoutComponent } from './layout/login-layout/login-layout.compone
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { PageNotFoundComponent } from './layout/page-not-found/page-not-found.component';
 import { AuthGuard } from './modules/auth/guards/auth.guard';
+import { LayoutRecuitmentComponent } from './modules/recuitment/components/layout-recuitment/layout-recuitment.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
-    path: 'recuitment', loadChildren: () => import('./modules/recuitment/recuitment.module').then((m) => m.RecuitmentModule)
+    path: 'recuitment', component: LayoutRecuitmentComponent, children: [
+      {path: '', loadChildren: () => import('./modules/recuitment/recuitment.module').then((m) => m.RecuitmentModule) }
+    ]
   },
   {
     path: 'login', component: LoginLayoutComponent, children: [

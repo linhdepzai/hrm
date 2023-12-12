@@ -15,8 +15,15 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("{userId}/get-all")]
-        public async Task<IActionResult> GetAllJob(Guid userId)
+        [HttpGet("get/{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var job = await _dataContext.Job.Where(i => i.IsDeleted == false && i.Id == id).AsNoTracking().ToListAsync();
+            return CustomResult(job);
+        }
+
+        [HttpGet("get-all")]
+        public async Task<IActionResult> GetAllJob()
         {
             var jobs = await _dataContext.Job.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync();
             return CustomResult(jobs);

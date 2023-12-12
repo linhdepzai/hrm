@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  hrm:
+    image: ${DOCKER_REGISTRY-}hrm
+    build:
+      context: .
+      dockerfile: HRM/Dockerfile
+    ports:
+     - "8080:80"

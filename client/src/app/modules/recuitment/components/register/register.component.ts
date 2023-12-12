@@ -67,11 +67,24 @@ export class RegisterComponent implements OnInit {
     });
 
   handleSubmit() {
-    console.log(this.fileList)
+    this.candidateForm.controls['fileCV'].setValue(this.fileList.name);
+    if (this.candidateForm.valid) {
+      this.candidateService.create(this.candidateForm.value).subscribe((response) => {
+        if (response.statusCode == 200) {
+          this.message.success('Successfully!');
+          this.createCandidateForm();
+        }});
+    } else {
+      Object.values(this.candidateForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 
   downloadCV = (file: NzUploadFile) => {
-    window.location.assign(file.response.message)
-    console.log(file);
+    this.candidateService.downloadCV(file.response.message);
   };
 }

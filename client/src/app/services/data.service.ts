@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, catchError, of } from 'rxjs';
-import { Bank, Level, OptionRequestOff, Priority, ProjectType, StatusTask } from '../enums/Enum';
+import { Bank, Level, OptionRequestOff, Priority, ProjectType, StatusCandidate, StatusTask } from '../enums/Enum';
 import { ApiResponse } from '../interfaces/interfaceReponse';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -18,6 +18,7 @@ export class DataService {
   public priorityList = new BehaviorSubject<{ value: Priority, label: string }[]>([]);
   public statusTaskList = new BehaviorSubject<{ value: StatusTask, label: string }[]>([]);
   public projectTypeList = new BehaviorSubject<{ value: ProjectType, label: string }[]>([]);
+  public statusCandidate = new BehaviorSubject<{ value: StatusCandidate, label: string }[]>([]);
 
   constructor(
     private httpClient: HttpClient,
@@ -81,7 +82,16 @@ export class DataService {
       { value: ProjectType.Product, label: 'Product' },
       { value: ProjectType.TM, label: 'Time&Materials' },
       { value: ProjectType.Training, label: 'Training' },
-    ])
+    ]);
+    this.statusCandidate.next([
+      { value: StatusCandidate.Waiting, label: 'Waiting'},
+      { value: StatusCandidate.PassCV, label: 'Pass CV'},
+      { value: StatusCandidate.PassInterview, label: 'Pass Interview'},
+      { value: StatusCandidate.Rejected, label: 'Rejected'},
+      { value: StatusCandidate.Success, label: 'Success'},
+      { value: StatusCandidate.Deleted, label: 'Deleted'},
+      { value: StatusCandidate.Failure, label: 'Failure'}
+    ]);
     this.iconList.next(['house', 'magnifying-glass', 'user', 'check',
       'download', 'image', 'phone', 'bars', 'envelope', 'star',
       'location-dot', 'music', 'wand-magic-sparkles', 'heart',

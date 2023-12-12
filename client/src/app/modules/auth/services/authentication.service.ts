@@ -44,7 +44,7 @@ export class AuthenticationService {
           this.presence.createHubConnection(response.data);
           this.notification.success(`Hello ${response.data.fullName}!`, '');
           this.isLogin.next(true);
-          this.router.navigate(['home']);
+          this.router.navigate(['manage/home']);
         }
         this.loading.next(false);
       });

@@ -77,4 +77,8 @@ export class CandidateComponent {
         }).catch(() => console.log('Oops errors!'))
     });
   }
+
+  download(filename: string) {
+    this.candidateService.downloadCV(filename);
+  }
 }

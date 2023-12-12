@@ -19,7 +19,7 @@ export class ApiLoginService {
   ) { }
 
   login(payload: Login): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'account/login', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Account/login', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

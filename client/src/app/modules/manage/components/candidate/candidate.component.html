@@ -24,7 +24,7 @@
             <td>{{ data.fullName }}</td>
             <td nzAlign="center">{{ data.email }}</td>
             <td nzAlign="center">{{ data.phone }}</td>
-            <td nzAlign="center">{{ data.fileCV }}</td>
+            <td nzAlign="center"><span class="download" (click)="download(data.fileCV)">download</span></td>
             <td nzAlign="center">
                 <button nz-button nzType="primary" class="mr-5" (click)="openModal(data, 'update')">
                     <i class="fa-solid fa-pen-to-square"></i>

@@ -6,6 +6,8 @@
     <i class="fa-solid fa-bars fa-2x" style="margin-top: -3px;"></i>
 </button>
 <span class="config-option">
+    <a href="http://localhost:4200/recuitment"
+        target="_blank" class="fa-solid fa-users-between-lines fa-2x"></a>
     <i class="fa-solid fa-comment-dots fa-2x" (click)="openMessage()">
         <app-tag class="totalUnSeen" *ngIf="totalUnSeen > 0" [label]="totalUnSeen.toString()" [color]="'red'"></app-tag>
     </i>
@@ -23,8 +25,6 @@
     </ng-template>
     <a href="https://docs.google.com/document/d/1FQ7DLaRJC_h0cUiAfYHsAp1FEEOO8v_9y4WDEadkvwI/edit?usp=sharing"
         target="_blank" class="fa-solid fa-file-lines fa-2x"></a>
-    <a href="http://localhost:4200/recuitment"
-        target="_blank" class="fa-solid fa-users-between-lines fa-2x"></a>
     <i class="fa-solid fa-gear fa-2x" 
         nzPopoverTrigger="click" 
         nz-button 

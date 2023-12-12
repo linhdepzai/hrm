@@ -1,0 +1,179 @@
+.card-grid {
+  width: 50%;
+}
+
+.content {
+    width: 60rem;
+    /* text-align: center; */
+    margin: 0 auto;
+}
+
+.body {
+  height: 100%;
+  overflow-y: scroll;
+  background-color: #fff;
+}
+
+.logo {
+  position: absolute;
+  height: 50px;
+  width: 150px;
+  top: 8%;
+  left: 8%;
+  background-image: linear-gradient(45deg, #be6cce, #c673cd);
+}
+
+.btn-action {
+  width: 125px;
+  color: #000;
+}
+
+.col-btn {
+  text-align: center;
+}
+
+#apply {
+  padding-top: 50px;
+  padding-bottom: 100px;
+}
+
+.bottom {
+  transform: translateY(100%);
+  background-color: #8345c9;
+  width: 100%;
+  height: 108px;
+}
+
+.footer {
+  background-color: #8345c9;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.social-btn {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  font-family: "Titillium Web", sans-serif;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  margin: 5px;
+  transition: 1s;
+}
+
+.social-btn span {
+  width: 0px;
+  overflow: hidden;
+  transition: 1s;
+  text-align: center;
+}
+
+.social-btn:hover {
+  width: 150px;
+  border-radius: 5px;
+}
+
+.social-btn:hover span {
+  padding: 2px;
+  width: max-content;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.twitter {
+  background: linear-gradient(
+    90deg,
+    rgba(92, 228, 255, 1) 0%,
+    rgba(101, 197, 224, 1) 50%,
+    rgba(0, 166, 255, 1) 100%
+  );
+}
+
+.linkedin {
+  background-color: #0071ae;
+}
+
+.github {
+  background-color: #742e9b;
+}
+
+.facebook {
+  background: #067af1;
+}
+
+.discord {
+  background-color: #5766b6;
+}
+
+.phone {
+  background-color: #000000;
+}
+
+.instagram {
+  background: linear-gradient(
+    90deg,
+    rgba(250, 255, 92, 1) 0%,
+    rgba(224, 101, 220, 1) 50%,
+    rgba(156, 0, 255, 1) 100%
+  );
+}
+
+.youtube {
+  background: red;
+}
+
+.mail {
+  background: #ffffff;
+  color: #000000;
+}
+
+.waves {
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  margin-bottom: -7px; /*Fix for safari gap*/
+  min-height: 100px;
+  max-height: 150px;
+}
+.parallax > use {
+  animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+}
+.parallax > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+}
+.parallax > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+.parallax > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+.parallax > use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 20s;
+}
+@keyframes move-forever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+/*Shrinking for mobile*/
+@media (max-width: 768px) {
+  .waves {
+    height: 40px;
+    min-height: 40px;
+  }
+}

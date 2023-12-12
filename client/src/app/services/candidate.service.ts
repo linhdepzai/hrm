@@ -11,7 +11,6 @@ import { ApiResponse, Candidate } from '../interfaces/interfaceReponse';
 })
 export class CandidateService {
   public candidateList$ = new BehaviorSubject<Candidate[]>([]);
-  private baseUrl = environment.baseUrl + 'Candidate/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
 
   constructor(
     private notification: NzNotificationService,
@@ -20,7 +19,8 @@ export class CandidateService {
   ) { }
 
   getAllCandidate() {
-    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all')
+    const baseUrl = environment.baseUrl + 'Candidate/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
+    return this.httpClient.get<ApiResponse>(baseUrl + 'get-all')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
@@ -33,11 +33,22 @@ export class CandidateService {
   uploadCV(file: File): Observable<ApiResponse> {
     const formData = new FormData();
     formData.append('File', file, file.name);
-    return this.httpClient.post<ApiResponse>(this.baseUrl + 'upload-cv', formData);
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'upload-cv', formData);
+  }
+
+  downloadCV(fileName: string): void {
+    this.httpClient.get(environment.baseUrl + 'Candidate/download-cv?filename=' + fileName, {observe: 'response', responseType:'blob'}).subscribe(
+      (response: any) =>{
+        let blob: Blob = response.body as Blob;
+        let a = document.createElement('a');
+        a.download = fileName;
+        a.href = window.URL.createObjectURL(blob);
+        a.click();
+      });
   }
 
   create(payload: any): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(this.baseUrl + 'create', payload)
+    return this.httpClient.post<ApiResponse>(environment.baseUrl + 'Candidate/create', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -45,7 +56,8 @@ export class CandidateService {
   }
 
   update(payload: Candidate): Observable<ApiResponse> {
-    return this.httpClient.post<ApiResponse>(this.baseUrl + 'update', payload)
+    const baseUrl = environment.baseUrl + 'Candidate/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
+    return this.httpClient.put<ApiResponse>(baseUrl + 'update', payload)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -53,7 +65,8 @@ export class CandidateService {
   }
 
   delete(id: string): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(this.baseUrl + `delete?id=${id}`)
+    const baseUrl = environment.baseUrl + 'Candidate/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
+    return this.httpClient.delete<ApiResponse>(baseUrl + `delete?id=${id}`)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);

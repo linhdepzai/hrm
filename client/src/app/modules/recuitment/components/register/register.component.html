@@ -28,7 +28,7 @@
         <div nz-col [nzSpan]="13">
             <div *ngIf="candidateForm.value.option == 'cv'; else portfolio" class="clearfix">
                 <nz-upload
-                nzAction="https://localhost:7114/api/Candidate/upload-cv"
+                nzAction="http://localhost:5037/api/Candidate/upload-cv"
                 nzListType="text"
                 style="display: flex;"
                 [nzMultiple]="false" 
