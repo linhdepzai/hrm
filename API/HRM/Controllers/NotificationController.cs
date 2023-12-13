@@ -39,7 +39,7 @@ namespace HRM.Controllers
                                               CreateDate = n.CreateDate,
                                               IsRead = e.IsRead,
                                               CreateUserId = n.CreatorUserId,
-                                              CreateUserName = _dataContext.Employee.FirstOrDefault(i => i.Id == n.CreatorUserId).FullName,
+                                              CreateUserName = _dataContext.Employee.FirstOrDefault(i => i.AppUserId == n.CreatorUserId).FullName,
                                               CreateUserPhoto = _dataContext.AppUser.FirstOrDefault(i => i.Id == n.CreatorUserId).AvatarUrl,
                                           }).AsNoTracking().ToListAsync();
             return CustomResult(notificationList);

@@ -1,4 +1,4 @@
-<div class="title">Salary</div>
+<div class="title">Manage employee salary coefficients</div>
 <nz-table #table1 [nzData]="salaryForEmployeeList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '49.5vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items

@@ -24,7 +24,6 @@ export class NotificationComponent implements OnInit {
   }
 
   readNotification(id: string) {
-    this.router.navigate(['member/notification-detail/' + id]);
+    window.location.href = 'https://mail.google.com/mail/u/1/?pli=1#inbox'
   }
-
 }

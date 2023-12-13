@@ -16,7 +16,7 @@
                 [nzEllipsisRows]="2" 
                 [ngClass]="item.isRead ? '' : 'fw-bold'" 
                 [nzContent]="item.title | uppercase"></div>
-            <div style="float: right;">{{ item.createDate| date: 'dd/MM/yyyy' }} by {{ item.createUserName }}</div>
+            <div style="float: right;">{{ item.createDate | date: 'dd/MM/yyyy' }} by {{ item.createUserName }}</div>
         </div>
     </li>
 </ul>

@@ -24,7 +24,10 @@
             <td nz-typography nzEllipsis>{{ data.fullName }}</td>
             <td nzAlign="center" nz-typography nzEllipsis>{{ data.email }}</td>
             <td nzAlign="center">{{ data.phone }}</td>
-            <td nzAlign="center"><span class="download" (click)="download(data.fileCV)">download</span></td>
+            <td nzAlign="center"><span class="download" (click)="download(data.fileCV)">
+                <i class="fa-solid fa-download mr-5"></i>
+                <span>download</span>
+            </span></td>
             <td nzAlign="center">
                 <button nz-button nzType="primary" class="mr-5" (click)="openModal(data, 'update')">
                     <i class="fa-solid fa-pen-to-square"></i>

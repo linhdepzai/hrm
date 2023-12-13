@@ -6,6 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { Level } from 'src/app/enums/Enum';
@@ -35,7 +36,8 @@ export class ModalJobComponent {
     private positionService: PositionService,
     private dataService: DataService,
     private notification: NzNotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modal: NzModalService
   ) {
     this.initForm();
   }
@@ -133,7 +135,7 @@ export class ModalJobComponent {
     } else {
       this.jobForm.controls['salaryRange'].setValue(this.formatSalary(this.jobForm.value.fromSalary) + ' ~ ' + this.formatSalary(this.jobForm.value.toSalary));
     }
-    if (this.jobForm.valid) {
+    if (this.jobForm.valid && this.confirmChange()) {
       this.jobForm.controls['fromDate'].setValue(this.jobForm.value.dateRange[0]);
       this.jobForm.controls['toDate'].setValue(this.jobForm.value.dateRange[1]);
       this.jobService.save(this.jobForm.value).subscribe((response) => {
@@ -168,4 +170,15 @@ export class ModalJobComponent {
     this.cancel.emit();
   }
 
+  confirmChange() :boolean {
+    if (this.data!.visible) {
+      this.modal.confirm({
+        nzTitle: 'This job is currently being published. Are you sure you want to fix it?',
+        nzOnOk: () => {
+          return true;
+        }
+      });
+    }
+    return false;
+  }
 }
