@@ -38,6 +38,7 @@ import { JobComponent } from './components/job/job.component';
 import { CandidateComponent } from './components/candidate/candidate.component';
 import { ModalCandidateComponent } from './components/candidate/modal-candidate/modal-candidate.component';
 import { ModalJobComponent } from './components/job/modal-job/modal-job.component';
+import { SalaryReportComponent } from './components/salary-report/salary-report.component';
 registerLocaleData(en);
 @NgModule({
     declarations: [
@@ -71,6 +72,7 @@ registerLocaleData(en);
         CandidateComponent,
         ModalCandidateComponent,
         ModalJobComponent,
+        SalaryReportComponent,
     ],
     exports: [
         ManageRoutingModule,

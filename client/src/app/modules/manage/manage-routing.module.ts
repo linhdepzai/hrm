@@ -13,6 +13,7 @@ import { PositionManagementComponent } from './components/position-management/po
 import { DepartmentManagementComponent } from './components/department-management/department-management.component';
 import { JobComponent } from './components/job/job.component';
 import { CandidateComponent } from './components/candidate/candidate.component';
+import { SalaryReportComponent } from './components/salary-report/salary-report.component';
 
 const routes: Routes = [
   { path: 'users', component: UsersComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'punish', component: PayoffComponent },
   { path: 'salary-management', component: SalaryComponent },
   { path: 'salary-for-employee', component: SalaryForEmployeeComponent },
+  { path: 'salary-report', component: SalaryReportComponent },
   { path: 'notification', component: NotificationManageComponent },
   { path: 'notification/:id', component: CreateOrEditNotificationComponent },
   { path: 'job', component: JobComponent },

@@ -21,8 +21,8 @@
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table.data" cdkDrag>
             <td>{{ getJobPosition(data.jobId) }}</td>
-            <td>{{ data.fullName }}</td>
-            <td nzAlign="center">{{ data.email }}</td>
+            <td nz-typography nzEllipsis>{{ data.fullName }}</td>
+            <td nzAlign="center" nz-typography nzEllipsis>{{ data.email }}</td>
             <td nzAlign="center">{{ data.phone }}</td>
             <td nzAlign="center"><span class="download" (click)="download(data.fileCV)">download</span></td>
             <td nzAlign="center">
