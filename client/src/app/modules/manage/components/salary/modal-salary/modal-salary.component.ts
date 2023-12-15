@@ -7,6 +7,7 @@ import { Level } from 'src/app/enums/Enum';
 import { DataService } from 'src/app/services/data.service';
 import { SalaryService } from 'src/app/services/salary.service';
 import { PositionService } from 'src/app/services/position.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-modal-salary',
@@ -26,25 +27,24 @@ export class ModalSalaryComponent implements OnInit {
     private positionService: PositionService,
     private fb: FormBuilder,
     private notification: NzNotificationService,
-  ) { }
+    private modal: NzModalService
+    ) { }
 
   ngOnInit(): void {
     this.positionService.getAllPosition();
     this.levelList = this.dataService.levelList;
     this.positionList = this.positionService.positionList$;
     this.salaryForm = this.fb.group({
-      actionId: [null, Validators.required],
       level: [null, Validators.required],
       position: [null, Validators.required],
       money: [100000, Validators.required],
       welfare: [100000, Validators.required],
+      synchronized: [false],
     });
   }
 
   submitForm() {
-    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
-    this.salaryForm.controls['actionId'].setValue(user.id);
-    if (this.salaryForm.valid) {
+    if (this.salaryForm.valid && this.confirmSyn()) {
       this.salaryService
         .createSalary(this.salaryForm.value)
         .subscribe((response) => {
@@ -65,5 +65,14 @@ export class ModalSalaryComponent implements OnInit {
 
   handleCancel() {
     this.cancel.emit();
+  }
+
+  confirmSyn() :boolean {
+    this.modal.confirm({
+      nzTitle: 'This job is currently being published. Are you sure you want to fix it?',
+      nzOnOk: () => { this.salaryForm.controls['synchronized'].setValue(true); return true},
+      nzOnCancel: () => {return true}
+    });
+    return false;
   }
 }

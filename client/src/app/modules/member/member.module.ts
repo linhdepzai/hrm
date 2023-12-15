@@ -20,6 +20,7 @@ import { MessageDetailComponent } from './components/message/message-detail/mess
 import { NotificationComponent } from './components/notification/notification.component';
 import { NotificationDetailComponent } from './components/notification/notification-detail/notification-detail.component';
 import { QuillModule } from 'ngx-quill';
+import { ConfirmSalaryComponent } from './components/confirm-salary/confirm-salary.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { QuillModule } from 'ngx-quill';
     AvatarComponent,
     NotificationComponent,
     NotificationDetailComponent,
+    ConfirmSalaryComponent,
   ],
   imports: [
     CommonModule,

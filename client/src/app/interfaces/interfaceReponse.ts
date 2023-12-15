@@ -138,6 +138,7 @@ export interface Salary {
     positionId: string,
     money: number,
     welfare: number,
+    synchronized: boolean,
 }
 
 export interface SalaryForEmployee {

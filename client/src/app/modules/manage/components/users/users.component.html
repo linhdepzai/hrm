@@ -21,7 +21,7 @@
         <label nz-radio-button nzValue="Pending">Pending</label>
     </nz-radio-group>
 </div>
-<nz-table #table [nzData]="employeeList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'hidden', y: '49.5vh'}">
+<nz-table #table [nzData]="employeeList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'hidden', y: '49vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>

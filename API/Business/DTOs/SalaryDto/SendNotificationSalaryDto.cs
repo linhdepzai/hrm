@@ -11,6 +11,6 @@ namespace Business.DTOs.SalaryDto
     }
     public class EmployeeIdList
     {
-        public Guid EmployeeId { get; set; }
+        public Guid UserId { get; set; }
     }
 }

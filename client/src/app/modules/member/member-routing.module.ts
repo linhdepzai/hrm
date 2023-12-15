@@ -9,6 +9,7 @@ import { MyWorkingTimeComponent } from './components/my-working-time/my-working-
 import { ProjectComponent } from '../manage/components/project/project.component';
 import { TaskComponent } from '../manage/components/task/task.component';
 import { NotificationDetailComponent } from './components/notification/notification-detail/notification-detail.component';
+import { ConfirmSalaryComponent } from './components/confirm-salary/confirm-salary.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'project', component: ProjectComponent },
   { path: 'issue', component: TaskComponent },
   { path: 'notification-detail/:id', component: NotificationDetailComponent },
+  { path: 'confirm', component: ConfirmSalaryComponent },
 ];
 
 @NgModule({

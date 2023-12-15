@@ -5,6 +5,7 @@ import { SalaryService } from 'src/app/services/salary.service';
 import { SalaryForEmployee } from 'src/app/interfaces/interfaceReponse';
 import { Observable } from 'rxjs';
 import { Employee } from 'src/app/interfaces/interfaces';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-salary-report',
@@ -25,13 +26,16 @@ export class SalaryReportComponent implements OnInit {
   detailList: SalaryForEmployee[] = [];
   data!: SalaryForEmployee;
   visibleModal: boolean = false;
+  loading: boolean = false;
   
   constructor(
     private employeeService: EmployeeService,
-    private salaryService: SalaryService
+    private salaryService: SalaryService,
+    private message: NzMessageService,
   ){}
   
   ngOnInit(): void {
+    this.salaryService.getAllSalaryForEmployee(new Date().getMonth(), new Date().getFullYear());
     this.salaryService.salaryForEmployeeList$.subscribe((data) => {
       this.detailList = data;
     });
@@ -77,17 +81,20 @@ export class SalaryReportComponent implements OnInit {
   }
 
   sendRequest(): void {
-    const requestData = this.detailList.filter(data => this.setOfCheckedId.has(data.id));
+    const requestData = this.detailList.filter(data => this.setOfCheckedId.has(data.userId));
     const response = {
       month: new Date().getMonth(),
       year: new Date().getFullYear(),
       employee: requestData,
     };
+    this.loading = true;
     this.salaryService.sendNotificationSalary(response)
       .subscribe((res) => {
         if (res.statusCode == 200) {
           this.setOfCheckedId.clear();
           this.refreshCheckedStatus();
+          this.message.success('Email sent successfully!');
+          this.loading = false;
         }
       });
   }

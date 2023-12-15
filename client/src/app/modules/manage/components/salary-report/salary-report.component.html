@@ -1,6 +1,6 @@
 <div class="title">Monthly Salary Report</div>
 <div style="margin-bottom: 15px;">
-    <button nz-button nzType="primary" (click)="sendRequest()" class="mr-per" [disabled]="setOfCheckedId.size === 0">
+    <button nz-button nzType="primary" (click)="sendRequest()" class="mr-per" [disabled]="setOfCheckedId.size === 0" [nzLoading]="loading">
         <i class="fa-solid fa-user-plus mr-5"></i>
         <span>Send</span>
     </button>
@@ -17,7 +17,7 @@
         <nz-option [nzLabel]="item" [nzValue]="item" *ngFor="let item of yearList"></nz-option>
     </nz-select>
 </div>
-<nz-table #table [nzData]="detailList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '49.5vh'}">
+<nz-table #table [nzData]="detailList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '49vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>
@@ -36,8 +36,8 @@
     </thead>
     <tbody cdkDropList (cdkDropListDropped)="drop($event)">
         <tr *ngFor="let data of table.data" cdkDrag>
-            <td [nzChecked]="setOfCheckedId.has(data.id)" [nzDisabled]="isDisable"
-                (nzCheckedChange)="onItemChecked(data.id, $event)"></td>
+            <td [nzChecked]="setOfCheckedId.has(data.userId)" [nzDisabled]="isDisable"
+                (nzCheckedChange)="onItemChecked(data.userId, $event)"></td>
             <td nzAlign="center">
                 <i *ngIf="data.isConfirm == 0" class="fa-solid fa-o" style="color: blue;"></i>
                 <i *ngIf="data.isConfirm == 1" class="fa-solid fa-check" style="color: aqua"></i>
@@ -50,7 +50,7 @@
             <td nzAlign="center">{{ data.totalWorkdays }}</td>
             <td nzAlign="center">{{ data.actualSalary | vnd }}</td>
             <td nzAlign="center">
-                <button nz-button nzType="primary" (click)="openModal(data)">
+                <button nz-button nzType="primary" (click)="openModal(data)" [nzLoading]="loading">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
             </td>

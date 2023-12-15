@@ -22,7 +22,6 @@ export class SalaryForEmployeeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.salaryService.getAllSalaryForEmployee(new Date().getMonth(), new Date().getFullYear());
     this.salaryService.getAllSalary();
     this.employeeService.getAllEmployee();
     this.salaryService.GetSalaryForEmployee().subscribe((response) => {

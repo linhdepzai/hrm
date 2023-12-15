@@ -4,7 +4,7 @@
         <nz-option [nzLabel]="item.fullName" [nzValue]="item.fullName" *ngFor="let item of candidateList"></nz-option>
     </nz-select>
 </div>
-<nz-table #table [nzData]="candidateList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '49.5vh'}">
+<nz-table #table [nzData]="candidateList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'none', y: '49vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>

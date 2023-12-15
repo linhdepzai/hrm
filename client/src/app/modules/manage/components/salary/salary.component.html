@@ -14,7 +14,7 @@
         <nz-option [nzLabel]="item.name" [nzValue]="item.id" *ngFor="let item of positionList | async"></nz-option>
     </nz-select>
 </div>
-<nz-table #table [nzData]="salaryList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: null, y: '49.5vh'}">
+<nz-table #table [nzData]="salaryList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: null, y: '49vh'}">
     <ng-template #rangeTemplate let-range="range" let-total>
         {{ range[0] }}-{{ range[1] }} of {{ total }} items
     </ng-template>

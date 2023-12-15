@@ -10,5 +10,6 @@ namespace Business.DTOs.SalaryDto
         public Guid PositionId { get; set; }
         public int Money { get; set; }
         public int Welfare { get; set; }
+        public bool Synchronized { get; set; }
     }
 }
