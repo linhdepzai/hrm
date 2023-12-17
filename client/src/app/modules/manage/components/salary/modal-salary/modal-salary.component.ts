@@ -36,7 +36,7 @@ export class ModalSalaryComponent implements OnInit {
     this.positionList = this.positionService.positionList$;
     this.salaryForm = this.fb.group({
       level: [null, Validators.required],
-      position: [null, Validators.required],
+      positionId: [null, Validators.required],
       money: [100000, Validators.required],
       welfare: [100000, Validators.required],
       synchronized: [false],
@@ -44,11 +44,12 @@ export class ModalSalaryComponent implements OnInit {
   }
 
   submitForm() {
-    if (this.salaryForm.valid && this.confirmSyn()) {
+    if (this.salaryForm.valid) {
       this.salaryService
         .createSalary(this.salaryForm.value)
         .subscribe((response) => {
           if (response.statusCode == 200) {
+            this.salaryService.salaryList$.next([response.data,...this.salaryService.salaryList$.value]);
             this.notification.success('Successfully!!!', '');
             this.cancel.emit();
           }
@@ -67,12 +68,11 @@ export class ModalSalaryComponent implements OnInit {
     this.cancel.emit();
   }
 
-  confirmSyn() :boolean {
+  confirmSyn() {
     this.modal.confirm({
       nzTitle: 'This job is currently being published. Are you sure you want to fix it?',
-      nzOnOk: () => { this.salaryForm.controls['synchronized'].setValue(true); return true},
-      nzOnCancel: () => {return true}
+      nzOnOk: () => { this.salaryForm.controls['synchronized'].setValue(true); this.submitForm()},
+      nzOnCancel: () => {this.submitForm()}
     });
-    return false;
   }
 }

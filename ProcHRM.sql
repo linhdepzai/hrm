@@ -141,7 +141,7 @@ as
 		declare @Welfare int = (select [Welfare] from Salary where [Id] = @Salary);
 		declare @ActualSalary int = @Money + @Welfare + @totalBounty - @totalPunish;
 		insert into SalaryReport ([Id], [Date], [totalWorkdays], [UserId], [Salary], [Punish], [Bounty], [ActualSalary], [CreatorUserId], [CreationTime], [IsDeleted], [IsConfirm])
-			values (newid(), getdate(), @totalWorkday, @UserId, @Salary, @totalPunish, @totalBounty, @ActualSalary, '00000000-0000-0000-0000-000000000000', getdate(), 0, 0);
+			values (newid(), getdate(), @totalWorkday, @UserId, @Salary, @totalPunish, @totalBounty, @ActualSalary, '00000000-0000-0000-0000-000000000000', getdate(), 0, 1);
 		set @i = @i + 1;
 	end
 go

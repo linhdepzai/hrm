@@ -35,6 +35,7 @@ export class SalaryReportComponent implements OnInit {
   ){}
   
   ngOnInit(): void {
+    this.salaryService.getAllSalary();
     this.salaryService.getAllSalaryForEmployee(new Date().getMonth(), new Date().getFullYear());
     this.salaryService.salaryForEmployeeList$.subscribe((data) => {
       this.detailList = data;
@@ -76,7 +77,7 @@ export class SalaryReportComponent implements OnInit {
 
   onAllChecked(checked: boolean): void {
     this.detailList
-      .forEach(({ id }) => this.updateCheckedSet(id, checked));
+      .forEach(({ userId }) => this.updateCheckedSet(userId, checked));
     this.refreshCheckedStatus();
   }
 

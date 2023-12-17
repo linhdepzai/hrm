@@ -171,11 +171,13 @@ export class ModalJobComponent {
   }
 
   confirmChange() {
-    if (this.data!.visible) {
+    if (this.data?.visible && this.mode != 'Create') {
       this.modal.confirm({
         nzTitle: 'This job is currently being published. Are you sure you want to fix it?',
-        //nzOnOk: OnClickCallback<unknown>,
+        nzOnOk: () => {this.submitForm()},
       });
+    } else {
+      this.submitForm();
     }
     
   }

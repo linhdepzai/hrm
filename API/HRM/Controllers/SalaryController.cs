@@ -43,7 +43,7 @@ namespace HRM.Controllers
             {
                 Id = new Guid(),
                 CreatorUserId = userId,
-                SalaryCode = Random(input),
+                SalaryCode = Random(input.PositionId),
                 Level = input.Level,
                 PositionId = input.PositionId,
                 Money = input.Money,
@@ -184,45 +184,44 @@ namespace HRM.Controllers
             }
             return CustomResult(salary);
         }
-        public static string Random(CreateSalaryDto input)
+        private string Random(Guid input)
         {
-            string randomStr = "0" + input.PositionId;
-            switch (input.Level)
+            string posName = _dataContext.Position.FirstOrDefault(i => i.Id == input).Name;
+            string randomStr = "";
+            switch (posName)
             {
-                case Level.Intern:
-                    randomStr += "01";
+                case "BA":
+                    randomStr += "BA";
                     break;
-                case Level.Fresher:
-                    randomStr += "02";
+                case "Admin":
+                    randomStr += "ADM";
                     break;
-                case Level.Middle:
-                    randomStr += "03";
+                case "PM":
+                    randomStr += "PM";
                     break;
-                case Level.Junior:
-                    randomStr += "04";
+                case "Accountant":
+                    randomStr += "ACT";
                     break;
-                case Level.Senior:
-                    randomStr += "05";
+                case "ScrumMaster":
+                    randomStr += "SMT";
+                    break;
+                case "DevOps":
+                    randomStr += "DOP";
+                    break;
+                case "QA":
+                    randomStr += "QA";
+                    break;
+                case "DataEngineer":
+                    randomStr += "DE";
+                    break;
+                case "Dev":
+                    randomStr += "DEV";
                     break;
             }
-            randomStr += DateTime.Now.ToString("MM");
-            randomStr += DateTime.Now.ToString("yy");
-            try
-            {
-                int[] myIntArray = new int[4];
-                int x;
-                //that is to create the random # and add it to uour string
-                Random autoRand = new Random();
-                for (x = 0; x < 4; x++)
-                {
-                    myIntArray[x] = System.Convert.ToInt32(autoRand.Next(0, 9));
-                    randomStr += (myIntArray[x].ToString());
-                }
-            }
-            catch (Exception ex)
-            {
-                randomStr = "error";
-            }
+            randomStr += "-";
+            string sal = _dataContext.Salary.Where(s => s.SalaryCode.Contains(randomStr)).OrderByDescending(od => od.SalaryCode).FirstOrDefault().SalaryCode;
+            int seq = Int32.Parse(sal.Substring(sal.Length - 2)) + 1;
+            randomStr += seq.ToString().Length == 1 ? "0" + seq : seq;
             return randomStr;
         }
 
@@ -356,7 +355,7 @@ namespace HRM.Controllers
                         <span class=""total-value"">{input.Total}</span>
                     </div>
                     <div style=""text-align: right; padding-bottom: 30px;"">
-                        <a type=""button"" href=""http://localhost:4200/member/confirm?action=1&id={input.Id}"" class=""ant-btn danger"">
+                        <a type=""button"" href=""http://localhost:4200/member/confirm?action=3&id={input.Id}"" class=""ant-btn danger"">
                             <i class=""fa-solid fa-xmark mr-5""></i>
                             <span>Complain</span>
                         </a>
