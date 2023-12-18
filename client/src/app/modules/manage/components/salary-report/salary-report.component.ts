@@ -89,6 +89,7 @@ export class SalaryReportComponent implements OnInit {
       employee: requestData,
     };
     this.loading = true;
+    this.salaryService.getAllSalaryForEmployee(new Date().getMonth(), new Date().getFullYear());
     this.salaryService.sendNotificationSalary(response)
       .subscribe((res) => {
         if (res.statusCode == 200) {

@@ -19,15 +19,13 @@ namespace HRM.Controllers
         public async Task<IActionResult> GetAll(Guid userId, string status)
         {
             RecordStatus stt = status == "Approved" ? RecordStatus.Approved: RecordStatus.Pending;
-            var user = await _dataContext.AppUser.FindAsync(userId);
-            var isAdmin = await (from u in _dataContext.AppUserRole
+            var role = await (from u in _dataContext.AppUserRole
                                  join r in _dataContext.AppRole on u.RoleId equals r.Id
-                                 where u.UserId == userId && r.Name == "Admin"
+                                 where u.UserId == userId
                                  select new
                                  {
                                      Role = r.Name,
                                  }).AsNoTracking().ToListAsync();
-            var departments = await _dataContext.Department.Where(i => i.Boss == userId).AsNoTracking().ToListAsync();
             var data = await (from e in _dataContext.Employee
                               join u in _dataContext.AppUser on e.AppUserId equals u.Id
                               where e.Status == stt && e.IsDeleted == false
@@ -64,31 +62,10 @@ namespace HRM.Controllers
                                   DateOfIssue = e.DateOfIssue,
                                   IssuedBy = e.IssuedBy
                               }).AsNoTracking().ToListAsync();
-            if (isAdmin.Count > 0) return CustomResult(data);
-            if (departments.Count > 0)
-            {
-                var list = new List<GetAllEmployeeForViewDto>();
-                foreach (var department in departments)
-                {
-                    data = data.Where(e => e.DepartmentId == department.Id).ToList();
-                    if (list.Any())
-                    {
-                        foreach (var i in data)
-                        {
-                            list.Add(i);
-                        }
-                    }
-                    else
-                    {
-                        list = data;
-                    }
-                }
-                return CustomResult(list);
-            }
-            else
-            {
-                return CustomResult(data);
-            }
+            if (role.FirstOrDefault(i => i.Role == "Admin") is not null) return CustomResult(data);
+            if (role.FirstOrDefault(i => i.Role == "Accountant") is not null) return CustomResult(data.Where(i => i.Roles.FirstOrDefault(r => r.Name == "Admin") is null));
+            if (role.FirstOrDefault(i => i.Role == "Leader") is not null) return CustomResult(data.Where(i => i.Manager == userId));
+            return CustomResult(data);
         }
         [HttpPost("{userId}/save")]
         public async Task<IActionResult> CreateOrEdit(Guid userId, CreateOrEditEmployeeDto input)
@@ -181,7 +158,7 @@ namespace HRM.Controllers
             };
             await _dataContext.EmployeeSalary.AddAsync(employeeSalary);
             await _dataContext.SaveChangesAsync();
-            return CustomResult(employee);
+            return CustomResult(input);
         }
         private async Task<IActionResult> Update(Guid userId, CreateOrEditEmployeeDto input)
         {
@@ -230,7 +207,7 @@ namespace HRM.Controllers
                 _dataContext.Employee.Update(employee);
             };
             await _dataContext.SaveChangesAsync();
-            return CustomResult(employee);
+            return CustomResult(input);
         }
         [HttpPut("{userId}/update-status")]
         public async Task<IActionResult> UpdateStatus(Guid userId, UpdateStatusEmployeeDto input)
@@ -283,6 +260,22 @@ namespace HRM.Controllers
             _dataContext.Employee.Remove(employee);
             await _dataContext.SaveChangesAsync();
             return CustomResult("Removed");
+        }
+
+        [HttpGet("{userId}/get-manager")]
+        public async Task<IActionResult> GetAllManager(Guid userId)
+        {
+            var result = await (from u in _dataContext.AppUser
+                                join ur in _dataContext.AppUserRole on u.Id equals ur.UserId
+                                join r in _dataContext.AppRole on ur.RoleId equals r.Id
+                                join e in _dataContext.Employee on u.Id equals e.AppUserId
+                                where r.Name == "Leader" && e.IsActive == true && e.IsDeleted == false
+                                select new
+                                {
+                                    Id = u.Id,
+                                    Name = e.FullName,
+                                }).AsNoTracking().ToListAsync();
+            return CustomResult(result);
         }
         public static string Random(CreateOrEditEmployeeDto input)
         {

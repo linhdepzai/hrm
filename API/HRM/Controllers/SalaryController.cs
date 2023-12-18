@@ -109,13 +109,15 @@ namespace HRM.Controllers
                     IsRead = false,
                     CreatorUserId = userId,
                 };
-                await _dataContext.AddAsync(employee);
+                await _dataContext.NotificationEmployee.AddAsync(employee);
                 var emp = await _dataContext.Employee.FirstOrDefaultAsync(u => u.AppUserId == i.UserId && u.IsDeleted == false);
                 var rpt = await _dataContext.SalaryReport.FirstOrDefaultAsync(s => s.UserId == i.UserId && s.CreationTime.Value.Month == notification.CreateDate.Month);
                 var sal = await (from s in _dataContext.Salary
                                  join se in _dataContext.EmployeeSalary on s.Id equals se.SalaryId
                                  where se.AppUserId == i.UserId
                                  select s).FirstOrDefaultAsync();
+                rpt.IsConfirm = ConfirmStatus.Waiting;
+                _dataContext.SalaryReport.Update(rpt);
                 SendSalaryToEmail mail = new SendSalaryToEmail
                 {
                     Id = rpt.Id,
@@ -167,7 +169,7 @@ namespace HRM.Controllers
         {
             var list = await (from s in _dataContext.EmployeeSalary
                               join e in _dataContext.Employee on s.AppUserId equals e.AppUserId
-                              where e.IsDeleted == false
+                              where e.IsDeleted == false && e.Status == RecordStatus.Approved
                               select s).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }

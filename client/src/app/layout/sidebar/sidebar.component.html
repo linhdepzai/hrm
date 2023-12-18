@@ -10,7 +10,7 @@
     </div>
 </div>
 <ul nz-menu nzMode="inline" class="sider-menu">
-    <li nz-menu-item routerLink="/member/home" [nzMatchRouter]="true">
+    <li *ngIf="role.includes('Leader') || role.includes('Accountant')" nz-menu-item routerLink="/member/home" [nzMatchRouter]="true">
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Home Page</span>
     </li>
@@ -18,13 +18,13 @@
         <span nz-icon nzType="user" nzTheme="outline"></span>
         <span>My Profile</span>
     </li>
-    <li nz-submenu nzTitle="Management" nzIcon="deployment-unit">
+    <li *ngIf="role.includes('Leader') || role.includes('Accountant')" nz-submenu nzTitle="Management" nzIcon="deployment-unit">
         <ul>
-            <li nz-menu-item routerLink="/manage/department" [nzMatchRouter]="true">
+            <li *ngIf="role.includes('Admin')" nz-menu-item routerLink="/manage/department" [nzMatchRouter]="true">
                 <span nz-icon nzType="group" nzTheme="outline"></span>
                 <span>Department</span>
             </li>
-            <li nz-menu-item routerLink="/manage/position" [nzMatchRouter]="true">
+            <li *ngIf="role.includes('Admin')" nz-menu-item routerLink="/manage/position" [nzMatchRouter]="true">
                 <span nz-icon nzType="audit" nzTheme="outline"></span>
                 <span>Position</span>
             </li>
@@ -32,7 +32,7 @@
                 <span nz-icon nzType="team" nzTheme="outline"></span>
                 <span>Users</span>
             </li>
-            <li nz-menu-item routerLink="/manage/working-time" [nzMatchRouter]="true">
+            <li *ngIf="role.includes('Leader')" nz-menu-item routerLink="/manage/working-time" [nzMatchRouter]="true">
                 <span nz-icon nzType="field-time" nzTheme="outline"></span>
                 <span>Working Time</span>
             </li>
@@ -50,7 +50,7 @@
             </li>
         </ul>
     </li>
-    <li nz-submenu nzTitle="Salary Management" nzIcon="money-collect">
+    <li *ngIf="role.includes('Accountant')" nz-submenu nzTitle="Salary Management" nzIcon="money-collect">
         <ul>
             <li nz-menu-item routerLink="/manage/salary-management" [nzMatchRouter]="true">
                 <span nz-icon nzType="property-safety" nzTheme="outline"></span>
@@ -66,7 +66,7 @@
             </li>
         </ul>
     </li>
-    <li nz-submenu nzTitle="Recuitment" nzIcon="reconciliation">
+    <li *ngIf="role.includes('Accountant')" nz-submenu nzTitle="Recuitment" nzIcon="reconciliation">
         <ul>
             <li nz-menu-item routerLink="/manage/job" [nzMatchRouter]="true">
                 <span nz-icon nzType="one-to-one" nzTheme="outline"></span>
@@ -94,14 +94,14 @@
         <span nz-icon nzType="clock-circle" nzTheme="outline"></span>
         <span>My Working Time</span>
     </li>
-    <li nz-menu-item routerLink="/member/project" [nzMatchRouter]="true">
+    <!-- <li nz-menu-item routerLink="/member/project" [nzMatchRouter]="true">
         <span nz-icon nzType="bar-chart" nzTheme="outline"></span>
         <span>Projects</span>
     </li>
     <li nz-menu-item routerLink="/member/issue" [nzMatchRouter]="true">
         <span nz-icon nzType="bars" nzTheme="outline"></span>
         <span>Issues</span>
-    </li>
+    </li> -->
 </ul>
 <div class="footer" (click)="logout()">
     <span nz-icon nzType="logout" nzTheme="outline"></span>

@@ -39,9 +39,18 @@
             <td [nzChecked]="setOfCheckedId.has(data.userId)" [nzDisabled]="isDisable"
                 (nzCheckedChange)="onItemChecked(data.userId, $event)"></td>
             <td nzAlign="center">
-                <i *ngIf="data.isConfirm == 1" class="fa-solid fa-o" style="color: blue;"></i>
-                <i *ngIf="data.isConfirm == 2" class="fa-solid fa-check" style="color: aqua"></i>
-                <i *ngIf="data.isConfirm == 3" class="fa-solid fa-xmark" style="color: tomato"></i>
+                <span nz-tooltip nzTooltipTitle="New">
+                    <i *ngIf="data.isConfirm == 1" class="fa-solid fa-o" style="color: blue;"></i>
+                </span>
+                <span nz-tooltip nzTooltipTitle="Confirmed">
+                    <i *ngIf="data.isConfirm == 2" class="fa-solid fa-check" style="color: aqua"></i>
+                </span>
+                <span nz-tooltip nzTooltipTitle="Refused">
+                    <i *ngIf="data.isConfirm == 3" class="fa-solid fa-xmark" style="color: tomato"></i>
+                </span>
+                <span nz-tooltip nzTooltipTitle="Waiting for response">
+                    <i *ngIf="data.isConfirm == 4" class="fa-solid fa-hourglass-half" style="color: brown"></i>
+                </span>
             </td>
             <td>{{ getEmployeeName(data.userId) }}</td>
             <td nzAlign="center">{{ getSalaryName(data.salary) }}</td>

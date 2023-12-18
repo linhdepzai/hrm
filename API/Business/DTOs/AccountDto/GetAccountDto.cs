@@ -7,6 +7,7 @@ namespace Business.DTOs.AccountDto
     public class GetAccountDto
     {
         public Guid Id { get; set; }
+        public List<AccRole> Role { get; set; }
         public string? Avatar { get; set; }
         public string? FullName { get; set; }
         public bool Gender { get; set; }
@@ -32,5 +33,9 @@ namespace Business.DTOs.AccountDto
         public string? IssuedBy { get; set; }
         public string? UserCode { get; set; }
         public string? Token { get; set; }
+    }
+    public class AccRole
+    {
+        public string RoleName { get; set; }
     }
 }

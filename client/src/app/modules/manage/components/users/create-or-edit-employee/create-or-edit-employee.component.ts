@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Observable } from 'rxjs';
 import { Bank, Level, Status } from 'src/app/enums/Enum';
@@ -34,7 +34,9 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   roles: any;
   user: LoginResponse= JSON.parse(localStorage.getItem('user')!);
   roleSelect: string[] = [];
-  employeeList = new Observable<Employee[]>();
+  employeeList: any[] = [];
+  role = JSON.parse(localStorage.getItem('role')!);
+  loading: boolean = false;
 
   constructor(
     private departmentService: DepartmentService,
@@ -51,10 +53,17 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.employeeForm.reset();
     this.roleSelect = [];
+    this.loading = false;
     this.isEdit = true;
     if (this.mode == 'create') {
       this.title = 'Create';
       this.employeeForm.enable();
+      this.employeeForm.controls['level'].setValue(Level.Intern);
+      this.employeeForm.controls['positionId'].setValue(this.positionService.positionList$.value[0]?.id);
+      this.employeeForm.controls['departmentId'].setValue(this.departmentService.departmentList$.value[0]?.id);
+      this.employeeForm.controls['manager'].setValue(this.employeeList[0]?.id);
+      this.employeeForm.controls['gender'].setValue(true);
+      this.roleSelect.push(this.roleService.roleList$.value.find(i => i.name == 'Employee')?.id);
     } else {
       this.employeeForm.patchValue(this.data!);
       this.employeeForm.value.roles.forEach((i: any) => {
@@ -71,7 +80,9 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
     this.positionList = this.positionService.positionList$;
     this.bankList = this.dataService.bankList;
     this.roleList = this.roleService.roleList$;
-    this.employeeList = this.employeeService.employeeList$;
+    this.employeeService.getManager().subscribe((res) => {
+      this.employeeList = res.data;
+    });
   }
 
   initForm() {
@@ -104,7 +115,11 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
   }
 
   submitForm(mode: string) {
+    this.loading = true;
     if (mode == 'edit') {
+      if (this.employeeForm.value.role == null) {
+        this.employeeForm.controls['roles'].setValue(this.roleSelect);
+      }
       if (this.employeeForm.valid) {
         this.employeeService.saveEmployee(this.employeeForm.value)
           .subscribe((response) => {
@@ -116,8 +131,9 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
               } else {
                 this.employeeService.employeeList$.next([response.data, ...this.employeeService.employeeList$.value]);
               };
+              this.loading = false;
+              this.close();
             };
-            this.close();
           });
       } else {
         Object.values(this.employeeForm.controls).forEach(control => {
@@ -142,9 +158,10 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
             this.employeeService.requestChangeInfoList$.value.splice(index, 1);
             this.employeeService.requestChangeInfoList$.next([...this.employeeService.requestChangeInfoList$.value]);
             this.employeeService.getAllEmployee();
+            this.loading = false;
             this.close();
           }
-        })
+        });
     }
   }
 
@@ -167,5 +184,19 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
     this.employeeForm.reset();
     this.employeeForm.controls['level'].setValue(Level.Intern);
     this.employeeForm.controls['gender'].setValue(true);
+  }
+
+  checkRole(role: any) {
+    const adminId = this.roleService.roleList$.value.find(i => i.name == "Admin")?.id;
+    const empId = this.roleService.roleList$.value.find(i => i.name == "Employee")?.id;
+    if (role?.includes(adminId)) {
+      this.roleSelect = [];
+      this.roleList.subscribe((item) => { item.forEach((i => this.roleSelect.push(i.id)))});
+    } else {
+      if (this.roleSelect.includes(adminId)) {
+        this.roleSelect = [];
+        this.roleSelect.push(empId);
+      }
+    }
   }
 }

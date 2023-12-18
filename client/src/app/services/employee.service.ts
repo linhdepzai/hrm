@@ -67,4 +67,12 @@ export class EmployeeService {
         return of(err);
       }));
   }
+
+  getManager(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-manager')
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
 }

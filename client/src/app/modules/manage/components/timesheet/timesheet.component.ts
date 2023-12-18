@@ -34,10 +34,6 @@ export class TimesheetComponent implements OnInit {
     return this.datepipe.transform(date, 'MM/dd/YYYY');
   }
 
-  getAccountName(id: string) {
-    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
-  }
-
   openModal(date: Date) {
     this.isVisibleModal = true;
     this.date = date;

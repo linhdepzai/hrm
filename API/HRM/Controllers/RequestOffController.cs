@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using CoreApiResponse;
-using System.Collections.Generic;
 using Database;
 using Entities;
 using Business.DTOs.OnLeaveDto;
-using Entities.Enum;
 using Entities.Enum.Record;
 using Business.DTOs.RequestOffDto;
+using System.Runtime.Intrinsics.X86;
 
 namespace HRM.Controllers
 {
@@ -22,7 +17,7 @@ namespace HRM.Controllers
         {
             _dataContext = dataContext;
         }
-        [HttpGet("{userId}/get-all")]
+        [HttpGet("{userId}/get-all-for-current-user")]
         public async Task<IActionResult> GetAll(Guid userId)
         {
             var list = await _dataContext.RequestOff.Where(i => i.UserId == userId && i.IsDeleted == false).AsNoTracking().ToListAsync();
@@ -32,65 +27,37 @@ namespace HRM.Controllers
         public async Task<IActionResult> GetAllRequest(Guid userId)
         {
             var user = await _dataContext.Employee.FirstOrDefaultAsync(i => i.AppUserId == userId);
-            var isAdmin = await (from u in _dataContext.AppUserRole
-                                 join r in _dataContext.AppRole on u.RoleId equals r.Id
-                                 where u.UserId == userId && r.Name == "Admin"
-                                 select new
-                                 {
-                                     Role = r.Name,
-                                 }).AsNoTracking().ToListAsync();
-            if (isAdmin.Count > 0) return CustomResult(await _dataContext.RequestOff.Where(i => i.IsDeleted == false).AsNoTracking().ToListAsync());
-            var list = new List<RequestOffForViewDto>();
-            var isBoss = await _dataContext.Department.Where(i => i.Boss == user.AppUserId).AsNoTracking().ToListAsync();
-            if (isBoss.Any())
-            {
-                foreach (var department in isBoss)
-                {
-                    var employees = await _dataContext.Employee.Where(i => i.DepartmentId == department.Id && i.Status == RecordStatus.Approved).AsNoTracking().ToListAsync();
-                    foreach (var employee in employees)
-                    {
-                        var avt = await _dataContext.AppUser.FirstOrDefaultAsync(i => i.Id == employee.AppUserId);
-                        var onleaveList = await _dataContext.RequestOff.Where(i => i.UserId == employee.Id && i.IsDeleted == false).AsNoTracking().ToListAsync();
-                        foreach (var i in onleaveList)
-                        {
-                            var item = new RequestOffForViewDto { 
-                                Id = i.Id,
-                                UserId = i.UserId,
-                                AvatarUser = avt.AvatarUrl,
-                                DayOff = i.DayOff,
-                                Option = i.Option,
-                                Reason = i.Reason,
-                                Status = i.Status,
-                            };
-                            list.Add(item);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                var department = await _dataContext.Department.FindAsync(user.DepartmentId);
-                var employees = await _dataContext.Employee.Where(i => i.DepartmentId == department.Id && i.Status == RecordStatus.Approved).AsNoTracking().ToListAsync();
-                foreach (var employee in employees)
-                {
-                    var onleaveList = await _dataContext.RequestOff.Where(i => i.UserId == employee.AppUserId && i.IsDeleted == false).AsNoTracking().ToListAsync();
-                    var avt = await _dataContext.AppUser.FirstOrDefaultAsync(i => i.Id == employee.AppUserId);
-                    foreach (var i in onleaveList)
-                    {
-                        var item = new RequestOffForViewDto
-                        {
-                            Id = i.Id,
-                            UserId = i.UserId,
-                            AvatarUser = avt.AvatarUrl,
-                            DayOff = i.DayOff,
-                            Option = i.Option,
-                            Reason = i.Reason,
-                            Status = i.Status,
-                        };
-                        list.Add(item);
-                    }
-                }
-            }
+            var role = await (from u in _dataContext.AppUserRole
+                              join r in _dataContext.AppRole on u.RoleId equals r.Id
+                              where u.UserId == userId
+                              select new
+                              {
+                                Role = r.Name,
+                              }).AsNoTracking().ToListAsync();
+            var data = await (from r in _dataContext.RequestOff
+                              join u in _dataContext.AppUser on r.UserId equals u.Id
+                              join e in _dataContext.Employee on u.Id equals e.AppUserId
+                              where r.IsDeleted == false && e.Status == RecordStatus.Approved
+                              select new RequestOffForViewDto
+                              {
+                                  Id = r.Id,
+                                  UserId = r.UserId,
+                                  AvatarUser = u.AvatarUrl,
+                                  Name = e.FullName,
+                                  DayOff = r.DayOff,
+                                  Option = r.Option,
+                                  Reason = r.Reason,
+                                  Status = r.Status,
+                                  IsAction = e.Manager == userId ? true : false,
+                                  CreationTime = r.CreationTime,
+                                  LastModificationTime = r.LastModificationTime,
+                                  LastModifierUserId = _dataContext.Employee.FirstOrDefault(i => i.Status == RecordStatus.Approved && i.AppUserId == r.LastModifierUserId).FullName,
+                              }).AsNoTracking().ToListAsync();
+            if (role.FirstOrDefault(i => i.Role == "Admin") is not null) return CustomResult(data);
+            var list = from r in data
+                       join e in _dataContext.Employee on r.UserId equals e.AppUserId
+                       where e.Status == RecordStatus.Approved && (e.Manager == user.Manager || e.Manager == userId)
+                       select r;
             return CustomResult(list);
         }
         [HttpPost("{userId}/request-off")]

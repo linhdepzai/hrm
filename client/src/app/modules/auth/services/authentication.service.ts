@@ -5,7 +5,6 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Login } from 'src/app/interfaces/interfaces';
 import { ApiLoginService } from './api-login.service';
 import { PresenceService } from 'src/app/services/presence.service';
-import { Position } from 'src/app/interfaces/interfaceReponse';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +35,7 @@ export class AuthenticationService {
       }))
       .subscribe((response) => {
         if(response.statusCode == 200){
+          this.getUserRole(response.data.role);
           if (loginForm.rememberMe == true) {
             localStorage.setItem('user', JSON.stringify(response.data));
           } else {
@@ -53,8 +53,15 @@ export class AuthenticationService {
   logout(): void {
     sessionStorage.removeItem('user');
     localStorage.removeItem('user');
-    this.router.navigate(['login']);
+    localStorage.removeItem('role');
+    window.location.href = 'http://localhost:4200/login';
     this.presence.stopHubConnection();
     this.isLogin.next(false);
+  }
+
+  getUserRole(role: any[]){
+    let userRole: string[] = [];
+    role.forEach(item => { userRole.push(item.roleName) });
+    localStorage.setItem('role', JSON.stringify(userRole));
   }
 }

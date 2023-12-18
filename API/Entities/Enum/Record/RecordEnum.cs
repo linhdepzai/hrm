@@ -18,6 +18,7 @@ namespace Entities.Enum.Record
         New = 1,
         Confirm = 2,
         Complain = 3,
+        Waiting = 4,
     }
 
     public enum OptionRequest : short

@@ -14,10 +14,10 @@ export class SidebarComponent implements OnInit {
   coverAvt: string = '';
   user!: LoginResponse;
   isVisibleAvatar: boolean = false;
-
+  role = JSON.parse(localStorage.getItem('role')!);
+  
   constructor(
-    private authenticationService: AuthenticationService,
-    private positionService: PositionService
+    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit(): void {

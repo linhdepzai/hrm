@@ -33,10 +33,10 @@ export class RequestOffComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.requestOffService.getAllRequestOff();
+    this.requestOffService.getAllCurrentOff();
     this.requestList = [];
     this.optionRequestList = this.dataService.requestOffList;
-    this.requestOffService.requestOffList$.subscribe((data) => {
+    this.requestOffService.currRequestOff$.subscribe((data) => {
       this.requestOffList = data;
     });
   }
@@ -124,9 +124,9 @@ export class RequestOffComponent implements OnInit {
           this.requestOffService.deleteRequestOff(id)
             .subscribe((response) => {
               if (response.statusCode == 200) {
-                const index = this.requestOffService.requestOffList$.value.findIndex((item) => item.id == response.data.id);
-                this.requestOffService.requestOffList$.value.splice(index, 1);
-                this.requestOffService.requestOffList$.next([...this.requestOffService.requestOffList$.value]);
+                const index = this.requestOffService.currRequestOff$.value.findIndex((item) => item.id == response.data.id);
+                this.requestOffService.currRequestOff$.value.splice(index, 1);
+                this.requestOffService.currRequestOff$.next([...this.requestOffService.currRequestOff$.value]);
                 this.notification.success('Successfully!', response.message);
               }
             });

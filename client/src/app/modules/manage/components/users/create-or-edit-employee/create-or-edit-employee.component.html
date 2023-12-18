@@ -13,11 +13,11 @@
                 <input nz-input placeholder="Enter your name" formControlName="fullName" id="fullName" />
             </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
+        <nz-form-item *ngIf="role.includes('Admin')">
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Role</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid roles!">
-                <nz-select [ngModel]="roleSelect" nzMode="multiple" formControlName="roles" id="roles">
-                    <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+                <nz-select [ngModel]="roleSelect" nzMode="multiple" formControlName="roles" id="roles" (ngModelChange)="checkRole($event)">
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name" [nzDisabled]="item.name == 'Employee'"
                         *ngFor="let item of roleList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
@@ -81,9 +81,14 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button [disabled]="!isEdit" nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true">
+            <button *ngIf="role.includes('Admin'); else disable" [disabled]="!isEdit" nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisiblePositionModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Position</span>
             </button>
+            <ng-template #disable>
+                <button disabled nz-button nz-col [nzSpan]="6" nzType="primary">
+                    <span nz-typography nzEllipsis style="color: #fff;">New Position</span>
+                </button>
+            </ng-template>
         </nz-form-item>
         <nz-form-item nz-row>
             <nz-form-label nz-col [nzSpan]="6" nzRequired nzFor="name">Department</nz-form-label>
@@ -95,16 +100,21 @@
                 </nz-select>
             </nz-form-control>
             <span nz-col [nzSpan]="1"></span>
-            <button [disabled]="!isEdit" nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true">
+            <button *ngIf="role.includes('Admin'); else disable" [disabled]="!isEdit" nz-button nz-col [nzSpan]="6" nzType="primary" (click)="isVisibleDepartmentModal = true">
                 <span nz-typography nzEllipsis style="color: #fff;">New Department</span>
             </button>
+            <ng-template #disable>
+                <button disabled nz-button nz-col [nzSpan]="6" nzType="primary">
+                    <span nz-typography nzEllipsis style="color: #fff;">New Position</span>
+                </button>
+            </ng-template>
         </nz-form-item>
         <nz-form-item>
             <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">Manager</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24" nzErrorTip="The input is not valid manager!">
                 <nz-select [ngModel]="employeeForm.value.manager" formControlName="manager" id="manager">
-                    <nz-option [nzValue]="item.id" [nzLabel]="item.fullName"
-                        *ngFor="let item of employeeList | async"></nz-option>
+                    <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+                        *ngFor="let item of employeeList"></nz-option>
                 </nz-select>
             </nz-form-control>
         </nz-form-item>
@@ -113,7 +123,7 @@
                 <span nz-tooltip nzTooltipTitle="Ngân hàng">Bank</span>
             </nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24">
-                <nz-select [ngModel]="" nzPlaceHolder="Choose bank..." formControlName="bank" id="bank">
+                <nz-select [ngModel]="employeeForm.value.bank" nzPlaceHolder="Choose bank..." formControlName="bank" id="bank">
                     <nz-option [nzValue]="item" [nzLabel]="item" *ngFor="let item of bankList | async"></nz-option>
                 </nz-select>
             </nz-form-control>
@@ -185,7 +195,7 @@
             <i class="fa-solid fa-xmark mr-5"></i>
             <span>Reject</span>
         </button>
-        <button nz-button nzType="primary" style="float: right;" (click)="submitForm('approve')">
+        <button class="mr-5" nz-button nzType="primary" style="float: right;" (click)="submitForm('approve')">
             <i class="fa-solid fa-check mr-5"></i>
             <span>Approve</span>
         </button>
@@ -196,7 +206,7 @@
             <span>Edit</span>
         </button>
         <ng-template #edit>
-            <button style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm('edit')">
+            <button [nzLoading]="loading" style="float: right;" class="ml-5" nz-button nzType="primary" (click)="submitForm('edit')">
                 <i class="fa-solid fa-check mr-5"></i>
                 <span>Submit</span>
             </button>

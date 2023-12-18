@@ -35,9 +35,18 @@ namespace HRM.Controllers
             //var department = await _dataContext.Department.FirstOrDefaultAsync(i => i.Boss == user.Id && i.IsDeleted == false);
             Position position = user.PositionId == null ? null : _dataContext.Position.FirstOrDefault(i => i.Id == user.PositionId);
             Department department = user.DepartmentId == null ? null : _dataContext.Department.FirstOrDefault(i => i.Id == user.DepartmentId);
+            var role = await (from ur in _dataContext.AppUserRole
+                              join r in _dataContext.AppRole on ur.RoleId equals r.Id
+                              where ur.UserId == user.AppUserId
+                              select new AccRole
+                              {
+                                  RoleName = r.Name
+                              }
+                             ).AsNoTracking().ToListAsync();
             var account = new GetAccountDto
             {
                 Id = user.AppUserId,
+                Role = role,
                 Avatar = checkAccount.AvatarUrl,
                 FullName = user.FullName,
                 Gender = user.Gender,
@@ -103,10 +112,12 @@ namespace HRM.Controllers
                         FullName = employeeDraft.FullName,
                         Gender = employeeDraft.Gender,
                         Phone = input.Phone,
+                        Identify = employeeDraft.Identify,
                         DoB = employeeDraft.DoB,
                         Level = employeeDraft.Level,
                         PositionId = employeeDraft.PositionId,
                         DepartmentId = employeeDraft.DepartmentId != null ? employeeDraft.DepartmentId : null,
+                        Manager = employeeDraft.Manager,
                         JoinDate = employeeDraft.JoinDate,
                         IsActive = false,
                         Bank = input.Bank,

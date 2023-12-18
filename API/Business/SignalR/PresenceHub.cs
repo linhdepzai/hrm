@@ -10,12 +10,10 @@ namespace Business.SignalR
     public class PresenceHub : Hub
     {
         private readonly PresenceTracker _tracker;
-        private readonly DataContext _dataContext;
 
         public PresenceHub(PresenceTracker tracker, DataContext dataContext)
         {
             _tracker = tracker;
-            _dataContext = dataContext;
         }
 
         public override async Task OnConnectedAsync()

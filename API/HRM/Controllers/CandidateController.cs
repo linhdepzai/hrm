@@ -96,7 +96,27 @@ namespace HRM.Controllers
             {
                 return CustomResult(null, HttpStatusCode.NoContent);
             }
-            string contentType = " image/jpeg";
+            string contentType = "";
+            if (filename.Contains("jpg") || filename.Contains("jpeg"))
+            {
+                contentType = "image/jpeg";
+            } 
+            else if (filename.Contains("png"))
+            {
+                contentType = "image/png";
+            }
+            else if (filename.Contains("pdf"))
+            {
+                contentType = "application/pdf";
+            }
+            else if (filename.Contains("doc"))
+            {
+                contentType = "application/msword";
+            }
+            else if (filename.Contains("docx"))
+            {
+                contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            }
             res.Position = 0;
             return File(res, contentType, filename);
         }

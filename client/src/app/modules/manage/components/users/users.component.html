@@ -54,8 +54,8 @@
             </td>
             <td nzAlign="center">{{ getPositionName(data.positionId) }}</td>
             <td nzAlign="center">
-                <app-tag *ngIf="data.departmentId" [color]="getDepartmentName(data.departmentId).color"
-                    [label]="getDepartmentName(data.departmentId).name"></app-tag>
+                <app-tag *ngIf="data.departmentId" [color]="getDepartmentName(data.departmentId)?.color"
+                    [label]="getDepartmentName(data.departmentId)?.name"></app-tag>
             </td>
             <td nzAlign="center">
                 <button nz-button nzType="primary" class="btn-action mr-5" (click)="openModal(data, statusMode == 'Pending' ? 'request' : 'update')">
@@ -68,4 +68,4 @@
         </tr>
     </tbody>
 </nz-table>
-<app-create-or-edit-employee [visible]="visible" [data]="data" [mode]="modalMode" (cancel)="visible = false"></app-create-or-edit-employee>
+<app-create-or-edit-employee [visible]="visible" [data]="data" [mode]="modalMode" (cancel)="visible = false; statusMode = 'Approve'"></app-create-or-edit-employee>

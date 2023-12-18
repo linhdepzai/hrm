@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using CoreApiResponse;
 using Database;
 using Business.DTOs.TimeWorkingDto;
 using Entities;
-using Entities.Enum;
 using Entities.Enum.Record;
-using Microsoft.AspNetCore.Http;
 
 namespace HRM.Controllers
 {
@@ -24,7 +18,19 @@ namespace HRM.Controllers
         [HttpGet("{userId}/get-all")]
         public async Task<IActionResult> GetAll(Guid userId)
         {
-            var list = await _dataContext.TimeWorking.AsNoTracking().ToListAsync();
+            var role = await (from u in _dataContext.AppUserRole
+                              join r in _dataContext.AppRole on u.RoleId equals r.Id
+                              where u.UserId == userId
+                              select new
+                              {
+                                  Role = r.Name,
+                              }).AsNoTracking().ToListAsync();
+            var data = await _dataContext.TimeWorking.AsNoTracking().ToListAsync();
+            if (role.FirstOrDefault(i => i.Role == "Admin") is not null) return CustomResult(data);
+            var list = await (from t in _dataContext.TimeWorking
+                              join e in _dataContext.Employee on t.UserId equals e.AppUserId
+                              where e.Status == RecordStatus.Approved && e.Manager == userId
+                              select t).AsNoTracking().ToListAsync();
             return CustomResult(list);
         }
         [HttpPost("{userId}/request-change-timeWorking")]

@@ -145,3 +145,13 @@ as
 		set @i = @i + 1;
 	end
 go
+-- confirm khi da het han
+create or alter proc autoConfirmEmail
+as
+	update SalaryReport set [IsConfirm] = 2, [LastModifierUserId] = '00000000-0000-0000-0000-000000000000', [LastModificationTime] = getdate() where [IsConfirm] = 4;
+go
+-- confirm khi da het han
+create or alter proc autoConfirmEvaluate
+as
+	update Evaluate set [LastModifierUserId] = '00000000-0000-0000-0000-000000000000', [LastModificationTime] = getdate() where [LastModifierUserId] is null;
+go

@@ -28,7 +28,7 @@
         </thead>
         <tbody  cdkDropList (cdkDropListDropped)="drop($event)">
             <tr *ngFor="let item of table.data" cdkDrag>
-                <td>{{ getAccountName(item.userId) }}</td>
+                <td>{{ item.name }}</td>
                 <td>{{ getOptionRequestOff(item.option) }}</td>
                 <td>{{ item.reason }}</td>
                 <td nzAlign="center" [ngClass]="status[item.status]">{{ status[item.status] }}</td>
@@ -36,10 +36,10 @@
                 <td nzAlign="center">
                     <span *ngIf="item.lastModificationTime">
                         {{ item.lastModificationTime | date: 'yyyy-MM-ddTHH:mm:ss' }} by 
-                        {{ getAccountName(item.lastModifierUserId) }}
+                        {{ item.lastModifierUserId }}
                     </span>
                 </td>
-                <td  nzAlign="center">
+                <td *ngIf="item.isAction" nzAlign="center">
                     <ng-container *ngIf="item.status != 3">
                         <button nz-button nzDanger nzType="primary" class="btn-action" (click)="actionRequestOff('reject', item.id)">
                             <i class="fa-solid fa-xmark"></i>

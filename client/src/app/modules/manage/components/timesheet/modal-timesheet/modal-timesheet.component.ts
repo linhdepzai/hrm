@@ -20,6 +20,7 @@ export class ModalTimesheetComponent implements OnChanges {
   @Input() date!: Date;
   requestOffList: RequestOffResponse[] = [];
   status = Status;
+  role = JSON.parse(localStorage.getItem('role')!);
 
   constructor(
     private employeeService: EmployeeService,
@@ -44,10 +45,6 @@ export class ModalTimesheetComponent implements OnChanges {
 
   handleCancel() {
     this.cancel.emit();
-  }
-
-  getAccountName(id: string) {
-    return this.employeeService.employeeList$.value.find(d => d.appUserId == id)?.fullName;
   }
 
   getOptionRequestOff(value: number) {

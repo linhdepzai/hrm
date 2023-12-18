@@ -7,7 +7,7 @@
         <div *ngIf="formatDate(item.dayOff) == formatDate(date)" (click)="openModal(date)">
             <nz-avatar [nzSize]="20" nzIcon="user"
                 [nzSrc]="item.avatarUser!"></nz-avatar>
-            <span nz-typography nzEllipsis>{{ getAccountName(item.userId) }}</span>
+            <span nz-typography nzEllipsis>{{ item.name }}</span>
         </div>
     </ng-container>
 </ng-template>

@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class RequestOffService {
   public requestOffList$ = new BehaviorSubject<RequestOffResponse[]>([]);
+  public currRequestOff$ = new BehaviorSubject<RequestOffResponse[]>([]);
   private baseUrl = environment.baseUrl + 'RequestOff/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
 
   constructor(
@@ -38,14 +39,14 @@ export class RequestOffService {
       });
   }
 
-  getAllOff() {
-    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all')
+  getAllCurrentOff() {
+    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all-for-current-user')
       .pipe(catchError((err) => {
         this.message.error('Server not responding!!!', { nzDuration: 3000 });
         return of(err);
       }))
       .subscribe((response) => {
-        this.requestOffList$.next(response.data);
+        this.currRequestOff$.next(response.data);
       });
   }
 
