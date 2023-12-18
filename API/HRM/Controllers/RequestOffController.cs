@@ -109,7 +109,26 @@ namespace HRM.Controllers
             }
             _dataContext.Update(item);
             await _dataContext.SaveChangesAsync();
-            return CustomResult(item);
+            var data = await (from r in _dataContext.RequestOff
+                              join u in _dataContext.AppUser on r.UserId equals u.Id
+                              join e in _dataContext.Employee on u.Id equals e.AppUserId
+                              where r.Id == input.Id
+                              select new RequestOffForViewDto
+                              {
+                                  Id = r.Id,
+                                  UserId = r.UserId,
+                                  AvatarUser = u.AvatarUrl,
+                                  Name = e.FullName,
+                                  DayOff = r.DayOff,
+                                  Option = r.Option,
+                                  Reason = r.Reason,
+                                  Status = r.Status,
+                                  IsAction = e.Manager == userId ? true : false,
+                                  CreationTime = r.CreationTime,
+                                  LastModificationTime = r.LastModificationTime,
+                                  LastModifierUserId = _dataContext.Employee.FirstOrDefault(i => i.Status == RecordStatus.Approved && i.AppUserId == r.LastModifierUserId).FullName,
+                              }).FirstOrDefaultAsync();
+            return CustomResult(data);
         }
     }
 }

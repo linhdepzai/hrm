@@ -19,6 +19,7 @@
     <nz-radio-group class="filter" [ngModel]="'Approve'" nzButtonStyle="solid" (ngModelChange)="changeFilter($event)">
         <label nz-radio-button nzValue="Approve">Approved</label>
         <label nz-radio-button nzValue="Pending">Pending</label>
+        <label nz-radio-button nzValue="Inactive">Inactive</label>
     </nz-radio-group>
 </div>
 <nz-table #table [nzData]="employeeList" [nzShowTotal]="rangeTemplate" [nzScroll]="{x: 'hidden', y: '49vh'}">
@@ -58,11 +59,14 @@
                     [label]="getDepartmentName(data.departmentId)?.name"></app-tag>
             </td>
             <td nzAlign="center">
-                <button nz-button nzType="primary" class="btn-action mr-5" (click)="openModal(data, statusMode == 'Pending' ? 'request' : 'update')">
+                <button *ngIf="statusMode != 'Inactive'" nz-button nzType="primary" class="btn-action mr-5" (click)="openModal(data, statusMode == 'Pending' ? 'request' : 'update')">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
-                <button nz-button nzDanger nzType="primary" class="btn-action" (click)="deleteItem(data.id!)">
-                    <i class="fa-solid fa-trash-can"></i>
+                <button *ngIf="statusMode == 'Approve'" nz-button nzDanger nzType="primary" class="btn-action" (click)="deleteItem(data.appUserId!)">
+                    <i class="fa-solid fa-eye-slash"></i>
+                </button>
+                <button *ngIf="statusMode == 'Inactive'" nz-button nzType="primary" class="btn-action" (click)="activeItem(data.appUserId!)">
+                    <i class="fa-solid fa-eye"></i>
                 </button>
             </td>
         </tr>

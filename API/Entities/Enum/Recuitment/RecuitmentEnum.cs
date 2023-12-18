@@ -14,6 +14,5 @@ namespace Entities.Enum.Recuitment
         PassInterview = 4,
         Rejected = 5,
         Success = 6,
-        Deleted = 7,
     }
 }

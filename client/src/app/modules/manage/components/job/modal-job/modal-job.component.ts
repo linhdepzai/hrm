@@ -141,7 +141,7 @@ export class ModalJobComponent {
       this.jobService.save(this.jobForm.value).subscribe((response) => {
         if (response.statusCode == 200) {
           this.notification.success('Successfully!', '');
-          if (this.mode == 'Create') {
+          if (this.mode == 'create') {
             this.jobService.jobList$.next([response.data,...this.jobService.jobList$.value]);
           } else {
             this.jobService.jobList$.value.splice(

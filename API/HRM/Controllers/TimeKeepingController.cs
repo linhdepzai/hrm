@@ -40,7 +40,17 @@ namespace HRM.Controllers
         [HttpPost("{userId}/checkin-or-checkout")]
         public async Task<IActionResult> CheckinOrCheckout(Guid userId, CreateTimeKeepingDto input)
         {
-            if (input.PhotoCheckout != null)
+            bool isCheckin = false;
+            var timeWorking = await _dataContext.TimeWorking.FirstOrDefaultAsync(i => i.UserId == userId && i.Status == Entities.Enum.Record.RecordStatus.Approved);
+            var request = await _dataContext.RequestOff.FirstOrDefaultAsync(i => i.UserId == userId && i.IsDeleted == false && i.DayOff.Date == input.Checkin.Date && i.DayOff.Month == input.Checkin.Month && i.DayOff.Year == input.Checkin.Year);
+            if (request is not null && request.Option == Entities.Enum.Record.OptionRequest.OffAfternoon)
+            {
+                if (calTime(timeWorking.MorningEndTime, input.Checkin, 1))
+                {
+                    isCheckin = true;
+                }
+            }
+            if (isCheckin)
             {
                 var checkout = new CheckoutDto
                 {
@@ -48,7 +58,8 @@ namespace HRM.Controllers
                     PhotoCheckout = input.PhotoCheckout,
                 };
                 return await CheckOut(userId, checkout);
-            } else
+            }
+            else
             {
                 var checkin = new CheckinDto
                 {
@@ -97,6 +108,19 @@ namespace HRM.Controllers
             _dataContext.TimeKeeping.Update(checkinComplain);
             await _dataContext.SaveChangesAsync();
             return CustomResult(checkinComplain);
+        }
+
+        private bool calTime(DateTime timeWorking, DateTime checkin, int timePunish)
+        {
+            if (timeWorking.Hour - checkin.Hour < timePunish) return true;
+            if (timeWorking.Hour - checkin.Hour == timePunish)
+            {
+                if (timeWorking.Minute < checkin.Minute)
+                {
+                    return true;
+                }
+            };
+            return false;
         }
     }
 }

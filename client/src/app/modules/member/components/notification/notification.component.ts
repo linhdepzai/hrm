@@ -24,6 +24,10 @@ export class NotificationComponent implements OnInit {
   }
 
   readNotification(id: string) {
-    window.location.href = 'https://mail.google.com/mail/u/1/?pli=1#inbox'
+    this.notificationService.readNotification(id).subscribe((res) => {
+      if (res.statusCode == 200) {
+        window.location.href = 'https://mail.google.com/mail/u/1/?pli=1#inbox'
+      }
+    });
   }
 }

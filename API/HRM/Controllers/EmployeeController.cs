@@ -18,6 +18,44 @@ namespace HRM.Controllers
         [HttpGet("{userId}/get-all/{status}")]
         public async Task<IActionResult> GetAll(Guid userId, string status)
         {
+            var inactive = await (from e in _dataContext.Employee
+                              join u in _dataContext.AppUser on e.AppUserId equals u.Id
+                              where e.IsActive == false && e.Status == RecordStatus.Approved
+                              select new GetAllEmployeeForViewDto
+                              {
+                                  Id = e.Id,
+                                  UserCode = e.UserCode,
+                                  AppUserId = e.AppUserId,
+                                  Roles = (from r in _dataContext.AppRole
+                                           join ur in _dataContext.AppUserRole on r.Id equals ur.RoleId
+                                           where ur.UserId == u.Id
+                                           select new AppRole
+                                           {
+                                               Id = r.Id,
+                                               Name = r.Name,
+                                           }).AsNoTracking().ToList(),
+                                  FullName = e.FullName,
+                                  Gender = e.Gender,
+                                  Email = u.Email,
+                                  Password = u.Password,
+                                  Phone = e.Phone,
+                                  DoB = e.DoB,
+                                  Level = e.Level,
+                                  PositionId = e.PositionId,
+                                  DepartmentId = e.DepartmentId,
+                                  JoinDate = e.JoinDate,
+                                  Manager = e.Manager,
+                                  Bank = e.Bank,
+                                  BankAccount = e.BankAccount,
+                                  TaxCode = e.TaxCode,
+                                  InsuranceStatus = e.InsuranceStatus,
+                                  Identify = e.Identify,
+                                  PlaceOfOrigin = e.PlaceOfOrigin,
+                                  PlaceOfResidence = e.PlaceOfResidence,
+                                  DateOfIssue = e.DateOfIssue,
+                                  IssuedBy = e.IssuedBy
+                              }).AsNoTracking().ToListAsync();
+            if (status == "Inactive") return CustomResult(inactive);
             RecordStatus stt = status == "Approved" ? RecordStatus.Approved: RecordStatus.Pending;
             var role = await (from u in _dataContext.AppUserRole
                                  join r in _dataContext.AppRole on u.RoleId equals r.Id
@@ -28,7 +66,7 @@ namespace HRM.Controllers
                                  }).AsNoTracking().ToListAsync();
             var data = await (from e in _dataContext.Employee
                               join u in _dataContext.AppUser on e.AppUserId equals u.Id
-                              where e.Status == stt && e.IsDeleted == false
+                              where e.Status == stt && e.IsActive == true
                               select new GetAllEmployeeForViewDto
                               {
                                   Id = e.Id,
@@ -90,6 +128,7 @@ namespace HRM.Controllers
                 Id = new Guid(),
                 Email = input.Email,
                 Password = input.Password,
+                IsActive = true,
             };
             await _dataContext.AppUser.AddAsync(account);
             foreach(var r in input.Roles)
@@ -253,13 +292,107 @@ namespace HRM.Controllers
         [HttpDelete("{userId}/delete")]
         public async Task<IActionResult> Delete(Guid employeeId, Guid userId)
         {
-            var employee = await _dataContext.Employee.FindAsync(employeeId);
-            employee.IsActive = true;
-            employee.DeleteUserId = userId;
-            _dataContext.Update(employee);
-            _dataContext.Employee.Remove(employee);
+            var user = await _dataContext.AppUser.FindAsync(employeeId);
+            user.IsActive = false;
+            _dataContext.AppUser.Update(user);
+            var emp = await _dataContext.Employee.FirstOrDefaultAsync(e => e.AppUserId == employeeId && e.Status == RecordStatus.Approved);
+            emp.IsActive = false;
+            _dataContext.Employee.Update(emp);
+            var emp1 = await _dataContext.Employee.FirstOrDefaultAsync(e => e.AppUserId == employeeId && e.Status == RecordStatus.Pending);
+            if (emp1 is not null)
+            {
+                emp1.Status = RecordStatus.Rejected;
+                _dataContext.Employee.Update(emp1);
+            }
             await _dataContext.SaveChangesAsync();
-            return CustomResult("Removed");
+            var data = await (from e in _dataContext.Employee
+                              join u in _dataContext.AppUser on e.AppUserId equals u.Id
+                              where e.Status == RecordStatus.Approved && u.Id == employeeId
+                              select new GetAllEmployeeForViewDto
+                              {
+                                  Id = e.Id,
+                                  UserCode = e.UserCode,
+                                  AppUserId = e.AppUserId,
+                                  Roles = (from r in _dataContext.AppRole
+                                           join ur in _dataContext.AppUserRole on r.Id equals ur.RoleId
+                                           where ur.UserId == u.Id
+                                           select new AppRole
+                                           {
+                                               Id = r.Id,
+                                               Name = r.Name,
+                                           }).AsNoTracking().ToList(),
+                                  FullName = e.FullName,
+                                  Gender = e.Gender,
+                                  Email = u.Email,
+                                  Password = u.Password,
+                                  Phone = e.Phone,
+                                  DoB = e.DoB,
+                                  Level = e.Level,
+                                  PositionId = e.PositionId,
+                                  DepartmentId = e.DepartmentId,
+                                  JoinDate = e.JoinDate,
+                                  Manager = e.Manager,
+                                  Bank = e.Bank,
+                                  BankAccount = e.BankAccount,
+                                  TaxCode = e.TaxCode,
+                                  InsuranceStatus = e.InsuranceStatus,
+                                  Identify = e.Identify,
+                                  PlaceOfOrigin = e.PlaceOfOrigin,
+                                  PlaceOfResidence = e.PlaceOfResidence,
+                                  DateOfIssue = e.DateOfIssue,
+                                  IssuedBy = e.IssuedBy
+                              }).FirstOrDefaultAsync();
+            return CustomResult(data);
+        }
+
+        [HttpPut("{userId}/active")]
+        public async Task<IActionResult> Active(Guid employeeId, Guid userId)
+        {
+            var user = await _dataContext.AppUser.FindAsync(employeeId);
+            user.IsActive = true;
+            _dataContext.Update(user);
+            var emp = await _dataContext.Employee.FirstOrDefaultAsync(e => e.AppUserId == employeeId && e.Status == RecordStatus.Approved);
+            emp.IsActive = true;
+            _dataContext.Employee.Update(emp);
+            var data = await (from e in _dataContext.Employee
+                              join u in _dataContext.AppUser on e.AppUserId equals u.Id
+                              where e.Status == RecordStatus.Approved && u.Id == employeeId
+                              select new GetAllEmployeeForViewDto
+                              {
+                                  Id = e.Id,
+                                  UserCode = e.UserCode,
+                                  AppUserId = e.AppUserId,
+                                  Roles = (from r in _dataContext.AppRole
+                                           join ur in _dataContext.AppUserRole on r.Id equals ur.RoleId
+                                           where ur.UserId == u.Id
+                                           select new AppRole
+                                           {
+                                               Id = r.Id,
+                                               Name = r.Name,
+                                           }).AsNoTracking().ToList(),
+                                  FullName = e.FullName,
+                                  Gender = e.Gender,
+                                  Email = u.Email,
+                                  Password = u.Password,
+                                  Phone = e.Phone,
+                                  DoB = e.DoB,
+                                  Level = e.Level,
+                                  PositionId = e.PositionId,
+                                  DepartmentId = e.DepartmentId,
+                                  JoinDate = e.JoinDate,
+                                  Manager = e.Manager,
+                                  Bank = e.Bank,
+                                  BankAccount = e.BankAccount,
+                                  TaxCode = e.TaxCode,
+                                  InsuranceStatus = e.InsuranceStatus,
+                                  Identify = e.Identify,
+                                  PlaceOfOrigin = e.PlaceOfOrigin,
+                                  PlaceOfResidence = e.PlaceOfResidence,
+                                  DateOfIssue = e.DateOfIssue,
+                                  IssuedBy = e.IssuedBy
+                              }).FirstOrDefaultAsync();
+            await _dataContext.SaveChangesAsync();
+            return CustomResult(data);
         }
 
         [HttpGet("{userId}/get-manager")]

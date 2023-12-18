@@ -11,6 +11,7 @@ namespace Entities
         public string? AvatarUrl { get; set; }
         [StringLength(100)]
         public string? PublicId { get; set; }
+        public bool IsActive { get; set; } = true;
 
         //Relationship
         public ICollection<Employee> Employee { get; set; }

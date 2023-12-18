@@ -43,7 +43,6 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.departmentService.getAllDepartment();
-    this.employeeService.getAllRequestChangeInfo();
     this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
     this.departmentList = this.departmentService.departmentList$;
     this.levelList = this.dataService.levelList;
@@ -70,9 +69,14 @@ export class UsersComponent implements OnInit {
   changeFilter(mode: string) {
     this.statusMode = mode;
     if (mode == 'Approve') {
+      this.employeeService.getAllEmployee();
       this.employeeService.employeeList$.subscribe((data) => { this.employeeList = data });
-    } else {
+    } else if (mode == 'Pending') {
+      this.employeeService.getAllRequestChangeInfo();
       this.employeeService.requestChangeInfoList$.subscribe((data) => { this.employeeList = data });
+    } else {
+      this.employeeService.getAllEmployeeInactive();
+      this.employeeService.employeeInactiveList$.subscribe((data) => { this.employeeList = data });
     }
   }
 
@@ -98,15 +102,30 @@ export class UsersComponent implements OnInit {
 
   deleteItem(id: string) {
     this.confirmModal = this.modal.confirm({
-      nzTitle: 'Do you Want to delete this movie?',
-      nzContent: 'When clicked the OK button, this movie will be deleted system-wide!!!',
+      nzTitle: "You want to stop this user's activity?",
       nzOnOk: () =>
         new Promise((resolve, reject) => {
           this.employeeService.deleteEmployee(id).subscribe((response) => {
-            if (response.message == 'Removed') {
+            if (response.statusCode == 200) {
               const index = this.employeeService.employeeList$.value.findIndex((item) => item.id == id);
               this.employeeService.employeeList$.value.splice(index, 1);
-              this.employeeService.employeeList$.next([...this.employeeService.employeeList$.value]);
+            } else {
+              this.notification.create('error', 'Failed!', '');
+            }
+          });
+          setTimeout(null ? resolve : reject, 1000);
+        }).catch(() => console.log('Oops errors!'))
+    });
+  }
+
+  activeItem(id: string) {
+    this.confirmModal = this.modal.confirm({
+      nzTitle: "You want to start this user's activity?",
+      nzOnOk: () =>
+        new Promise((resolve, reject) => {
+          this.employeeService.activeEmployee(id).subscribe((response) => {
+            if (response.statusCode == 200) {
+              this.employeeService.employeeList$.next([response.data,...this.employeeService.employeeList$.value]);
             } else {
               this.notification.create('error', 'Failed!', '');
             }

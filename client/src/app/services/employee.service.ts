@@ -13,6 +13,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 })
 export class EmployeeService {
   public employeeList$ = new BehaviorSubject<Employee[]>([]);
+  public employeeInactiveList$ = new BehaviorSubject<Employee[]>([]);
   public requestChangeInfoList$ = new BehaviorSubject<Employee[]>([]);
   private baseUrl = environment.baseUrl + 'Employee/' + JSON.parse(localStorage.getItem('user')!).id + '/'; 
 
@@ -42,7 +43,15 @@ export class EmployeeService {
   }
 
   deleteEmployee(id: string): Observable<ApiResponse> {
-    return this.httpClient.delete<ApiResponse>(this.baseUrl + `delete/${id}?employeeId=${id}`)
+    return this.httpClient.delete<ApiResponse>(this.baseUrl + `delete?employeeId=${id}`)
+      .pipe(catchError((err) => {
+        this.notification.error('Error!!!', err.error.message);
+        return of(err);
+      }));
+  }
+
+  activeEmployee(id: string): Observable<ApiResponse> {
+    return this.httpClient.put<ApiResponse>(this.baseUrl + `active?employeeId=${id}`, null)
       .pipe(catchError((err) => {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
@@ -74,5 +83,16 @@ export class EmployeeService {
         this.notification.error('Error!!!', err.error.message);
         return of(err);
       }));
+  }
+
+  getAllEmployeeInactive() {
+    return this.httpClient.get<ApiResponse>(this.baseUrl + 'get-all/Inactive')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }))
+      .subscribe((response) => {
+        this.employeeInactiveList$.next(response.data);
+      });
   }
 }

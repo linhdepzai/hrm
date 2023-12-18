@@ -163,6 +163,7 @@ export class CreateOrEditEmployeeComponent implements OnInit, OnChanges {
           }
         });
     }
+    this.loading = false;
   }
 
   close(): void {

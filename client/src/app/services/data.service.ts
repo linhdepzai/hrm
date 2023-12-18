@@ -105,7 +105,6 @@ export class DataService {
       { value: StatusCandidate.PassInterview, label: 'Pass Interview'},
       { value: StatusCandidate.Rejected, label: 'Rejected'},
       { value: StatusCandidate.Success, label: 'Success'},
-      { value: StatusCandidate.Deleted, label: 'Deleted'},
       { value: StatusCandidate.Failure, label: 'Failure'}
     ]);
     this.iconList.next(['house', 'magnifying-glass', 'user', 'check',
