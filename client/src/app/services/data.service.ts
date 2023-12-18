@@ -37,6 +37,22 @@ export class DataService {
       }));
   }
 
+  getStatisticalCandidate(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Statistical/get-all-candidate')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
+  getStatisticalJob(): Observable<ApiResponse> {
+    return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Statistical/get-all-job')
+      .pipe(catchError((err) => {
+        this.message.error('Server not responding!!!', { nzDuration: 3000 });
+        return of(err);
+      }));
+  }
+
   getStatisticPayOffForMonth(): Observable<ApiResponse> {
     return this.httpClient.get<ApiResponse>(environment.baseUrl + 'Statistical/payoffForMonth')
       .pipe(catchError((err) => {

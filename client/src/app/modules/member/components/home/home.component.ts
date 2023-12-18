@@ -10,6 +10,9 @@ Chart.register(...registerables)
 })
 export class HomeComponent implements OnInit {
   statistical: any;
+  jobList: any[] = [];
+  candidateList: any[] = [];
+  totalCandidate: string = '0';
 
   constructor(
     private dataService: DataService,
@@ -39,7 +42,14 @@ export class HomeComponent implements OnInit {
             }
           });
         };
-      })
+      });
+    this.dataService.getStatisticalCandidate().subscribe((res) => {
+      this.candidateList = res.data;
+      this.totalCandidate = res.message;
+    });
+    this.dataService.getStatisticalJob().subscribe((res) => {
+      this.jobList = res.data;
+    });
   }
 
   chart() {
@@ -78,6 +88,10 @@ export class HomeComponent implements OnInit {
 
   getPercent(percent: number) {
     return percent == -2147483548 ? '0%' : percent + '%';
+  }
+
+  getStatusCandidate(status: number) {
+    return this.dataService.statusCandidate.value.find(i => i.value == status)?.label;
   }
 
 }
